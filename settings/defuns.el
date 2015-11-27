@@ -1,0 +1,110 @@
+(defun rename-current-buffer-file ()
+  "Renames current buffer and file it is visiting."
+  (interactive)
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (error "Buffer '%s' is not visiting a file!" name)
+      (let ((new-name (read-file-name "New name: " filename)))
+        (if (get-buffer new-name)
+            (error "A buffer named '%s' already exists!" new-name)
+          (rename-file filename new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil)
+          (message "File '%s' successfully renamed to '%s'"
+                   name (file-name-nondirectory new-name)))))))
+
+
+
+
+
+
+(defun goto-line-with-feedback ()
+  "Show line numbers temporarily, while prompting for the line number input"
+  (interactive)
+  (unwind-protect
+      (progn
+        (linum-mode 1)
+        (goto-line (read-number "Goto line: ")))
+    (linum-mode -1)))
+
+
+(defun cleanup-buffer ()
+    "Perform a bunch of operations on the whitespace content of a buffer.
+Including indent-buffer, which should not be called automatically on save."
+    (interactive)
+    (untabify-buffer)
+    (delete-trailing-whitespace)
+    (indent-buffer))
+
+
+
+(defun transpose-params ()
+  "Presumes that params are in the form (p, p, p) or {p, p, p} or [p, p, p]"
+  (interactive)
+  (let* ((end-of-first (cond
+			((looking-at ", ") (point))
+			((and (looking-back ",") (looking-at " ")) (- (point) 1))
+			((looking-back ", ") (- (point) 2))
+			(t (error "Place point between params to transpose."))))
+	 (start-of-first (save-excursion
+			   (goto-char end-of-first)
+			   (move-backward-out-of-param)
+			   (point)))
+	 (start-of-last (+ end-of-first 2))
+	 (end-of-last (save-excursion
+			(goto-char start-of-last)
+			(move-forward-out-of-param)
+			(point))))
+    (transpose-regions start-of-first end-of-first start-of-last end-of-last)))
+
+;; shorthand for interactive lambdas
+(defmacro λ (&rest body)
+  `(lambda ()
+     (interactive)
+     ,@body))
+
+
+(defun isearch-forward-use-region ()
+  (interactive)
+  (when (region-active-p)
+    (add-to-history 'search-ring (region-as-string))
+    (deactivate-mark))
+  (call-interactively 'isearch-forward))
+
+(defun isearch-backward-use-region ()
+  (interactive)
+  (when (region-active-p)
+    (add-to-history 'search-ring (region-as-string))
+    (deactivate-mark))
+  (call-interactively 'isearch-backward))
+
+(eval-after-load "multiple-cursors"
+  '(progn
+     (unsupported-cmd isearch-forward-use-region ".")
+     (unsupported-cmd isearch-backward-use-region ".")))
+
+(defun check-expansion ()
+  (save-excursion
+    (if (looking-at "\\_>") t
+      (backward-char 1)
+      (if (looking-at "\\.") t
+        (backward-char 1)
+        (if (looking-at "->") t nil)))))
+
+(defun do-yas-expand ()
+  (let ((yas/fallback-behavior 'return-nil))
+    (yas/expand)))
+
+(defun tab-indent-or-complete ()
+  (interactive)
+  (if (minibufferp)
+      (minibuffer-complete)
+    (if (or (not yas/minor-mode)
+            (null (do-yas-expand)))
+        (if (check-expansion)
+            (company-complete-common)
+          (indent-for-tab-command)))))
+
+(provide 'defuns)
