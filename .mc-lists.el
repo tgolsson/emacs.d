@@ -6,6 +6,7 @@
       '(
         isearch-abort
         subword-left
+        subword-right
         ))
 
 (setq mc/cmds-to-run-once

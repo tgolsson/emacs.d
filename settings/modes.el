@@ -16,7 +16,7 @@
 
 
 ;; OTHER MODES
-(add-to-list 'auto-mode-alist '("\\.m\\" . octave-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.el" . emacs-lisp-mode))
+(add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.el\\'" . emacs-lisp-mode))
 (provide 'modes)
