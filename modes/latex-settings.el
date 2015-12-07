@@ -31,7 +31,8 @@
   
   (company-auctex-init)
   ;; (define-key LaTeX-mode-map (kbd "<backtab>") 'TeX-complete-symbol)
-  (add-to-list 'company-backends '(company-auctex company-math company-yasnippets ))
+  (add-to-list 'company-backends '(company-auctex-bibs company-auctex-labels
+  company-auctex-symbols company-auctex-environments company-auctex-macros company-math-symbols-latex company-yasnippet))
 
   (setq ispell-program-name "aspell") ; could be ispell as well, depending on your preferences
   (setq ispell-dictionary "english") ; this can obviously be set to any language your spell-checking program supports

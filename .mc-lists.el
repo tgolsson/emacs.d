@@ -4,6 +4,12 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        c-electric-colon
+        c-electric-paren
+        c-electric-semi&comma
+        c-electric-slash
+        c-electric-star
+        electric-pair-delete-pair
         isearch-abort
         subword-left
         subword-right
