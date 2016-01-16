@@ -119,3 +119,4 @@
   (load (file-name-sans-extension file)))
 
 
+(setenv "SSH_ASKPASS" "git-gui--askpass")
