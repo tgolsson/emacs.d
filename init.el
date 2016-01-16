@@ -26,6 +26,7 @@
 		     company-c-headers
 		     company-irony
 		     company-irony-c-headers
+			 company-jedi
 		     company-math
 		     company-statistics
 		     company-web
@@ -38,6 +39,7 @@
 		     gradle-mode
                      guru-mode
                      hide-lines
+					 guide-key
 		     html-script-src
 		     irony
 		     java-snippets
@@ -60,6 +62,7 @@
 		     org-caldav
 		     pkg-info
 		     popup
+			 popwin
 		     s
 		     simple-httpd
 		     skewer-mode
@@ -114,6 +117,5 @@
 ;; Load everything in settings file
 (dolist (file (directory-files modes-dir t "\.el$" nil))
   (load (file-name-sans-extension file)))
-
 
 

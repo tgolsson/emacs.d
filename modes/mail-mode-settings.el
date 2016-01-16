@@ -1,3 +1,5 @@
+(if (not (eq system-type 'windows-nt))
+ (progn
 (require 'mu4e)
 (require 'mu4e-multi)
 (require 'gnus-dired)
@@ -142,4 +144,5 @@ original."
 
 (add-hook 'mu4e-view-mode-hook 'smiley-buffer)
 
-(mu4e-multi-enable)
+(mu4e-multi-enable))
+)

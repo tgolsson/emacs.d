@@ -15,5 +15,7 @@
 (add-to-list 'default-frame-alist '(foreground-color . "#aaa099"))
 (add-to-list 'default-frame-alist '(background-color . "#000000"))
 
+(setq inhibit-splash-screen t)
+(setq inhibit-startup-message t)
 
 (provide 'appearance)
