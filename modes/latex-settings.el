@@ -68,4 +68,11 @@
 
 
 
+ 	
+(add-hook 'plain-TeX-mode-hook
+	  (lambda () (set (make-variable-buffer-local 'TeX-electric-math)
+			  (cons "$" "$"))))
+(add-hook 'LaTeX-mode-hook
+	  (lambda () (set (make-variable-buffer-local 'TeX-electric-math)
+			  (cons "\\(" "\\)"))))
 (add-hook 'LaTeX-mode-hook 'setup-latex-mode) ; with Emacs latex mode
