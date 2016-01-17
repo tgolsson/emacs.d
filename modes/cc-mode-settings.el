@@ -24,7 +24,8 @@
   (electric-pair-mode 1)
   (semantic-mode 1)
 
-  (add-to-list 'company-backends '(company-irony company-irony-c-headers company-yasnippet))
+  (add-to-list 'company-backends '(company-irony company-irony-c-headers
+  company-etags company-yasnippet))
   
   ) 
 (add-hook 'c-mode-common-hook 'setup-c-modes)
