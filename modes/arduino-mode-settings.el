@@ -5,7 +5,6 @@
 (require 'company-arduino)
 (defun my-arduino-mode ()
   ;; enable web mode
-  (print "Inside the hook!")
   (yas-activate-extra-mode 'c++-mode)
   
   )
