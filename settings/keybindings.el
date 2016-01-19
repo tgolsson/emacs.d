@@ -57,4 +57,5 @@
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key [tab] 'tab-indent-or-complete)
 
+(global-set-key (kbd "C-x M-k") 'to/kill-other-buffers)
 (provide 'keybindings)
