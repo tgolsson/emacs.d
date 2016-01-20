@@ -6,7 +6,7 @@ package-manager.
 
 This config is a mix of things I have gathered around the internet and things I
 have made up myself. Large parts were inspired/partially stolen from
-[magnars emacs.d config](www.github.com/magnars/.emacs.d).
+[magnars emacs.d config](http://www.github.com/magnars/.emacs.d).
 
 ## Init.el ##
 **`init.el`** contains the startup information and is used in place of the the usual `.emacs` in
