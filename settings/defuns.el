@@ -128,4 +128,40 @@ With prefix argument (`C-u'), also kill the special buffers."
               (message "Killing buffer %s" buf-name)
               (kill-buffer buf))))))))
 
+
+(defun to/close-older-buffers ()
+  ;; Run in interactive
+  (interactive)
+  ;; let bufs -> reverse buffer list (oldest first)
+  ;;     numbufs -> number of buffs in buffer-list
+  (let ((bufs (reverse (buffer-list (selected-frame))))
+        (numbufs (length (buffer-list (selected-frame)))))
+    ;; for each buffer
+    (dolist (buf bufs)
+      ;; if there's more than 10 buffers in list
+      (if (> numbufs 10)
+          ;; let current buffer be buf
+          (with-current-buffer buf
+            (progn
+              ;; extract the buffer-name for easier use
+              (setq buf-name (buffer-name buf))
+              ;; if buffer-name begins with star
+              (if (string-match "\*" buf-name)
+                  ;; reduce remaining buffers by 1
+                  (setq numbufs (- numbufs 1))
+                ;; else
+                (progn
+                  ;; if modified, prompt before killing
+                  (if (buffer-modified-p buf)
+                      (if (y-or-n-p (concat "Kill unsaved buffer " buf-name "?"))
+                          ;; if yes
+                          (progn
+                            ;; kill and reduce ounter
+                            (kill-buffer buf)
+                            (setq numbufs (- numbufs 1))))
+                    ;; else kill directly and reduce counter
+                    (progn
+                      (kill-buffer)
+                      (setq numbufs (- numbufs 1))))))))))))
+  
 (provide 'defuns)
