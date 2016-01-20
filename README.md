@@ -4,6 +4,10 @@ This is my emacs config; posted here for others to use as well as for me to
 track how it works. It requires Emacs24 or later, as it uses the built in
 package-manager.
 
+This config is a mix of things I have gathered around the internet and things I
+have made up myself. Large parts were inspired/partially stolen from
+[magnars emacs.d config](www.github.com/magnars/.emacs.d).
+
 ## Init.el ##
 **`init.el`** contains the startup information and is used in place of the the usual `.emacs` in
   `~`. It will download all packages from MELPA/Marmalade when loading, and
