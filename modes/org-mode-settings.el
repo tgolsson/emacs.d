@@ -6,3 +6,4 @@
    (sh . t)))
 
 (setq org-confirm-babel-evalute nil)
+(setq org-agenda-files '("~/Dropbox/notes"))

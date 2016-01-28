@@ -11,6 +11,13 @@
                                       ("^[ \t]*>[ \t]*>.*$"
                                        (0 'mail-double-quoted-text-face))))))
 
+(setf mu4e-bookmarks
+  '( ("flag:unread AND NOT flag:trashed AND NOT maildir:/Bahnhof/INBOX.Trash AND NOT maildir:/TomOlsson/Trash AND NOT maildir:Gmail/[Gmail].TRASH" "Unread messages"      ?u)
+     ("date:today..now"                  "Today's messages"     ?t)
+     ("date:7d..now"                     "Last 7 days"          ?w)
+     ("mime:image/*"                     "Messages with images" ?p))
+  )
+
 (defun my-mu4e-trash-function(msg)
   (if msg
       (cond
@@ -21,9 +28,7 @@
        ((string-match-p (regexp-quote "Bahnhof") (plist-get msg :path)) "/Bahnhof/INBOX.Trash")
        ((string-match-p (regexp-quote "TomOlsson") (plist-get msg :path)) "/TomOlsson/Trash")
        ((string-match-p (regexp-quote "Gmail") (plist-get msg :path)) "/Gmail/[Gmail].Trash")
-       
-       )
-    
+       )    
     "/trash"
     )        
   )

@@ -39,8 +39,9 @@
 		     gradle-mode
                      guru-mode
                      hide-lines
-					 guide-key
+                     guide-key
 		     html-script-src
+                     htmlize
 		     irony
 		     java-snippets
 		     jdee
@@ -62,7 +63,7 @@
 		     org-caldav
 		     pkg-info
 		     popup
-			 popwin
+                     popwin
 		     s
 		     simple-httpd
 		     skewer-mode
