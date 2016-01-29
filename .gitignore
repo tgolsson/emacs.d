@@ -21,3 +21,5 @@ company-statistics-cache.el
 ac-comphist.dat
 /server
 projectile-bookmarks.eld
+bookmarks
+projectile.cache
