@@ -7,75 +7,80 @@
 
 
 (setq package-list '(
-		     ac-html
-		     ac-html-csswatcher
-		     ac-ispell
-		     ac-js2
-		     ac-octave
-		     arduino-mode
-		     async
-		     auctex
-		     auctex-latexmk
-		     auto-complete
-		     auto-complete-auctex
-		     cmake-mode
-		     color-theme
-		     company
-		     company-arduino
-		     company-auctex
-		     company-c-headers
-		     company-irony
-		     company-irony-c-headers
-			 company-jedi
-		     company-math
-		     company-statistics
-		     company-web
-		     ctags
-		     dash
-		     epl
-		     f
-		     flycheck
-		     git-commit
-		     gradle-mode
+                     ac-html
+                     ac-html-csswatcher
+                     ac-ispell
+                     ac-js2
+                     ac-octave
+                     arduino-mode
+                     async
+                     auctex
+                     auctex-latexmk
+                     auto-complete
+                     auto-complete-auctex
+                     cmake-mode
+                     color-theme
+                     company
+                     company-arduino
+                     company-auctex
+                     company-c-headers
+                     company-irony
+                     company-irony-c-headers
+                     company-jedi
+                     company-math
+                     company-statistics
+                     company-web
+                     ctags
+                     dash
+                     epc
+                     epl
+                     f
+                     flx-ido
+                     flycheck
+                     git-commit
+                     gradle-mode
+                     guide-key
                      guru-mode
                      hide-lines
-                     guide-key
-		     html-script-src
+                     html-script-src
                      htmlize
-		     irony
-		     java-snippets
-		     jdee
-		     js2-highlight-vars
-		     js2-mode
-		     js2-refactor
-		     jtags
-		     less-css-mode
-		     let-alist
-		     magit
-		     magit-popup
-                     markdown-mode
-                     markdown-mode+
-                     markdown-toc
-		     math-symbol-lists
-		     matlab-mode
-		     multiple-cursors
-		     org
-		     org-caldav
-		     pkg-info
-		     popup
-                     popwin
-		     s
-		     simple-httpd
-		     skewer-mode
-		     web-completion-data
-		     web-mode
-		     with-editor
-                     flx-ido
                      ido-at-point
                      ido-ubiquitous
                      ido-vertical-mode
+                     irony
+                     java-snippets
+                     jdee
+                     js2-highlight-vars
+                     js2-mode
+                     js2-refactor
+                     jtags
+                     less-css-mode
+                     let-alist
+                     magit
+                     magit-popup
+                     markdown-mode
+                     markdown-mode+
+                     markdown-toc
+                     math-symbol-lists
+                     matlab-mode
+                     metaweblog
+                     multiple-cursors
+                     org
+                     org-caldav
+                     org-projectile
+                     org2blog
+                     pkg-info
+                     popup
+                     popwin
+                     s
+                     simple-httpd
+                     skewer-mode
                      smooth-scrolling
-		     yasnippet
+                     web-completion-data
+                     web-mode
+                     with-editor
+                     xml-rpc
+                     yasnippet
 		     ))
 
 (package-initialize) ;; You might already have this line
