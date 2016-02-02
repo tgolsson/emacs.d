@@ -11,7 +11,7 @@
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "|" "DONE(d)")
         (sequence "BUG(r)" "KNOWNCAUSE(k)" "|" "FIXED(f)"))))
-
+(org-toggle-pretty-entities)
 ;; Org-agenda
 (setq org-agenda-files (list "~/Dropbox/notes"))
 ;; Org-projectile
@@ -27,7 +27,8 @@
       "-----------------------
 #+TITLE: %s
 #+DATE: %s
-#+CATEGORY: 
+#+CATEGORY:
+#+TAGS: 
 -----------------------\n")
 (defun my-format-function (format-string)
   (format format-string
@@ -51,7 +52,9 @@
    (octave . t)
    (sh . t)))
 (setq org-confirm-babel-evalute nil)
-
+(defun org-mode-settings ()
+  (visual-line-mode 1)
+  )
  
-
+(add-hook 'org-mode-hook 'org-mode-settings)
 (global-set-key (kbd "C-c M-c") 'org-capture)
