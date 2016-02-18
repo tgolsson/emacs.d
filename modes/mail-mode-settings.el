@@ -148,6 +148,7 @@ original."
 (add-hook 'mu4e-compose-pre-hook 'my-mu4e-from-address)
 
 (add-hook 'mu4e-view-mode-hook 'smiley-buffer)
+(add-hook 'mu4e-view-mode-hook 'visual-line-mode)
 
 (mu4e-multi-enable))
 )

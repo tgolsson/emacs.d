@@ -18,7 +18,8 @@ have made up myself. Large parts were inspired/partially stolen from
 **`modes`** contains mode-specific settings, defined as mode-hooks. Each mode
   shall be contained in its own file with the same name as the mode *including*
   "mode".
-
+  
+  
 ## Settings ##
 **`settings`** contains overall configuration based on general type. *Most*
 settings that are not mode-specific should be in one of these files to make sure

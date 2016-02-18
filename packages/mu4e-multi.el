@@ -202,7 +202,7 @@ keys of the `mu4e-multi-account-alist'."
          (catch 'exit
            (let* ((from (message-fetch-field "from"))
                   (email (and from
-                              (string-match thing-at-point-email-regexp from)
+                              (string-match "[-+_.~a-zA-Z][-+_.~:a-zA-Z0-9]*@[-.a-zA-Z0-9]+"  from)
                               (match-string-no-properties 0 from))))
              (if email
                  (cl-dolist (alist mu4e-multi-account-alist)
