@@ -56,18 +56,18 @@
       mu4e-drafts-folder  "/TomOlsson/Drafts"
       mu4e-sent-folder  "/TomOlsson/Sent"
       mu4e-trash-folder  'my-mu4e-trash-function
-
       mu4e-attachment-dir "~/Download"
-      mu4e-headers-fields
-      '( (:date          .  25)    ;; alternatively, use :human-date
-         (:flags         .   6)
-         (:from          .  22)
-         (:subject       .  nil)
-         (:thread-subject . nil)
-         (:to . nil)
-         )
+
+      
+      mu4e-headers-fields '((:date          .  20)    ;; alternatively, use :human-date
+                            (:flags         .   6)
+                            (:from          .  20)
+                            (:thread-subject . 63)
+                            (:to . 20)
+                            )
       )
 
+      
 
 (defun gnus-dired-mail-buffers ()
   "Return a list of active message buffers."
