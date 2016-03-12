@@ -27,7 +27,9 @@
   (visual-line-mode 1)
   (flyspell-mode 1)
   (LaTeX-math-mode 1)
-
+  (setq TeX-electric-sub-and-superscript t)
+  
+  (set (make-variable-buffer-local 'TeX-electric-math) ( cons "\\(" "\\)"))
   
   (company-auctex-init)
   ;; (define-key LaTeX-mode-map (kbd "<backtab>") 'TeX-complete-symbol)
@@ -72,7 +74,4 @@
 (add-hook 'plain-TeX-mode-hook
 	  (lambda () (set (make-variable-buffer-local 'TeX-electric-math)
 			  (cons "$" "$"))))
-(add-hook 'LaTeX-mode-hook
-	  (lambda () (set (make-variable-buffer-local 'TeX-electric-math)
-			  (cons "\\(" "\\)"))))
 (add-hook 'LaTeX-mode-hook 'setup-latex-mode) ; with Emacs latex mode
