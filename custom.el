@@ -4,8 +4,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-
  '(flycheck-display-errors-function (function flycheck-pos-tip-error-messages))
+ '(safe-local-variable-values
+   (quote
+    ((eval setenv "TEXINPUTS" "/home/tgo/Dropbox/Dokument/latex/:"))))
  '(send-mail-function (quote sendmail-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

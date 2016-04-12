@@ -77,4 +77,7 @@
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 (electric-pair-mode 1)
+
+(setq browse-url-browser-function 'browse-url-generic
+            browse-url-generic-program "vivaldi-stable")
 (provide 'settings)
