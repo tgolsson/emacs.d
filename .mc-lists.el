@@ -17,6 +17,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        end-of-visual-line
         ido-find-file
         isearch-forward-regexp
         isearch-printing-char
