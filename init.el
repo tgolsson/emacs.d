@@ -104,6 +104,8 @@
 (setq packages-dir (expand-file-name "packages" user-emacs-directory))
 (add-to-list 'load-path packages-dir)
 
+(setq frame-background-mode 'dark)
+(mapc 'frame-set-background-mode (frame-list))
 (require 'appearance)
 
 (require 'basic-packages)
