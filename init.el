@@ -19,7 +19,6 @@
                      auto-complete
                      auto-complete-auctex
                      cmake-mode
-                     color-theme
                      company
                      company-arduino
                      company-auctex
