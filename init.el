@@ -26,6 +26,7 @@
                      company-irony
                      company-irony-c-headers
                      company-jedi
+                     company-lua
                      company-math
                      company-statistics
                      company-web
@@ -55,6 +56,7 @@
                      jtags
                      less-css-mode
                      let-alist
+                     lua-mode
                      magit
                      magit-popup
                      markdown-mode

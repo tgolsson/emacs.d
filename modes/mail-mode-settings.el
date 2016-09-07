@@ -12,8 +12,10 @@
                                        (0 'mail-double-quoted-text-face))))))
 
 (setf mu4e-bookmarks
-  '( ("flag:unread AND NOT flag:trashed AND NOT maildir:/Bahnhof/INBOX.Trash AND NOT maildir:/TomOlsson/Trash AND NOT maildir:Gmail/[Gmail].TRASH" "Unread messages"      ?u)
+  '( ("flag:unread AND NOT flag:trashed AND (m:/Bahnhof/INBOX OR m:/TomOlsson/INBOX OR m:/Gmail/INBOX)" "Unread messages (Inboxes)" ?u)
+     ("flag:unread AND NOT flag:trashed AND NOT m:/Bahnhof/INBOX AND NOT m:/TomOlsson/INBOX AND NOT m:/Gmail/INBOX AND NOT m:/Bahnhof/INBOX.Trash AND NOT m:/TomOlsson/Trash AND NOT m:/Gmail/[Gmail].Bin" "Unread subdirs"      ?s)
      ("date:today..now"                  "Today's messages"     ?t)
+          ("flag:flagged"                  "Flagged"     ?f)
      ("date:7d..now"                     "Last 7 days"          ?w)
      ("mime:image/*"                     "Messages with images" ?p))
   )

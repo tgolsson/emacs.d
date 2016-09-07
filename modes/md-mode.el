@@ -10,4 +10,4 @@
 
 
 
-(add-hook 'markdown-mode-hook 'my-octave-settings)
+(add-hook 'markdown-mode-hook 'my-markdown-settings)

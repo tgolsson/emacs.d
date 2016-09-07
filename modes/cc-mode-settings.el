@@ -23,7 +23,7 @@
   (company-irony 1)
   (electric-pair-mode 1)
   (semantic-mode 1)
-
+(make-local-variable 'company-backends)
   (add-to-list 'company-backends '(company-irony company-irony-c-headers
   company-etags company-yasnippet))
   
