@@ -11,7 +11,14 @@
 (setq guide-key/recursive-key-sequence-flag t)
 (setq guide-key/popup-window-position 'bottom)
 
+(require 'smex) ; Not needed if you use package.el
+(smex-initialize) ; Can be omitted. This might cause a (minimal) delay
+                                        ; when Smex is auto-initialized on its first run.
+
+(require 'discover-my-major) 
 (require 'guru-mode)
 (require 'projectile)
 (projectile-global-mode)
+
+
 (provide 'basic-packages)

@@ -1,4 +1,3 @@
-
 ;; CTAGS
 (global-set-key (kbd "M-.")  'ctags-search)
 (global-set-key (kbd "<f7>") 'ctags-create-or-update-tags-table)
@@ -14,7 +13,7 @@
 (global-set-key (kbd "M-j")(lambda ()(interactive)(join-line -1)))
 
 (global-set-key (kbd "C-x C-r") 'rename-current-buffer-file)
-(global-set-key [remap goto-line] 'goto-line-with-feedback)
+(global-set-key [remap goto-line] 'goto-line-with-feedback) 
 
 
 ;; Experimental multiple-cursors
@@ -44,6 +43,11 @@
 (global-set-key (kbd "C-c C-<return>") 'delete-blank-lines)
 
 
+;; DMM
+(global-set-key (kbd "C-h C-m") 'discover-my-major)
+(global-set-key (kbd "C-h M-m") 'discover-my-mode)
+
+;; Transpose
 (global-unset-key (kbd "M-t")) ;; which used to be transpose-words
 (global-set-key (kbd "M-t l") 'transpose-lines)
 (global-set-key (kbd "M-t w") 'transpose-words)
@@ -57,6 +61,14 @@
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key [tab] 'tab-indent-or-complete)
 
-;; For projectile
+
+;;; SMEX
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; This is your old M-x.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+
+
 (global-set-key (kbd "C-x M-k") 'to/kill-other-buffers)
 (provide 'keybindings)

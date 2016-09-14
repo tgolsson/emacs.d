@@ -21,13 +21,16 @@
 
 
 (defun goto-line-with-feedback ()
-  "Show line numbers temporarily, while prompting for the line number input"
+  "Show line numbers temporarily, while prompting for the line number input if
+linum-mode is disabled"
   (interactive)
-  (unwind-protect
+  (let ((has-linum linum-mode))
+    (unwind-protect
       (progn
-        (linum-mode 1)
+        (when (not has-linum) (linum-mode 1))
         (goto-line (read-number "Goto line: ")))
-    (linum-mode -1)))
+      (if (not has-linum) (linum-mode -1)
+        (linum-update (current-buffer))))))
 
 
 (defun cleanup-buffer ()
