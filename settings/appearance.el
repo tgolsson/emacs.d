@@ -30,4 +30,23 @@
   )
 
 
+(define-fringe-bitmap 'right-curly-arrow
+  [#b00000000
+   #b00000000
+   #b00000000
+   #b00000000
+   #b00000000
+   #b00000000
+   #b00000000
+   #b00000000])
+(define-fringe-bitmap 'left-curly-arrow
+  [#b00000000
+   #b00000000
+   #b00110000
+   #b00110000
+   #b00110000
+   #b00110000
+   #b00000000
+   #b00000000])
+
 (provide 'appearance)

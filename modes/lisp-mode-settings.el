@@ -5,12 +5,14 @@ exists."
     (when (and (eq major-mode 'emacs-lisp-mode)
                             (file-exists-p (byte-compile-dest-file
                                             buffer-file-name)))
-          (byte-compile-file buffer-file-name)))
+      (byte-compile-file buffer-file-name)))
+
 (defun my-elisp-settings ()
   (abbrev-mode 1)
   (auto-fill-mode 1)
   (font-lock-mode 1)
   (company-mode 1)
+  (make-local-variable 'company-backends)
   (add-to-list 'company-backends '(company-elisp company-yasnippet))
 
   ;; Use spaces, not tabs.

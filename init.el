@@ -109,6 +109,7 @@
                      ox-impress-js
                      ox-ioslide
                      ox-reveal
+                     powerline
                      php-mode
                      pkg-info
                      popup
@@ -120,7 +121,7 @@
                      request
                      request-deferred
                      rtags
-                     s
+                     spaceline
                      seq
                      simple-httpd
                      skewer-mode
