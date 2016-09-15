@@ -7,7 +7,9 @@
 (set-face-bold 'linum-highlight-face t)
 (set-face-background 'linum-highlight-face "#111")
 (set-face-foreground 'linum "#666")
-(set-face-foreground 'linum-highlight-face "color-196") ;
+(if (display-graphic-p)
+    (set-face-foreground 'linum-highlight-face "red")
+  (set-face-foreground 'linum-highlight-face "color-196"))
 
 
 (provide 'linum-settings)

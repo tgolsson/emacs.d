@@ -90,7 +90,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 (defun check-expansion ()
   (save-excursion
-    (if (looking-at "\\_>") t
+    (if (looking-at "\\_>")
+        t
       (backward-char 1)
       (if (looking-at "\\.") t
         (backward-char 1)
@@ -99,14 +100,13 @@ Including indent-buffer, which should not be called automatically on save."
 (defun do-yas-expand ()
   (let ((yas/fallback-behavior 'return-nil))
     (yas/expand)))
-
 (defun tab-indent-or-complete ()
   (interactive)
-    (if (or (not (or yas-global-mode yas/minor-mode))
-            (null (do-yas-expand)))
-        (if (check-expansion)
-            (company-complete-common)
-          (indent-for-tab-command))))
+  (if (or (not (or yas-global-mode yas/minor-mode))
+          (null (do-yas-expand)))
+      (if (check-expansion)
+          (company-complete-common)
+        (indent-for-tab-command))))
 
 (defun to/kill-other-buffers (&optional kill-special)
   "Kill buffers that do not belong to a `projectile' project.
