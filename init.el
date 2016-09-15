@@ -15,16 +15,16 @@
                      ac-php-core
                      alert
                      android-mode
-                     arduino-mode
+                     arduino-mode ;; configured
                      async
-                     auctex
+                     auctex 
                      auctex-latexmk
-                     auto-complete
+                     auto-complete 
                      auto-complete-auctex
-                     bison-mode
-                     calfw
-                     cmake-font-lock
-                     cmake-mode
+                     bison-mode  
+                     calfw  ;; configured
+                     cmake-font-lock ;; configured 
+                     cmake-mode ;; configured
                      company
                      company-arduino
                      company-auctex
@@ -124,10 +124,10 @@
                      spaceline
                      seq
                      simple-httpd
-                     skewer-mode
+                     skewer-mode  ;; maybe remove
                      smex
                      smooth-scrolling
-                     speed-type
+                     speed-type ; setup
                      tiny
                      w3m
                      web-beautify
@@ -136,7 +136,7 @@
                      with-editor
                      xcscope
                      xml-rpc
-                     yasnippet
+                     yasnippet ;; setup
 
 		     ))
 
@@ -178,12 +178,12 @@
 (require 'settings)
 (require 'defuns)
 
-(require 'keybindings)
-(require 'settings)
+ (require 'keybindings)
+ (require 'settings)
 
-(require 'modes)
-(require 'setup-magit)
-(require 'setup-company)
+ (require 'modes)
+ (require 'setup-magit)
+ (require 'setup-company)
 (require 'setup-flycheck)
 (require 'setup-ido)
 (require 'darkroom-settings)

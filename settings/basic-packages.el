@@ -1,9 +1,13 @@
 (require 'ctags)
+(require 'flycheck)
+;; yas
 (require 'yasnippet)
 (yas-global-mode 1)
 (add-to-list 'yas-snippet-dirs "~/.emacs.d/yas")
 (setq yas-wrap-around-region t)
 (define-key yas-keymap (kbd "<return>") 'yas-exit-all-snippets)
+
+;; magit
 (require 'magit)
 (require 'magit-filenotify)
 (setq magit-completing-read-function 'magit-ido-completing-read)
@@ -37,7 +41,7 @@
 (require 'guru-mode)
 
 (require 'google-contacts)
-
+(require 'speed-type)
 (provide 'basic-packages)
 
 

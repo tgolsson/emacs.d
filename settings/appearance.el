@@ -12,6 +12,8 @@
 
 (add-to-list 'default-frame-alist '(foreground-color . "#ddd"))
 (add-to-list 'default-frame-alist '(background-color . "#111"))
+(set-face-background 'default "#111")
+(set-face-foreground 'default "#ddd")
 (set-face-background 'fringe "#111")
 
 (setq inhibit-splash-screen t)

@@ -102,14 +102,11 @@ Including indent-buffer, which should not be called automatically on save."
 
 (defun tab-indent-or-complete ()
   (interactive)
-  (if (minibufferp)
-      (progn (completion-at-point))
-    (if (or (not yas/minor-mode)
+    (if (or (not (or yas-global-mode yas/minor-mode))
             (null (do-yas-expand)))
         (if (check-expansion)
             (company-complete-common)
-          (indent-for-tab-command)))))
-
+          (indent-for-tab-command))))
 
 (defun to/kill-other-buffers (&optional kill-special)
   "Kill buffers that do not belong to a `projectile' project.

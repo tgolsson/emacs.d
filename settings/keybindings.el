@@ -61,7 +61,9 @@
 
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "M-n") 'forward-paragraph)
-(global-set-key [tab] 'tab-indent-or-complete)
+;;(global-set-key [tab] 'tab-indent-or-complete)
+;(define-key company-active-map [tab] 'tab-indent-or-complete)
+
 
 
 ;;; SMEX
@@ -75,4 +77,13 @@
 
 (global-set-key [f8] 'neotree-toggle)
 (global-set-key (kbd "C-x M-k") 'to/kill-other-buffers)
+
+;; company
+(define-key yas-minor-mode-map [(tab)]        nil)
+(define-key yas-minor-mode-map (kbd "TAB")    nil)
+(define-key yas-minor-mode-map (kbd "<tab>")  nil)
+
+(define-key company-active-map (kbd "TAB") 'tab-indent-or-complete)
+(define-key company-active-map (kbd "<tab>") 'tab-indent-or-complete)
+
 (provide 'keybindings)
