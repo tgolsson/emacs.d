@@ -1,16 +1,9 @@
-;; (require 'powerline)
-;; (require 'smart-mode-line)
-;; (require 'fancy-battery)
-;; (require 'smart-mode-line-powerline-theme)
-;; (setq sml/theme 'my)
-;; (setq sml/mode-width 'right)
-;; (sml/setup)
-;; (display-battery-mode 1)
 (require 'spaceline)
 (require 'spaceline-config)
 (require 'fancy-battery)
 (fancy-battery-mode)
-; DIMINISH
+
+;; DIMINISH
 (require 'diminish)
 (eval-after-load "minimap-mode" (diminish 'minimap-mode))
 (eval-after-load "guide-key-mode" (diminish 'guide-key-mode))
@@ -24,8 +17,16 @@
 (eval-after-load "eldoc-mode" (diminish 'eldoc-mode))
 (eval-after-load "subword-mode" (diminish 'subword-mode))
 (eval-after-load "projectile-mode" (diminish 'projectile-mode))
-;;SPACELINE
+(eval-after-load "rainbow" (diminish 'rainbow-mode))
+
+;; SPACELINE
+(set-face-background 'mode-line "gray40")
+(set-face-foreground 'powerline-active1 "#999")
 (setq powerline-height 25)
+
+(defface pml-highlight
+  '((t (:background "gray40")))
+  "Basic face for highlighting.")
 (when (not (display-graphic-p))
   (setq powerline-default-separator 'utf-8)
   )
@@ -35,7 +36,9 @@
              (stringp (projectile-project-p))
              (not (string= (projectile-project-name) (buffer-name))))
     (concat "P: " (projectile-project-name)))
- :face web-mode-whitespace-face)
+  :when active
+)
+
 (spaceline-emacs-theme 'my-projectile)
 
 ;; 
@@ -54,6 +57,6 @@
 (spaceline-toggle-buffer-position-off)
 (setq spaceline-minor-modes-separator " ")
 
-(set-face-attribute 'mode-line nil :box'(:color "#444" :width 10))
-(set-face-attribute 'mode-line-inactive nil :box'(:color "#222" :width 10))
+(set-face-attribute 'mode-line-inactive nil :box '(:line-width 2 :color "#333" ))
+(set-face-attribute 'mode-line nil :box '(:line-width 2 :color "#666" ))
 (provide 'modeline-settings)

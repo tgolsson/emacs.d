@@ -1,3 +1,4 @@
+(require 'rainbow-mode)
 ;; GUI
 (menu-bar-mode -1)
 (when (fboundp 'tool-bar-mode)
@@ -16,8 +17,8 @@
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-message t)
 
-(hl-line-mode)
-(rainbow-mode)
+(hl-line-mode 1)
+(rainbow-mode 1)
 (require 'minimap)
 (if window-system
     (progn 
@@ -25,6 +26,7 @@
                                                             nil)))
            (add-to-list 'minimap-major-modes 'latex-mode)
            (add-to-list 'minimap-major-modes 'cmake-mode)
+           (setq minimap-automatically-delete-window nil)
            (minimap-mode)
            )
   )

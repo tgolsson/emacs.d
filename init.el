@@ -189,6 +189,7 @@
 (require 'darkroom-settings)
 (require 'linum-settings)
 (require 'modeline-settings)
+(require 'projectile-settings)
 
 ;; Load everything in modes file
 (dolist (file (directory-files modes-dir t "\.el$" nil))
