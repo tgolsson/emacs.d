@@ -11,15 +11,13 @@
         c-electric-star
         electric-pair-delete-pair
         isearch-abort
+        kill-region
+        smex
         subword-left
         subword-right
-        ))
-
-(setq mc/cmds-to-run-once
-      '(
-        end-of-visual-line
+                end-of-visual-line
         ido-find-file
         isearch-forward-regexp
-        isearch-printing-char
-        kill-region
+        isearch-printing-char           
+
         ))

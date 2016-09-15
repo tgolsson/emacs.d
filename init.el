@@ -139,19 +139,23 @@
 
 		     ))
 
-(package-initialize) ;; You might already have this line
-
+(package-initialize) 
 (unless package-archive-contents
   (package-refresh-contents))
 
 
-                                        ; install the missing packages
+;; install the missing packages
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
 
+;; store passphrases
+(require 'plstore)
+(setq plstore-cache-passphrase-for-symmetric-encryption t)
+
 ;; Load experiments files here!
 (load-file (expand-file-name "experiments/company-netlogo.el" user-emacs-directory))
+(load-file (expand-file-name "experiments/smart-mode-line-my-theme.el" user-emacs-directory))
 
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -182,8 +186,9 @@
 (require 'setup-flycheck)
 (require 'setup-ido)
 (require 'darkroom-settings)
-(require 'modeline-settings)
 (require 'linum-settings)
+(require 'modeline-settings)
+
 ;; Load everything in settings file
 (dolist (file (directory-files modes-dir t "\.el$" nil))
   (load (file-name-sans-extension file)))

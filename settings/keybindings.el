@@ -15,6 +15,8 @@
 (global-set-key (kbd "C-x C-r") 'rename-current-buffer-file)
 (global-set-key [remap goto-line] 'goto-line-with-feedback) 
 
+;; Magit
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; Experimental multiple-cursors
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
@@ -69,6 +71,8 @@
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 
+;; projectile
 
+(global-set-key [f8] 'neotree-toggle)
 (global-set-key (kbd "C-x M-k") 'to/kill-other-buffers)
 (provide 'keybindings)

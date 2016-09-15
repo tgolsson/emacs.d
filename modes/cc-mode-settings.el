@@ -23,8 +23,8 @@
   (company-irony 1)
   (electric-pair-mode 1)
   (semantic-mode 1)
-(make-local-variable 'company-backends)
-  (add-to-list 'company-backends '(company-irony company-irony-c-headers
+  (make-local-variable 'company-backends)
+  (add-to-list 'company-backends '(company-semantic company-irony company-irony-c-headers
   company-etags company-yasnippet))
   
   ) 
@@ -47,5 +47,6 @@
 	    (font-lock-add-keywords nil
 				    '(("[^a-zA-Z]\\([a-zA-Z][_]+[a-zA-Z0-9_]+\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-variable-proper-face prepend))  'append
 				    )))
+
 
 

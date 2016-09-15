@@ -103,7 +103,7 @@ Including indent-buffer, which should not be called automatically on save."
 (defun tab-indent-or-complete ()
   (interactive)
   (if (minibufferp)
-      (minibuffer-complete)
+      (progn (completion-at-point))
     (if (or (not yas/minor-mode)
             (null (do-yas-expand)))
         (if (check-expansion)

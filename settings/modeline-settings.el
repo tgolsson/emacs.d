@@ -1,27 +1,59 @@
-(require 'smart-mode-line)
+;; (require 'powerline)
+;; (require 'smart-mode-line)
+;; (require 'fancy-battery)
+;; (require 'smart-mode-line-powerline-theme)
+;; (setq sml/theme 'my)
+;; (setq sml/mode-width 'right)
+;; (sml/setup)
+;; (display-battery-mode 1)
+(require 'spaceline)
+(require 'spaceline-config)
 (require 'fancy-battery)
-(deftheme smart-mode-line-mine "Light theme for smart-mode-line.")
+(fancy-battery-mode)
+; DIMINISH
+(require 'diminish)
+(eval-after-load "minimap-mode" (diminish 'minimap-mode))
+(eval-after-load "guide-key-mode" (diminish 'guide-key-mode))
+(eval-after-load "abbrev-mode" (diminish 'abbrev-mode))
+(eval-after-load "yasnippet-mode" (diminish 'yas-minor-mode))
+(eval-after-load "auto-revert-mode" (diminish 'auto-revert-mode))
+(eval-after-load "auto-fill" (diminish 'auto-fill-function))
+(eval-after-load "flyspell-mode" (diminish 'flyspell-mode))
+(eval-after-load "flycheck-mode" (diminish 'flycheck-mode))
+(require 'eldoc)
+(eval-after-load "eldoc-mode" (diminish 'eldoc-mode))
+(eval-after-load "subword-mode" (diminish 'subword-mode))
+(eval-after-load "projectile-mode" (diminish 'projectile-mode))
+;;SPACELINE
+(setq powerline-height 25)
+(when (not (display-graphic-p))
+  (setq powerline-default-separator 'utf-8)
+  )
+(spaceline-define-segment my-projectile
+  "Show the current projectile root."
+  (when (and (fboundp 'projectile-project-p)
+             (stringp (projectile-project-p))
+             (not (string= (projectile-project-name) (buffer-name))))
+    (concat "P: " (projectile-project-name)))
+ :face web-mode-whitespace-face)
+(spaceline-emacs-theme 'my-projectile)
 
+;; 
+(spaceline-toggle-anzu-off)
+(spaceline-toggle-battery-on)
+(spaceline-toggle-line-on)
+(spaceline-toggle-buffer-encoding-abbrev-off)
+(spaceline-toggle-org-pomodoro-off)
+(spaceline-toggle-column-off)
+(spaceline-toggle-erc-track-off)
+(spaceline-toggle-workspace-number-off)
+(spaceline-toggle-window-number-off)
+(spaceline-toggle-line-column-on)
+(spaceline-toggle-mu4e-alert-segment-on)
+(spaceline-toggle-buffer-size-off)
+(spaceline-toggle-buffer-position-off)
+(setq spaceline-minor-modes-separator " ")
 
-(setq sml/theme 'dark)
-(setq sml/mode-width 'right)
-(sml/setup)
-(fancy-battery-mode 1)
-(set-face-background 'mode-line "#222")
-
-(setq sml/pre-modes-separator (propertize (concat (char-to-string 57520) "  ")
-                                                          'face 
-                                                          '(:foreground "#222"
-                                                                        :background "#444")))
-
-
-(setq sml/pre-minor-modes-separator (propertize (concat  "  " (char-to-string 57522))
-                                                          'face 
-                                                          '(:foreground "#222"
-                                                                        :background "#444")))
-
-(set-face-background 'sml/modes "#444")
-(set-face-background 'sml/line-number "#222")
-
-
+(set-face-attribute 'mode-line nil :box'(:color "#444" :width 10))
+(set-face-attribute 'mode-line-inactive nil :box'(:color "#222" :width 10))
 (provide 'modeline-settings)
