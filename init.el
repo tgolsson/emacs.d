@@ -156,7 +156,6 @@
 
 ;; Load experiments files here!
 (load-file (expand-file-name "experiments/company-netlogo.el" user-emacs-directory))
-(load-file (expand-file-name "experiments/smart-mode-line-my-theme.el" user-emacs-directory))
 
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
