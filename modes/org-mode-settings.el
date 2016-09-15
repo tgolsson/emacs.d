@@ -85,13 +85,6 @@
 
 ;; org-gcal
 (require 'org-gcal)
-(setq org-gcal-client-id "879967201331-m52eltshjk36ema75jiiuapkfhb717kr.apps.googleusercontent.com"
-      org-gcal-client-secret "BW8sreilbCgIP1hCXh3TNguZ"
-            org-gcal-file-alist '(("tom.g.olsson@gmail.com" .
-                                   "~/Dropbox/notes/calendar.org")
-                                  ("272cdh5a3evi972jshgm0dsdd24tkuoj@import.calendar.google.com" .
-       "~/Dropbox/notes/schedule.org")
-                                  ))
 
 
 (add-hook 'org-mode-hook 'org-mode-settings)

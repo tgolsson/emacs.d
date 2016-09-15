@@ -167,6 +167,7 @@
 (add-to-list 'load-path modes-dir)
 
 (setq packages-dir (expand-file-name "packages" user-emacs-directory))
+(setq privates-dir (expand-file-name "private" user-emacs-directory))
 (add-to-list 'load-path packages-dir)
 
 (setq frame-background-mode 'dark)
@@ -189,8 +190,12 @@
 (require 'linum-settings)
 (require 'modeline-settings)
 
-;; Load everything in settings file
+;; Load everything in modes file
 (dolist (file (directory-files modes-dir t "\.el$" nil))
+  (load (file-name-sans-extension file)))
+
+;; Load everything in private folder
+(dolist (file (directory-files privates-dir t "\.el$" nil))
   (load (file-name-sans-extension file)))
 
 
