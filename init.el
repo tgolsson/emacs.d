@@ -154,9 +154,6 @@
 (require 'plstore)
 (setq plstore-cache-passphrase-for-symmetric-encryption t)
 
-;; Load experiments files here!
-(load-file (expand-file-name "experiments/company-netlogo.el" user-emacs-directory))
-
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
@@ -201,5 +198,9 @@
 (dolist (file (directory-files privates-dir t "\.el$" nil))
   (load (file-name-sans-extension file)))
 
+
+;; Load experiments files here!
+(load-file (expand-file-name "experiments/company-netlogo.el" user-emacs-directory))
+(load-file (expand-file-name "experiments/fixme-highlight.el" user-emacs-directory))
 
 (setenv "SSH_ASKPASS" "git-gui--askpass")

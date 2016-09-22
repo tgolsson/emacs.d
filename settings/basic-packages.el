@@ -4,6 +4,7 @@
 (require 'yasnippet)
 (yas-global-mode 1)
 (add-to-list 'yas-snippet-dirs "~/.emacs.d/yas")
+(yas-reload-all)
 (setq yas-wrap-around-region t)
 (define-key yas-keymap (kbd "<return>") 'yas-exit-all-snippets)
 

@@ -23,7 +23,8 @@
                                                                             4)))))
    `(company-scrollbar-bg ((t (:background ,(color-lighten-name bg 10)))))
    `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 5)))))
-   `(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
+   `(company-tooltip-selection ((t (:inherit font-lock-function-name-face
+       :background ,(color-lighten-name bg 10)))))
    `(company-tooltip-common ((t (:inherit font-lock-constant-face :foreground
                                           ,(color-darken-name fg 50) ))))))  
 (provide 'setup-company)
