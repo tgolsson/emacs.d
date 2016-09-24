@@ -34,7 +34,7 @@
 
 
 (defface c++-variable-proper-face
-  '((t (:inherit font-lock-variable-name-face :foreground "#ffffaa")))
+  '((t (:inherit font-lock-variable-name-face :inherit 'font-lock-variable-name-face)))
   "Face for single-letter prepended variable names, to highlight them slightly. Example: g_MyGlobal, l_MyLocal and so on."
   :group 'font-lock-faces )
 (defvar c++-variable-proper-face 'c++-variable-proper-face)
