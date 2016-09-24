@@ -167,25 +167,45 @@
 (setq privates-dir (expand-file-name "private" user-emacs-directory))
 (add-to-list 'load-path packages-dir)
 
-(setq frame-background-mode 'dark)
+(setq frame-background-mode 'bright)
 (mapc 'frame-set-background-mode (frame-list))
-(require 'appearance)
+
 
 (require 'basic-packages)
+(message "basic-packages loaded")
+
 (require 'settings)
+(message "settings loaded")
+
 (require 'defuns)
+(message "defuns loaded")
 
- (require 'settings)
+(require 'modes)
+(message "modes loaded")
 
- (require 'modes)
- (require 'setup-magit)
- (require 'setup-company)
+(require 'setup-magit)
+(message "magit setup")
+
+(require 'setup-company)
+(message "setup company")
+
 (require 'setup-flycheck)
+(message "flycheck setup")
+
 (require 'setup-ido)
+(message "ido setup")
+
 (require 'darkroom-settings)
+(message "darkroom")
+
 (require 'linum-settings)
+(message "linum")
+
 (require 'modeline-settings)
+(message "modeline")
+
 (require 'projectile-settings)
+(message "projectile")
 
 
 (require 'keybindings)
@@ -204,3 +224,6 @@
 (load-file (expand-file-name "experiments/fixme-highlight.el" user-emacs-directory))
 
 (setenv "SSH_ASKPASS" "git-gui--askpass")
+(require 'appearance)
+(message "appeareance loaded")
+

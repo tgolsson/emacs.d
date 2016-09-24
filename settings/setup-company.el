@@ -6,7 +6,6 @@
 (require 'color)
 
 (with-eval-after-load 'company 
-
   (company-statistics-mode)
                             
   (setq company-tooltip-limit 20)
@@ -16,15 +15,9 @@
   (setq company-minimum-prefix-length 1))
                             
 
-(let ( (bg (face-attribute 'default :background))
-       (fg (face-attribute 'default :foreground)))
-  (custom-set-faces
-   `(company-tooltip ((t (:inherit default :background ,(color-lighten-name bg
-                                                                            4)))))
-   `(company-scrollbar-bg ((t (:background ,(color-lighten-name bg 10)))))
-   `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 5)))))
-   `(company-tooltip-selection ((t (:inherit font-lock-function-name-face
-       :background ,(color-lighten-name bg 10)))))
-   `(company-tooltip-common ((t (:inherit font-lock-constant-face :foreground
-                                          ,(color-darken-name fg 50) ))))))  
+;; (let ( (bg (face-attribute 'default :background))
+;;        (fg (face-attribute 'default :foreground)))
+;;   (custom-set-faces
+;; ))
+
 (provide 'setup-company)
