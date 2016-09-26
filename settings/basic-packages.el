@@ -23,7 +23,9 @@
    '(magit-diff-removed ((t (:background "black" :foreground "red3")))))
 
 (require 'guide-key)
-(setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-x v" "C-x 8" "C-x +"))
+(setq guide-key/guide-key-sequence t)
+(setq guide-key/idle-delay 0.1)
+
 (guide-key-mode 1)
 (setq guide-key/recursive-key-sequence-flag t)
 (setq guide-key/popup-window-position 'bottom)
