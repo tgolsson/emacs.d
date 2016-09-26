@@ -196,19 +196,19 @@
 (message "ido setup")
 
 (require 'darkroom-settings)
-(message "darkroom")
+(message "darkroom setup")
 
 (require 'linum-settings)
-(message "linum")
+(message "linum setup")
 
 (require 'modeline-settings)
-(message "modeline")
+(message "modeline setup")
 
 (require 'projectile-settings)
-(message "projectile")
-
+(message "projectile setup")
 
 (require 'keybindings)
+(message "keybindings setup")
 
 ;; Load everything in modes file
 (dolist (file (directory-files modes-dir t "\.el$" nil))
@@ -219,13 +219,15 @@
   (load (file-name-sans-extension file)))
 
 
-;; Load experiments files here!
+;; Load experiments files here! TODO: Make this nicer?
 (load-file (expand-file-name "experiments/company-netlogo.el" user-emacs-directory))
-(load-file (expand-file-name "experiments/fixme-highlight.el" user-emacs-directory))
+(load-file (expand-file-name "experiments/fixme-mode.el" user-emacs-directory))
+(message "experiments setup")
 
 (setenv "SSH_ASKPASS" "git-gui--askpass")
+
 (require 'appearance)
 (message "appeareance loaded")
 
-
 (require 'setup-diminish)
+(message "diminish setup")

@@ -1,4 +1,5 @@
 (require 'rainbow-mode)
+(require 'fixme-mode)
 ;; GUI
 (menu-bar-mode -1)
 (when (fboundp 'tool-bar-mode)
