@@ -167,7 +167,7 @@
 (setq privates-dir (expand-file-name "private" user-emacs-directory))
 (add-to-list 'load-path packages-dir)
 
-(setq frame-background-mode 'bright)
+(setq frame-background-mode 'dark)
 (mapc 'frame-set-background-mode (frame-list))
 
 
@@ -227,3 +227,5 @@
 (require 'appearance)
 (message "appeareance loaded")
 
+
+(require 'setup-diminish)

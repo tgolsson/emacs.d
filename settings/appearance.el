@@ -36,12 +36,13 @@
            (minimap-mode)
            )
   )
-(set-face-attribute 'mode-line-inactive nil :box '(:line-width 2 :color "#333" ))
-(set-face-attribute 'mode-line nil :box '(:line-width 2 :color "#666" ))
+;(set-face-attribute 'mode-line-inactive nil :box '(:line-width 2 :color "#333" ))
+;(set-face-attribute 'mode-line nil :box '(:line-width 2 :color "#666" ))
 
 (set-frame-font "DejaVu Sans Mono for  Powerline")
+
 (setq custom-theme-directory (expand-file-name "themes" user-emacs-directory))
-(load-theme 'tgo-base t)
+(load-theme 'campfire t)
 
 (define-fringe-bitmap 'right-curly-arrow
   [#b00000000

@@ -1,4 +1,3 @@
-(message "modeline!?")
 (require  'color)
 (require 'spaceline)
 (require 'spaceline-config)
@@ -7,33 +6,18 @@
 (set-face-attribute 'mode-line-buffer-id nil :inherit nil)
 (set-face-attribute 'mode-line-buffer-id-inactive nil :inherit nil)
 
-;; DIMINISH
-(require 'diminish)
-(eval-after-load "minimap-mode" (diminish 'minimap-mode))
-(eval-after-load "guide-key-mode" (diminish 'guide-key-mode))
-(eval-after-load "abbrev-mode" (diminish 'abbrev-mode))
-(eval-after-load "yasnippet-mode" (diminish 'yas-minor-mode))
-(eval-after-load "auto-revert-mode" (diminish 'auto-revert-mode))
-(eval-after-load "auto-fill" (diminish 'auto-fill-function))
-(eval-after-load "flyspell-mode" (diminish 'flyspell-mode))
-(eval-after-load "flycheck-mode" (diminish 'flycheck-mode))
-(require 'eldoc)
-(eval-after-load "eldoc-mode" (diminish 'eldoc-mode))
-(eval-after-load "subword-mode" (diminish 'subword-mode))
-(eval-after-load "projectile-mode" (diminish 'projectile-mode))
-(eval-after-load "rainbow" (diminish 'rainbow-mode))
 
 ;; SPACELINE
-(let ((bg "#c2b99f")
-      (fg "#444"))
+(let ((bg "#222")
+      (fg "#c2b99f"))
   ;; active
-  (set-face-attribute 'mode-line           nil                              :background (color-darken-name bg 10) :foreground (color-darken-name fg 10))
-  (set-face-attribute 'powerline-active1   nil :inherit 'mode-line          :background (color-darken-name bg 20) :foreground (color-darken-name fg 20))
-  (set-face-attribute 'powerline-active2   nil :inherit 'mode-line          :background (color-darken-name bg 10) :foreground (color-darken-name fg 10))
+  (set-face-attribute 'mode-line           nil                              :background (color-lighten-name bg 10) :foreground (color-lighten-name fg 10))
+  (set-face-attribute 'powerline-active1   nil :inherit 'mode-line          :background (color-lighten-name bg 20) :foreground (color-lighten-name fg 20))
+  (set-face-attribute 'powerline-active2   nil :inherit 'mode-line          :background (color-lighten-name bg 10) :foreground (color-lighten-name fg 10))
   ;; inactive
-  (set-face-attribute 'mode-line-inactive  nil                              :background (color-darken-name bg  0) :foreground (color-darken-name  fg  0))
-  (set-face-attribute 'powerline-inactive1 nil :inherit 'mode-line-inactive :background (color-darken-name bg 10) :foreground (color-lighten-name fg 10))
-  (set-face-attribute 'powerline-inactive2 nil :inherit 'mode-line-inactive :background (color-darken-name bg  0) :foreground (color-darken-name  fg  0))
+  (set-face-attribute 'mode-line-inactive  nil                              :background (color-lighten-name bg  0) :foreground (color-lighten-name  fg 0))
+  (set-face-attribute 'powerline-inactive1 nil :inherit 'mode-line-inactive :background (color-lighten-name bg 10) :foreground (color-lighten-name fg 10))
+  (set-face-attribute 'powerline-inactive2 nil :inherit 'mode-line-inactive :background (color-lighten-name bg  0) :foreground (color-lighten-name  fg  0))
 
 
   )
@@ -56,11 +40,6 @@
 )
 
 (spaceline-emacs-theme 'my-projectile)
-
-(message "end of modeline")
-
-(message "super-end of modeline")  
-
 ;; 
 (spaceline-toggle-anzu-off)
 (spaceline-toggle-battery-on)
@@ -78,13 +57,21 @@
 (setq spaceline-minor-modes-separator " ")
 
 
+
 (add-hook 'window-setup-hook (lambda () 
-                               (let ((bg "#c2b99f")
-                                     (fg "#444"))
-                                 (set-face-attribute 'mode-line nil :box `(:line-width 2 :color ,(color-darken-name bg 20)))
-                                 (set-face-attribute 'mode-line-inactive nil  :box `(:line-width 2 :color
-                                                                                                 ,(color-darken-name
-                                                                                                   bg 10)))
+                               (let ((bg "#222")
+                                     (fg "#c2b99f"))
+                                 (set-face-attribute 'mode-line nil :box
+                                                     `(:line-width 2 :color ,(color-lighten-name bg 10)))
+                                 (set-face-attribute 'mode-line-inactive nil :box
+                                                     `(:line-width 2 :color ,(color-lighten-name bg 0)))
                                  (set-face-attribute 'mode-line-buffer-id nil :inherit nil)
-                                 (set-face-attribute 'mode-line-buffer-id-inactive nil :inherit nil))))
+                                 (set-face-attribute 'mode-line-buffer-id-inactive nil :inherit nil))
+                               ))
 (provide 'modeline-settings)
+
+
+
+;; Local Variables:
+;; Eval: (auto-fill-mode -1)
+;; End:
