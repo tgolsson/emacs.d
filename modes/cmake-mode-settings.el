@@ -6,7 +6,7 @@
   (make-local-variable 'company-backends)
   (setq company-backends '(company-cmake company-yasnippet))
   (company-mode 1)
-  (cmake-font-lock-activate 1)
+  (cmake-font-lock-activate)
   )
 
 (add-hook 'cmake-mode-hook 'my-cmake-settings)
