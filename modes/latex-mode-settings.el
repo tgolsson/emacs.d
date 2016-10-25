@@ -38,6 +38,7 @@
                                    company-auctex-environments
                                    company-auctex-macros
                                    company-math-symbols-latex
+                                   company-latex-commands
                                    company-yasnippet))  
   (set (make-variable-buffer-local 'TeX-electric-math) ( cons "\\(" "\\)"))
   

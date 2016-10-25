@@ -21,6 +21,7 @@
 
 
 ;; General org
+(setq org-latex-pdf-process (list "latexmk -f -lualatex %f"))
 (setq org-directory"~/Dropbox/notes")
 (setq org-use-fast-todo-selection t)
 (setq org-list-allow-alphabetical t)
@@ -81,6 +82,7 @@
 (setq org-confirm-babel-evalute nil)
 (defun org-mode-settings ()
   (visual-line-mode 1)
+  (setq org-list-demote-modify-bullet '(("1." . "-")))
   )
 
 ;; org-gcal

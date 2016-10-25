@@ -24,8 +24,7 @@
    `(minibuffer-prompt                  ((t (:foreground ,hl :background ,bg))))
    `(highlight                          ((t (:background ,(color-lighten-name bg 10)))))
    `(region                             ((t (:background ,(color-darken-name bg 10)))))
-   `(link                               ((t (:foreground ,(color-lighten-name hl4 20) :weight bold))))
-   
+   `(link                               ((t (:foreground ,(color-lighten-name hl4 20) :weight bold))))  
    ;; Font-lock
    `(font-lock-keyword-face             ((t (:foreground ,hl3 ))))
    `(font-lock-constant-face            ((t (:foreground ,hl4 ))))
@@ -44,7 +43,7 @@
    
    ;; linum
    `(linum-highlight-face               ((t (:inherit default :foreground ,hl2 ))))
-   `(linum                              ((t (:inherit shadow :foreground ,(color-lighten-name bg 10)))))
+   `(linum                              ((t (:inherit shadow :foreground ,(color-lighten-name bg 10) :background ,bg))))
    
    ;; mu4e
    `(mu4e-header-highlight-face         ((t (:inherit highlight))))

@@ -5,7 +5,7 @@
 (defun my-python-mode ()
 
   ;; make these variables local
-
+  (setq python-indent-offset 2)
   (jedi:setup)
   
   (company-mode 1)
