@@ -11,7 +11,6 @@
 (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
 (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase Mode" t)
 
-
 (defun setup-latex-mode()
   (turn-on-reftex)
 
