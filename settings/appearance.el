@@ -40,10 +40,16 @@
 ;(set-face-attribute 'mode-line-inactive nil :box '(:line-width 2 :color "#333" ))
 ;(set-face-attribute 'mode-line nil :box '(:line-width 2 :color "#666" ))
 
-(set-frame-font "DejaVu Sans Mono for  Powerline")
+(set-frame-font "Fira Mono for Powerline-9")
 
+; (set-frame-font "Source Code Pro for Powerline-9")
+
+(setq custom-safe-themes t)
 (setq custom-theme-directory (expand-file-name "themes" user-emacs-directory))
-(load-theme 'campfire t)
+(add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
+(add-hook 'emacs-startup-hook (lambda () (interactive) (load-theme 'campfire t)
+                              ))
+
 
 (define-fringe-bitmap 'right-curly-arrow
   [#b00000000
