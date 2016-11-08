@@ -1,3 +1,6 @@
+(setq package-enable-at-startup nil) (package-initialize)
+
+;(toggle-debug-on-error)
 ;; GENERAL SETTINGS
 (require 'package) ;; You might already have this line
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -201,9 +204,6 @@
 (require 'linum-settings)
 (message "linum setup")
 
-(require 'modeline-settings)
-(message "modeline setup")
-
 (require 'projectile-settings)
 (message "projectile setup")
 
@@ -218,6 +218,14 @@
 (dolist (file (directory-files privates-dir t "\.el$" nil))
   (load (file-name-sans-extension file)))
 
+(require 'appearance)
+(message "appeareance loaded")
+
+(require 'setup-diminish)
+(message "diminish setup")
+(add-hook 'emacs-startup-hook (lambda () (interactive)
+                                (require 'modeline-settings)
+                                (message "modeline setup")) t)
 
 ;; Load experiments files here! TODO: Make this nicer?
 (load-file (expand-file-name "experiments/company-netlogo.el" user-emacs-directory))
@@ -225,9 +233,3 @@
 (message "experiments setup")
 
 (setenv "SSH_ASKPASS" "git-gui--askpass")
-
-(require 'appearance)
-(message "appeareance loaded")
-
-(require 'setup-diminish)
-(message "diminish setup")
