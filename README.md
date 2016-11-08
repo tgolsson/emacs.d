@@ -7,6 +7,7 @@ This is my emacs config; posted here for others to use as well as for me to trac
 
 This config is a mix of things I have gathered around the internet and things I have made up myself. Large parts were inspired/partially stolen from [magnars emacs.d config](http://www.github.com/magnars/.emacs.d) when I first learned to use emacs.
 
+![Screenshot](full.png)
 ## Init.el ##
 **`init.el`** contains the startup information and is used in place of the the usual `.emacs` in `~`. It will download all packages from MELPA/Marmalade when  loading, and perform some very basic environment configuration. It will also  load the `settings` and `modes` folders.
 

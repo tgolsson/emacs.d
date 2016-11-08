@@ -218,6 +218,13 @@
 (dolist (file (directory-files privates-dir t "\.el$" nil))
   (load (file-name-sans-extension file)))
 
+;; Load experiments files here! TODO: Make this nicer?
+(load-file (expand-file-name "experiments/company-netlogo.el" user-emacs-directory))
+(load-file (expand-file-name "experiments/fixme-mode.el" user-emacs-directory))
+(message "experiments setup")
+
+(setenv "SSH_ASKPASS" "git-gui--askpass")
+
 (require 'appearance)
 (message "appeareance loaded")
 
@@ -226,10 +233,3 @@
 (add-hook 'emacs-startup-hook (lambda () (interactive)
                                 (require 'modeline-settings)
                                 (message "modeline setup")) t)
-
-;; Load experiments files here! TODO: Make this nicer?
-(load-file (expand-file-name "experiments/company-netlogo.el" user-emacs-directory))
-(load-file (expand-file-name "experiments/fixme-mode.el" user-emacs-directory))
-(message "experiments setup")
-
-(setenv "SSH_ASKPASS" "git-gui--askpass")
