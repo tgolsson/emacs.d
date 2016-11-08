@@ -13,7 +13,6 @@
   ;; define actual faces
 (custom-theme-set-faces
    'campfire
-
    ;; base
    `(default                            ((t ( :foreground ,fg :background ,bg ))))
    `(fringe                             ((t (:background ,bg :foreground ,hl2))))
@@ -79,13 +78,12 @@
    `(fancy-battery-discharging ((t (:foreground ,hl3))))
    ;; END CUSTOM FACE
   
-  )
-  (custom-theme-set-variables
-   'campfire
-   `(minimap-highlight-line-color ,hl4))
-
-  ;; END CUSTOM VARIABLES
-  )
+  ))
+  ;; (custom-theme-set-variables
+  ;;  'campfire
+   
+  ;; ;; END CUSTOM VARIABLES
+  ;; )
 (provide-theme 'campfire)
 ;; Local Variables:
 ;; eval: (auto-fill-mode -1)
