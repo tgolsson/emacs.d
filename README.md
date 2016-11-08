@@ -1,4 +1,5 @@
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+*I am currently redoing large parts of my config on the `revision` branch. It looks a lot nicer and works a lot better. I really suggest using that.*
 # My Emacs Config #
 This is my emacs config; posted here for others to use as well as for me to
 track how it works. It requires Emacs24 or later, as it uses the built in
