@@ -65,7 +65,7 @@
 (global-subword-mode 1)
 
 ;; Keep cursor away from edges when scrolling up/down
-(require 'smooth-scrolling)
+;; (require 'smooth-scrolling) -- broken?
 
 
 (require 'uniquify)
