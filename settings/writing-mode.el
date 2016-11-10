@@ -6,10 +6,10 @@ intended to make writing a lot faster. "
   :init-value nil
   :lighter " Writer"
   :keymap (let ((writer-map (make-sparse-keymap)))
-            (define-key writer-map (kbd "C-c d") '(lambda () (interactive) (delete-char 1 )))
+            (define-key writer-map (kbd "C-c d") '(lambda () (interactive) (delete-backward-char 1 )))
             (define-key writer-map (kbd "C-d") nil) writer-map)
   :group 'writing-mode
   (progn (if (bound-and-true-p writing-mode)
-             (progn (draft-mode 1) (darkroom-tentative-mode 1))
-           (progn (draft-mode 0 ) (darkroom-tentative-mode 0))))
+             (progn (draft-mode 1) (darkroom-mode 1))
+           (progn  (darkroom-mode 0) (draft-mode 0))))
   )
