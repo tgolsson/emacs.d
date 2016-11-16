@@ -5,19 +5,23 @@
 (setq mc/cmds-to-run-for-all
       '(
         c-electric-colon
+        c-electric-lt-gt
         c-electric-paren
         c-electric-semi&comma
         c-electric-slash
         c-electric-star
         electric-pair-delete-pair
+        end-of-visual-line
+        ido-find-file
         isearch-abort
+        isearch-forward-regexp
+        isearch-printing-char
         kill-region
         smex
         subword-left
         subword-right
-                end-of-visual-line
-        ido-find-file
-        isearch-forward-regexp
-        isearch-printing-char           
+        ))
 
+(setq mc/cmds-to-run-once
+      '(
         ))

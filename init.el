@@ -46,10 +46,11 @@
                      darkroom ; configured
                      dash
                      deferred
+                     diminish
                      discover-my-major ; configured
                      draft-mode
                      eclim
-                     emacs-eclim
+                    ;; emacs-eclim
                      epc
                      epl
                      epresent
@@ -119,6 +120,7 @@
                      popwin
                      pos-tip
                      projectile
+                     python-django
                      python-environment
                      rainbow-mode
                      request
@@ -127,6 +129,8 @@
                      spaceline
                      seq
                      simple-httpd
+                     sass-mode
+                     scss-mode
                      skewer-mode  ;; maybe remove
                      smex
                      smooth-scrolling
@@ -147,6 +151,8 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
 
 ;; install the missing packages
 (dolist (package package-list)
