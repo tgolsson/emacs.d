@@ -56,6 +56,7 @@
                      epresent
                      f
                      fasd
+                     fancy-battery
                      flx
                      flx-ido
                      flycheck
@@ -100,6 +101,7 @@
                      metaweblog
                      minimap
                      multiple-cursors
+                     neotree
                      oauth2
                      ob-browser
                      ob-http
