@@ -42,7 +42,7 @@
 (add-hook 'c-mode-common-hook
 	  (lambda ()
 	    (font-lock-add-keywords nil
-				    '(("[^a-zA-Z]\\([a-zA-Z][_]+[a-zA-Z0-9_]+\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-variable-proper-face prepend))  'append
+				    '(("[^a-zA-Z]\\([_]+[a-zA-Z0-9_]+\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-variable-proper-face prepend))  'append
 				    )))
 
 (define-key c-mode-base-map (kbd "M-.") (function rtags-find-symbol-at-point))
