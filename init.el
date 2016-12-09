@@ -4,7 +4,7 @@
 ;; GENERAL SETTINGS
 (require 'package) ;; You might already have this line
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "https://marmalade-repo.org/packages/")
+;                         ("marmalade" . "https://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
 
 
