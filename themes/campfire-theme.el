@@ -57,11 +57,11 @@
    `(minimap-highlight-selected         ((t (:foreground ,(color-lighten-name bg 40) :background ,hl))))
 
    ;; magit
-   `(magit-section-highlight            ((t (:background ,(color-lighten-name bg 10)))))
-   `(magit-branch-local                 ((t (:foreground ,hl ))))
-   `(magit-branch-remote                ((t (:foreground ,hl3 ))))
-   `(magit-branch-current               ((t (:foreground ,hl4 ))))
-   `(magit-section-heading              ((t (:weight bold :foreground ,(color-lighten-name hl2 10)))))
+   ;; `(magit-section-highlight            ((t (:background ,(color-lighten-name bg 10)))))
+   ;; `(magit-branch-local                 ((t (:foreground ,hl ))))
+   ;; `(magit-branch-remote                ((t (:foreground ,hl3 ))))
+   ;; `(magit-branch-current               ((t (:foreground ,hl4 ))))
+   ;; `(magit-section-heading              ((t (:weight bold :foreground ,(color-lighten-name hl2 10)))))
    
    ;; company
    `(company-tooltip                    ((t (:background ,(color-lighten-name bg 4) :inherit default ))))
