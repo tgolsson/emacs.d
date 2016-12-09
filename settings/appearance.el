@@ -55,6 +55,7 @@
                               ))
 
 
+(when window-system
 (define-fringe-bitmap 'right-curly-arrow
   [#b00000000
    #b00000000
@@ -73,7 +74,7 @@
    #b00110000
    #b00000000
    #b00000000])
-
+)
 (provide 'appearance)
 
 
