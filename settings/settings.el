@@ -84,6 +84,6 @@
 (require 'dashboard)
 (dashboard-setup-startup-hook)
 (setq dashboard-items '((recents . 10)
-                        (bookmarks . 5)
-                        (projects . 10)))
+                        (projects . 10)
+                        (bookmarks . 5)))
 (provide 'settings)
