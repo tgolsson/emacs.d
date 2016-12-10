@@ -118,6 +118,7 @@
                      ox-impress-js
                      ox-ioslide
                      ox-reveal
+		     page-break-lines
                      powerline
                      php-mode
                      pkg-info
