@@ -86,4 +86,8 @@
 (setq dashboard-items '((recents . 10)
                         (projects . 10)
                         (bookmarks . 5)))
+
+(setq bookmark-default-file  (concat user-emacs-directory "bookmarks.em"))
+(setq bookmark-save-flag 1)
+(bookmark-load bookmark-default-file t)
 (provide 'settings)
