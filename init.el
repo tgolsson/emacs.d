@@ -45,6 +45,7 @@
                      ctags
                      darkroom ; configured
                      dash
+                     dashboard
                      deferred
                      diminish
                      discover-my-major ; configured
@@ -73,6 +74,7 @@
                      hlinum
                      html-script-src
                      htmlize
+                     ibuffer-projectile
                      ido-at-point
                      ido-completing-read+
                      ido-ubiquitous
@@ -100,6 +102,7 @@
                      matlab-mode
                      metaweblog
                      minimap
+                     mu4e-maildirs-extension
                      multiple-cursors
                      neotree
                      oauth2

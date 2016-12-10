@@ -1,6 +1,7 @@
 (if (not (eq system-type 'windows-nt))
  (progn
 (require 'mu4e)
+(require 'mu4e-maildirs-extension)
 (require 'mu4e-multi)
 (require 'gnus-dired)
 (add-hook 'mail-mode-hook

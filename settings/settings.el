@@ -79,5 +79,11 @@
 (electric-pair-mode 1)
 
 (setq browse-url-browser-function 'browse-url-generic
-            browse-url-generic-program "vivaldi-stable")
+      browse-url-generic-program "vivaldi-stable")
+
+(require 'dashboard)
+(dashboard-setup-startup-hook)
+(setq dashboard-items '((recents . 10)
+                        (bookmarks . 5)
+                        (projects . 10)))
 (provide 'settings)

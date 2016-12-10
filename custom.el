@@ -12,7 +12,7 @@
  '(minimap-highlight-line-color "#8f92d0")
  '(package-selected-packages
    (quote
-    (gscholar-bibtex modern-cpp-font-lock org-mime flycheck-irony scss-mode flymake-sass sass-mode python-django web-mode web-beautify w3m visual-fill-column tiny speed-type spaceline smooth-scrolling smex smart-mode-line-powerline-theme rtags rotate rainbow-mode ox-reveal ox-ioslide ox-impress-js org2blog org-projectile org-present org-gcal org-caldav ob-http ob-browser neotree minimap matlab-mode markdown-toc markdown-preview-eww markdown-mode+ magit-filenotify less-css-mode jtags js2-refactor js2-highlight-vars jdee java-snippets ido-vertical-mode ido-ubiquitous ido-at-point htmlize html-script-src hlinum hide-lines guru-mode guide-key-tip gradle-mode google-contacts flycheck flx-ido fasd fancy-battery epresent emacs-eclim draft-mode discover-my-major diminish darkroom ctags company-web company-statistics company-math company-lua company-jedi company-irony-c-headers company-emacs-eclim company-auctex company-arduino cmake-font-lock cl-generic calfw bison-mode auto-complete-auctex auctex-latexmk android-mode ac-php-core ac-octave ac-js2 ac-ispell ac-html)))
+    (ibuffer-projectile dashboard mu4e-maildirs-extension gscholar-bibtex modern-cpp-font-lock org-mime flycheck-irony scss-mode flymake-sass sass-mode python-django web-mode web-beautify w3m visual-fill-column tiny speed-type spaceline smooth-scrolling smex smart-mode-line-powerline-theme rtags rotate rainbow-mode ox-reveal ox-ioslide ox-impress-js org2blog org-projectile org-present org-gcal org-caldav ob-http ob-browser neotree minimap matlab-mode markdown-toc markdown-preview-eww markdown-mode+ magit-filenotify less-css-mode jtags js2-refactor js2-highlight-vars jdee java-snippets ido-vertical-mode ido-ubiquitous ido-at-point htmlize html-script-src hlinum hide-lines guru-mode guide-key-tip gradle-mode google-contacts flycheck flx-ido fasd fancy-battery epresent emacs-eclim draft-mode discover-my-major diminish darkroom ctags company-web company-statistics company-math company-lua company-jedi company-irony-c-headers company-emacs-eclim company-auctex company-arduino cmake-font-lock cl-generic calfw bison-mode auto-complete-auctex auctex-latexmk android-mode ac-php-core ac-octave ac-js2 ac-ispell ac-html)))
  '(safe-local-variable-values
    (quote
     ((Eval auto-fill-mode -1)
@@ -35,3 +35,10 @@
 ;;  '(font-lock-negation-char-face ((t (:foreground "red"))))
 ;;  '(magit-diff-added ((t (:background "black" :foreground "green3"))))
 ;;  '(magit-diff-removed ((t (:background "black" :foreground "red3")))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(magit-diff-added ((t (:background "black" :foreground "green3"))))
+ '(magit-diff-removed ((t (:background "black" :foreground "red3")))))
