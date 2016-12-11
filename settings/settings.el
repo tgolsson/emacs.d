@@ -55,7 +55,9 @@
 ;; Save a list of recent files visited. (open recent file with C-x f)
 (recentf-mode 1)
 (setq recentf-max-saved-items 100) ;; just 20 is too recent
-
+(add-to-list 'recentf-exclude "/elpa/")
+(add-to-list 'recentf-exclude "company-statistics-cache.el")
+(add-to-list 'recentf-exclude "bookmarks.em")
 ;; Save minibuffer history
 (savehist-mode 1)
 (setq history-length 1000)
