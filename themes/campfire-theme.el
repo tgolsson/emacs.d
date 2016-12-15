@@ -49,6 +49,7 @@
    `(mu4e-header-face                   ((t (:inherit default))))
    `(mu4e-unread-face                   ((t (:inherit default :foreground ,(color-darken-name fg 15 ) :weight bold))))
    `(mu4e-read-face                     ((t (:inherit default :foreground ,(color-lighten-name fg 15 )))))
+   `(mu4e-replied-face                  ((t (:inherit default :foreground ,hl))))
    
    ;; minimap
    `(minimap-active-region-background   ((t (:height 15 :background ,(color-lighten-name bg 20)))))
@@ -57,11 +58,11 @@
    `(minimap-highlight-selected         ((t (:foreground ,(color-lighten-name bg 40) :background ,hl))))
 
    ;; magit
-   ;; `(magit-section-highlight            ((t (:background ,(color-lighten-name bg 10)))))
-   ;; `(magit-branch-local                 ((t (:foreground ,hl ))))
-   ;; `(magit-branch-remote                ((t (:foreground ,hl3 ))))
-   ;; `(magit-branch-current               ((t (:foreground ,hl4 ))))
-   ;; `(magit-section-heading              ((t (:weight bold :foreground ,(color-lighten-name hl2 10)))))
+    `(magit-section-highlight            ((t (:background ,(color-lighten-name bg 10)))))
+    `(magit-branch-local                 ((t (:foreground ,hl ))))
+    `(magit-branch-remote                ((t (:foreground ,hl3 ))))
+    `(magit-branch-current               ((t (:foreground ,hl4 ))))
+   `(magit-section-heading              ((t (:weight bold :foreground ,(color-lighten-name hl2 10)))))
    
    ;; company
    `(company-tooltip                    ((t (:background ,(color-lighten-name bg 4) :inherit default ))))
@@ -73,7 +74,8 @@
    
    
    ;; mode-line
-   `(fancy-battery-charging ((t (:foreground ,hl))))
+   `(fancy-battery)
+   `(fancy-battery-charging ((t (:foreground ,fg))))
    `(fancy-battery-critical ((t (:foreground ,hl2))))
    `(fancy-battery-discharging ((t (:foreground ,hl3))))
    ;; END CUSTOM FACE

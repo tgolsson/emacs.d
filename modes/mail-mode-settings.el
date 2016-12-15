@@ -71,11 +71,11 @@
           mu4e-attachment-dir "~/Download"
 
           
-          mu4e-headers-fields '((:date          .  20)    ;; alternatively, use :human-date
+          mu4e-headers-fields '((:human-date          .  20)    ;; alternatively, use :human-date
                                 (:flags         .   6)
                                 (:from          .  20)
-                                (:thread-subject . 63)
-                                (:to . 20)
+                                (:thread-subject . 64)
+                                (:to . 25)
                                 )
           )
 
@@ -235,6 +235,9 @@ original."
   (define-key mu4e-view-mode-map (kbd "C-i") 'w3m-next-anchor)
   (define-key mu4e-view-mode-map (kbd "M-<tab>") 'w3m-previous-anchor)
 
+  (add-hook 'mu4e-headers-mode-hook (lambda () (interactive "")  (message "turning
+                                off linum mode")(linum-mode 0) )
+                                )
   
 (mu4e-maildirs-extension)
   )
