@@ -23,9 +23,9 @@
 
 (hl-line-mode 1)
 
-(define-globalized-minor-mode my-global-rainbow-mode rainbow-mode
-  (lambda () (rainbow-mode 1)))
-(my-global-rainbow-mode 1)
+;; (define-globalized-minor-mode my-global-rainbow-mode rainbow-mode
+;;   (lambda () (rainbow-mode 1)))
+;; //(my-global-rainbow-mode 1)
 (require 'minimap)
 (if window-system
     (progn 
@@ -51,8 +51,7 @@
 (setq custom-theme-directory (expand-file-name "themes" user-emacs-directory))
 (setq minimap-minimum-width 20)
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-(add-hook 'emacs-startup-hook (lambda () (interactive) (load-theme 'campfire t)
-                              ))
+(add-hook 'emacs-startup-hook (lambda () (interactive) (load-theme 'campfire t) ))
 
 
 (when window-system

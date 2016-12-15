@@ -18,7 +18,7 @@
       (setq message-sendmail-extra-arguments
             (list "-a" user-mail-address)))
 
-    (setf global-mu4e-bookmarks
+    (setf mu4e-bookmarks
           '( ("flag:unread AND NOT flag:trashed AND (m:/Bahnhof/Inbox OR m:/TomOlsson/Inbox OR m:/Gmail/Inbox)" "Unread messages (Inboxes)" ?u)
              ("date:today..now"                  "Today's messages"     ?t)
              ("flag:flagged"                  "Flagged"     ?f)
