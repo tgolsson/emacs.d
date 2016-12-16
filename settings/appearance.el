@@ -36,7 +36,7 @@
            (add-to-list 'minimap-major-modes 'latex-mode)
            (add-to-list 'minimap-major-modes 'cmake-mode)
            (add-to-list 'minimap-major-modes 'org-mode)
-           (setq minimap-automatically-delete-window nil)
+           (setq minimap-automatically-delete-window t)
            (minimap-mode)
            )
   )
