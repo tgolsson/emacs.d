@@ -1,5 +1,6 @@
 ;; active Babel languages
 
+(require 'ob-core)
 (require 'org-projectile)
 (require 'org2blog-autoloads)
 (require 'calfw)
@@ -26,10 +27,10 @@
 (setq org-use-fast-todo-selection t)
 (setq org-list-allow-alphabetical t)
 (setq org-default-notes-file "~/Dropbox/notes/refile.org")
+(setq org-pretty-entities-include-sub-superscripts t)
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "|" "DONE(d)")
         (sequence "BUG(r)" "KNOWNCAUSE(k)" "|" "FIXED(f)"))))
-(org-toggle-pretty-entities)
 ;; Org-agenda
 (setq org-agenda-files (list "~/Dropbox/notes"))
 ;; Org-projectile

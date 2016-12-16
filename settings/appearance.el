@@ -53,8 +53,7 @@
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
 (add-hook 'emacs-startup-hook (lambda () (interactive) (load-theme 'campfire t) ))
 
-
-(when window-system
+(when window-system 
 (define-fringe-bitmap 'right-curly-arrow
   [#b00000000
    #b00000000

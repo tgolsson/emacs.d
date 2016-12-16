@@ -56,6 +56,7 @@
                      epl
                      epresent
                      f
+                     fancy-battery
                      fasd
                      fancy-battery
                      flx
@@ -153,6 +154,7 @@
 
 		     ))
 
+
 (package-initialize) 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -226,6 +228,7 @@
 (dolist (file (directory-files modes-dir t "\.el$" nil))
   (load (file-name-sans-extension file)))
 
+(message "loading privates")
 ;; Load everything in private folder
 (dolist (file (directory-files privates-dir t "\.el$" nil))
   (load (file-name-sans-extension file)))

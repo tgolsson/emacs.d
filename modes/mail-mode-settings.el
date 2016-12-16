@@ -1,4 +1,5 @@
-(when (not (eq system-type 'windows-nt))
+(when (and (not (eq system-type 'windows-nt)) (require 'some-library nil
+                                                    'noerror))
   (progn
     (require 'mu4e)
     (require 'mu4e-maildirs-extension)
