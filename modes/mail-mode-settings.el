@@ -48,6 +48,7 @@
                                       ("/Gmail/Inbox" . ?g)
                                       ("/Bahnhof/Inbox" . ?b)
                                       ("/Contact/Inbox" . ?c))
+          mu4e-headers-unread-mark '("u" . "✉")
           message-kill-buffer-on-exit t
           mu4e-compose-dont-reply-to-self t
           mu4e-compose-in-new-frame 0
@@ -69,7 +70,7 @@
           mu4e-drafts-folder  "/TomOlsson/Drafts"
           mu4e-sent-folder  "/TomOlsson/Sent"
           mu4e-trash-folder  'my-mu4e-trash-function
-          mu4e-attachment-dir "~/Download"
+          mu4e-attachment-dir "~/Downloads"
 
           
           mu4e-headers-fields '((:human-date          .  20)    ;; alternatively, use :human-date
