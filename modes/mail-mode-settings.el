@@ -1,4 +1,4 @@
-(when (and (not (eq system-type 'windows-nt)) (require 'some-library nil
+(when (and (not (eq system-type 'windows-nt)) (require 'mu4e nil
                                                     'noerror))
   (progn
     (require 'mu4e)
@@ -49,6 +49,7 @@
                                       ("/Bahnhof/Inbox" . ?b)
                                       ("/Contact/Inbox" . ?c))
           mu4e-headers-unread-mark '("u" . "✉")
+          mu4e-change-filenames-when-moving t
           message-kill-buffer-on-exit t
           mu4e-compose-dont-reply-to-self t
           mu4e-compose-in-new-frame 0
