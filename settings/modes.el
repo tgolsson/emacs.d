@@ -14,8 +14,8 @@
 (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode)) 
+(add-to-list 'auto-mode-alist '("\\.hbs" . web-mode))
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
-
 
 ;; OTHER MODES
 (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
