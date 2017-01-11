@@ -20,7 +20,7 @@
       apropos-do-all t
       mouse-yank-at-point t
       require-final-newline t
-      load-prefer-newer t
+;;      load-prefer-newer t
       ediff-window-setup-function 'ediff-setup-windows-plain
       save-place-file (concat user-emacs-directory "places")
       vc-make-backup-files t
@@ -81,7 +81,7 @@
 (electric-pair-mode 1)
 
 (setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "vivaldi-stable")
+      browse-url-generic-program "firefox")
 
 (require 'dashboard)
 (dashboard-setup-startup-hook)
