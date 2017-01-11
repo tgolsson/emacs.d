@@ -6,7 +6,7 @@
 (require 'company-irony-c-headers)
 ;; C-mode SETTINGS
 (setq-default c-default-style "linux"
-              c-basic-offset 4)
+              c-basic-offset 2)
 (c-set-offset 'inline-open 0)
 (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
 
