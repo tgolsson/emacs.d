@@ -14,6 +14,7 @@
         electric-pair-delete-pair
         end-of-visual-line
         ido-find-file
+        indent-for-tab-command
         isearch-abort
         isearch-backward-regexp
         isearch-exit
@@ -21,7 +22,6 @@
         isearch-printing-char
         kill-region
         message-beginning-of-line
-        smex
         subword-left
         subword-right
         ))
@@ -29,4 +29,6 @@
 (setq mc/cmds-to-run-once
       '(
         isearch-delete-char
+        next-buffer
+        smex
         ))
