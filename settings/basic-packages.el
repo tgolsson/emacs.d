@@ -1,4 +1,4 @@
-(require 'ctags)
+; (require 'ctags) //windows fix
 (require 'flycheck)
 ;; yas
 (require 'yasnippet)
