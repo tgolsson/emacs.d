@@ -43,8 +43,7 @@
 ;(set-face-attribute 'mode-line-inactive nil :box '(:line-width 2 :color "#333" ))
 ;(set-face-attribute 'mode-line nil :box '(:line-width 2 :color "#666" ))
 
-(set-frame-font "Fira Mono for Powerline-9")
-
+(set-frame-font "Fira Mono for Powerline-9" t t)
 ; (set-frame-font "Source Code Pro for Powerline-9")
 
 (setq custom-safe-themes t)
