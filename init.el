@@ -42,7 +42,7 @@
                      company-web
                      concurrent
                      ctable
-                     ctags
+                     ; ctags
                      darkroom ; configured
                      dash
                      dashboard
@@ -183,7 +183,6 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path modes-dir)
 (add-to-list 'load-path packages-dir)
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 
 (defun to/my-require (symbol)
   "Requires a package and then prints that it was loaded"
