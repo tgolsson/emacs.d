@@ -42,7 +42,7 @@
                      company-web
                      concurrent
                      ctable
-                     ctags
+                     ; ctags
                      darkroom ; configured
                      dash
                      dashboard
@@ -183,7 +183,6 @@
 (setq packages-dir (expand-file-name "packages" user-emacs-directory))
 (setq privates-dir (expand-file-name "private" user-emacs-directory))
 (add-to-list 'load-path packages-dir)
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 (setq frame-background-mode 'dark)
 (mapc 'frame-set-background-mode (frame-list))
 
