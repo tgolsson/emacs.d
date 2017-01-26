@@ -1,5 +1,26 @@
 ;; IDO-mode
 
+
+;; Set Windows-specific preferences if running in a Windows environment.
+(defun udf-windows-setup () (interactive)
+  ;; The variable `git-shell-path' contains the path to the `Git\bin'
+  ;; file on my system. I install this in
+  ;; `%USERPROFILE%\LocalAppInfo\apps\Git\bin'.
+  (setq git-shell-path
+        (concat "C:\\Program Files\\Git\\bin"))
+  (setq git-shell-executable
+        (concat git-shell-path "\\bash.exe"))
+  (add-to-list 'exec-path git-shell-path)
+  (setenv "PATH"
+          (concat git-shell-path ";"
+                  (getenv "PATH")))
+  (message "Windows preferences set."))
+
+(if (eq system-type 'windows-nt)
+    (udf-windows-setup)
+  (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e"))
+	
+	
 ;; Commands
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)
@@ -20,7 +41,7 @@
       apropos-do-all t
       mouse-yank-at-point t
       require-final-newline t
-      load-prefer-newer t
+;;      load-prefer-newer t
       ediff-window-setup-function 'ediff-setup-windows-plain
       save-place-file (concat user-emacs-directory "places")
       vc-make-backup-files t
@@ -55,7 +76,9 @@
 ;; Save a list of recent files visited. (open recent file with C-x f)
 (recentf-mode 1)
 (setq recentf-max-saved-items 100) ;; just 20 is too recent
-
+(add-to-list 'recentf-exclude "/elpa/")
+(add-to-list 'recentf-exclude "company-statistics-cache.el")
+(add-to-list 'recentf-exclude "bookmarks.em")
 ;; Save minibuffer history
 (savehist-mode 1)
 (setq history-length 1000)
@@ -65,7 +88,7 @@
 (global-subword-mode 1)
 
 ;; Keep cursor away from edges when scrolling up/down
-(require 'smooth-scrolling)
+;; (require 'smooth-scrolling) -- broken?
 
 
 (require 'uniquify)
@@ -79,5 +102,15 @@
 (electric-pair-mode 1)
 
 (setq browse-url-browser-function 'browse-url-generic
-            browse-url-generic-program "vivaldi-stable")
+      browse-url-generic-program "firefox")
+
+(require 'dashboard)
+(dashboard-setup-startup-hook)
+(setq dashboard-items '((recents . 10)
+                        (projects . 10)
+                        (bookmarks . 5)))
+
+(setq bookmark-default-file  (concat user-emacs-directory "bookmarks.em"))
+(setq bookmark-save-flag 1)
+(bookmark-load bookmark-default-file t)
 (provide 'settings)

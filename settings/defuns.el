@@ -21,13 +21,16 @@
 
 
 (defun goto-line-with-feedback ()
-  "Show line numbers temporarily, while prompting for the line number input"
+  "Show line numbers temporarily, while prompting for the line number input if
+linum-mode is disabled"
   (interactive)
-  (unwind-protect
+  (let ((has-linum linum-mode))
+    (unwind-protect
       (progn
-        (linum-mode 1)
+        (when (not has-linum) (linum-mode 1))
         (goto-line (read-number "Goto line: ")))
-    (linum-mode -1)))
+      (if (not has-linum) (linum-mode -1)
+        (linum-update (current-buffer))))))
 
 
 (defun cleanup-buffer ()
@@ -87,7 +90,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 (defun check-expansion ()
   (save-excursion
-    (if (looking-at "\\_>") t
+    (if (looking-at "\\_>")
+        t
       (backward-char 1)
       (if (looking-at "\\.") t
         (backward-char 1)
@@ -96,17 +100,13 @@ Including indent-buffer, which should not be called automatically on save."
 (defun do-yas-expand ()
   (let ((yas/fallback-behavior 'return-nil))
     (yas/expand)))
-
 (defun tab-indent-or-complete ()
   (interactive)
-  (if (minibufferp)
-      (minibuffer-complete)
-    (if (or (not yas/minor-mode)
-            (null (do-yas-expand)))
-        (if (check-expansion)
-            (company-complete-common)
-          (indent-for-tab-command)))))
-
+  (if (or (not (or yas-global-mode yas/minor-mode))
+          (null (do-yas-expand)))
+      (if (check-expansion)
+          (company-complete-common)
+        (indent-for-tab-command))))
 
 (defun to/kill-other-buffers (&optional kill-special)
   "Kill buffers that do not belong to a `projectile' project.
@@ -163,5 +163,13 @@ With prefix argument (`C-u'), also kill the special buffers."
                     (progn
                       (kill-buffer)
                       (setq numbufs (- numbufs 1))))))))))))
-  
+
+(defun create-scratch-buffer nil
+   "create a scratch buffer"
+   (interactive)
+   (switch-to-buffer (get-buffer-create "*scratch*"))
+   (lisp-interaction-mode))
+
 (provide 'defuns)
+
+

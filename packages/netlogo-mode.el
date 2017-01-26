@@ -1,14 +1,20 @@
+(defgroup netlogo-mode nil
+  "Major mode for NetLogo")
 (defvar netlogo-mode-hook nil)
+
 (add-to-list 'auto-mode-alist '("\\.nls\\'" . netlogo-mode))
 (add-to-list 'auto-mode-alist '("\\.nlogo\\'" . netlogo-mode))
 
 
-(defvar netlogo-indent-width 2 "the size of tabs when indenting netlogo code")
-(defvar netlogo-indent-increase-regexp "\\\[\\|\\(^\\|\s\\)to\-report\\|\\(^\\|\s\\)to\
-" "regexp selecting elements that causes an increase in indentation")
-(defvar netlogo-indent-decrease-regexp "\\\]\\|\\(^\\|\s\\)end\\($\\|\s\\)" "regexp
-selecting elements that causes a decrease in indentation")
+(defcustom netlogo-indent-width 2 "the size of tabs when indenting netlogo code"
+  :type 'integer
+  :group 'netlogo-mode)
 
+(defvar netlogo-indent-increase-regexp
+  "\\\[\\|\\(^\\|\s\\)to\-report\\|\\(^\\|\s\\)to" 
+  "regexp selecting elements that causes an increase in indentation")
+(defvar netlogo-indent-decrease-regexp "\\\]\\|\\(^\\|\s\\)end\\($\\|\s\\)"
+  "regexp selecting elements that causes a decrease in indentation")
 
 (defvar netlogo-mode-map
   (let ((netlogo-mode-map (make-keymap)))
@@ -155,7 +161,6 @@ selecting elements that causes a decrease in indentation")
 
 (defconst netlogo-source-separator "@#$#@#$#@")
 
-
 (defun netlogo-indent-change-for-line ()
   "returns the number of indentation changes for the current-line"
   (setq netlogo-indent-positive-change 0
@@ -248,12 +253,11 @@ selecting elements that causes a decrease in indentation")
       (next-line))))
                       
 
-(defun netlogo-mode ()
-  "Major mode for editing Workflow Process Description Language files"
-  (interactive)
-  (kill-all-local-variables)
-  (set-syntax-table netlogo-mode-syntax-table)
-  (use-local-map netlogo-mode-map)
+(define-derived-mode netlogo-mode prog-mode "NetLogo"
+              "Major mode for editing NetLogo files"
+              :group 'netlogo
+             
+             
 
   ;; code for syntax highlighting
   (setq font-lock-defaults '((netlogo-font-lock-keywords)))
@@ -270,11 +274,6 @@ selecting elements that causes a decrease in indentation")
   ;; for comments
   (make-local-variable 'comment-start)
   (setq comment-start ";")
-
-  (setq major-mode 'netlogo-mode)
-  (setq mode-name "NETLOGO")
-  (run-hooks 'netlogo-mode-hook))
-
-(message "netlogo-mode.el(c) is loaded")
+  (message "bob"))
 
 (provide 'netlogo-mode)
