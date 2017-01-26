@@ -7,6 +7,8 @@
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 
+(setq frame-background-mode 'dark)
+(mapc 'frame-set-background-mode (frame-list))
 
 (global-hl-line-mode 1)
 (show-paren-mode 1)
