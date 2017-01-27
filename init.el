@@ -151,7 +151,6 @@
                      xcscope
                      xml-rpc
                      yasnippet ;; setup
-
 		     ))
 
 
@@ -176,74 +175,59 @@
 (load custom-file)
 
 (setq settings-dir (expand-file-name "settings" user-emacs-directory))
-(add-to-list 'load-path settings-dir)
 (setq modes-dir (expand-file-name "modes" user-emacs-directory))
-(add-to-list 'load-path modes-dir)
-
+(setq experiments-dir (expand-file-name "experiments" user-emacs-directory))
 (setq packages-dir (expand-file-name "packages" user-emacs-directory))
 (setq privates-dir (expand-file-name "private" user-emacs-directory))
+
+(add-to-list 'load-path settings-dir)
+(add-to-list 'load-path modes-dir)
 (add-to-list 'load-path packages-dir)
-(setq frame-background-mode 'dark)
-(mapc 'frame-set-background-mode (frame-list))
 
+(defun to/my-require (symbol)
+  "Requires a package and then prints that it was loaded"
+  (require symbol)
+  (message "Loaded config file: %s" (symbol-name symbol)))
 
-(require 'basic-packages)
-(message "basic-packages loaded")
+(defun to/do-list-dir (thedir)
+  "Iterates over all files in THEDIR and loads them"
+  (if (file-accessible-directory-p thedir)
+      (progn
+        (dolist (file (directory-files thedir t "\.el$" nil))
+          (load (file-name-sans-extension file)))
+        (message "Loaded all files in: %s" thedir))
+    (message "Did not load files in: %s, not accessible", thedir)))
 
-(require 'settings)
-(message "settings loaded")
+(defmacro to/easy-hook
+    (hook prog &optional local append  )
+  `(add-hook ,hook (lambda () (interactive) ,prog) (when (boundp 'local) local)
+    (when (boundp 'append) append)))
 
-(require 'defuns)
-(message "defuns loaded")
+(to/my-require 'basic-packages)
+(to/my-require 'settings)
+(to/my-require 'defuns)
+(to/my-require 'modes)
+(to/my-require 'setup-magit)
+(to/my-require 'setup-company)
+(to/my-require 'setup-flycheck)
+(to/my-require 'setup-ido)
+(to/my-require 'darkroom-settings)
+(to/my-require 'linum-settings)
+(to/my-require 'projectile-settings)
+(to/my-require 'keybindings)
+(to/my-require 'single-line-hooks)
 
-(require 'modes)
-(message "modes loaded")
+;; Load modes
+(to/do-list-dir modes-dir)
+(to/do-list-dir privates-dir)
+(to/do-list-dir experiments-dir)
 
-(require 'setup-magit)
-(message "magit setup")
+(to/my-require 'appearance)
+(to/my-require 'setup-diminish)
 
-(require 'setup-company)
-(message "setup company")
+(setenv "SSH_ASKPASS" "git-gui --askpass")
 
-(require 'setup-flycheck)
-(message "flycheck setup")
+(to/easy-hook 'emacs-startup-hook (progn (to/my-require
+                                                 'modeline-settings))
+                                                 t)
 
-(require 'setup-ido)
-(message "ido setup")
-
-(require 'darkroom-settings)
-(message "darkroom setup")
-
-(require 'linum-settings)
-(message "linum setup")
-
-(require 'projectile-settings)
-(message "projectile setup")
-
-(require 'keybindings)
-(message "keybindings setup")
-
-;; Load everything in modes file
-(dolist (file (directory-files modes-dir t "\.el$" nil))
-  (load (file-name-sans-extension file)))
-
-(message "loading privates")
-;; Load everything in private folder
-(dolist (file (directory-files privates-dir t "\.el$" nil))
-  (load (file-name-sans-extension file)))
-
-;; Load experiments files here! TODO: Make this nicer?
-(load-file (expand-file-name "experiments/company-netlogo.el" user-emacs-directory))
-(load-file (expand-file-name "experiments/fixme-mode.el" user-emacs-directory))
-(message "experiments setup")
-
-(setenv "SSH_ASKPASS" "git-gui--askpass")
-
-(require 'appearance)
-(message "appeareance loaded")
-
-(require 'setup-diminish)
-(message "diminish setup")
-(add-hook 'emacs-startup-hook (lambda () (interactive)
-                                (require 'modeline-settings)
-                                (message "modeline setup")) t)

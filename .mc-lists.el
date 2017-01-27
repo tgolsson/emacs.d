@@ -4,6 +4,9 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        LaTeX-insert-left-brace
+        TeX-insert-backslash
+        beginning-of-visual-line
         c-electric-colon
         c-electric-lt-gt
         c-electric-paren
@@ -13,6 +16,7 @@
         downcase-region
         electric-pair-delete-pair
         end-of-visual-line
+        forward-sexp
         ido-find-file
         indent-for-tab-command
         isearch-abort
@@ -28,6 +32,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        comment-region
         isearch-delete-char
         next-buffer
         smex

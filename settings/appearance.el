@@ -9,6 +9,8 @@
 (when (fboundp 'menu-bar-mode)
   (menu-bar-mode -1))
 
+(setq frame-background-mode 'dark)
+(mapc 'frame-set-background-mode (frame-list))
 
 (global-hl-line-mode 1)
 (show-paren-mode 1)
@@ -45,8 +47,7 @@
 ;(set-face-attribute 'mode-line-inactive nil :box '(:line-width 2 :color "#333" ))
 ;(set-face-attribute 'mode-line nil :box '(:line-width 2 :color "#666" ))
 
-(set-frame-font "Fira Mono for Powerline-9")
-
+(set-frame-font "Fira Mono for Powerline-9" t t)
 ; (set-frame-font "Source Code Pro for Powerline-9")
 
 (setq custom-safe-themes t)

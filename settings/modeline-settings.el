@@ -18,8 +18,6 @@
   (set-face-attribute 'mode-line-inactive  nil                              :background (color-lighten-name bg  0) :foreground (color-lighten-name  fg 0))
   (set-face-attribute 'powerline-inactive1 nil :inherit 'mode-line-inactive :background (color-lighten-name bg 10) :foreground (color-lighten-name fg 10))
   (set-face-attribute 'powerline-inactive2 nil :inherit 'mode-line-inactive :background (color-lighten-name bg  0) :foreground (color-lighten-name  fg  0))
-
-
   )
 
 (setq powerline-height 20)
