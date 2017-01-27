@@ -5,7 +5,7 @@
 (require 'org2blog-autoloads)
 (require 'calfw)
 (require 'calfw-org)
-
+(require 'ob-ditaa)
 ;; calfw
 
 (setq calendar-week-start-day 1)
@@ -78,8 +78,9 @@
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((octave . t)
-   (sh . t)))
-(setq org-confirm-babel-evalute nil)
+   (shell . t)
+   (ditaa . t)))
+
 (defun org-mode-settings ()
   (visual-line-mode 1)
   (setq org-list-demote-modify-bullet '(("1." . "-")))
