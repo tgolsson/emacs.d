@@ -78,8 +78,6 @@
                 ("<tab>" . nil))
   :config
   (yas-global-mode 1)
-  ;;  (add-to-list 'yas-snippet-dirs "~/.emacs.d/yas") ;; unneeded?
-  ;; (yas-reload-all)
   (setq yas-wrap-around-region t))
 
 
@@ -98,5 +96,14 @@
   (guide-key-mode 1))
 
 
+(use-package autoinsert
+  :init
+  (setq auto-insert-directory (expand-file-name "templates" user-emacs-directory))
+  ;; Don't want to be prompted before insertion:
+  (setq auto-insert-query nil)
+  (add-hook 'find-file-hook 'auto-insert)
+  (auto-insert-mode 1)
+  (define-auto-insert "\\.el$" ["default-lisp.el" to/autoinsert-yas-expand])
+  (define-auto-insert "/sprints/" ["sprint.org" to/autoinsert-yas-expand]))
 
 (provide 'input-setup)

@@ -99,6 +99,10 @@ Including indent-buffer, which should not be called automatically on save."
         (if (looking-at "->") t nil)))))
 
 
+(defun to/autoinsert-yas-expand()
+  "Replace text in yasnippet template."
+  (yas/expand-snippet (buffer-string) (point-min) (point-max)))
+
 (defun do-yas-expand ()
   (let ((yas/fallback-behavior 'return-nil))
     (yas/expand)))

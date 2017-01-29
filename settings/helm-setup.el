@@ -10,6 +10,7 @@
          ("C-x c!" . helm-calul-expression))
 
   :config (setq
+           helm-mode-fuzzy-match t
            helm-buffers-fuzzy-matching t
            helm-recentf-fuzzy-match    t
            helm-ff-transformer-show-only-basename t
