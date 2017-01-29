@@ -1,3 +1,10 @@
+(defun untabify-buffer ()
+  (interactive)
+  (untabify 1 (point-max))
+  (if (not (eq major-mode 'mew-draft-mode))
+      ;; delete-trailing-whitespace does not work in mew-draft-mode.
+      (delete-trailing-whitespace)))
+
 (defun rename-current-buffer-file ()
   "Renames current buffer and file it is visiting."
   (interactive)
@@ -14,8 +21,6 @@
           (set-buffer-modified-p nil)
           (message "File '%s' successfully renamed to '%s'"
                    name (file-name-nondirectory new-name)))))))
-
-
 
 
 
@@ -100,6 +105,7 @@ Including indent-buffer, which should not be called automatically on save."
 (defun do-yas-expand ()
   (let ((yas/fallback-behavior 'return-nil))
     (yas/expand)))
+
 (defun tab-indent-or-complete ()
   (interactive)
   (if (or (not (or yas-global-mode yas/minor-mode))

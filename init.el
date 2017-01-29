@@ -1,10 +1,10 @@
-(setq package-enable-at-startup nil) (package-initialize)
-
-;(toggle-debug-on-error)
+(setq package-enable-at-startup nil)
+(package-initialize)
+(require 'use-package)
+(toggle-debug-on-error 1)
 ;; GENERAL SETTINGS
 (require 'package) ;; You might already have this line
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-;                         ("marmalade" . "https://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
 
 
@@ -59,8 +59,6 @@
                      fancy-battery
                      fasd
                      fancy-battery
-                     flx
-                     flx-ido
                      flycheck
                      git-commit
                      gntp
@@ -170,9 +168,6 @@
 (require 'plstore)
 (setq plstore-cache-passphrase-for-symmetric-encryption t)
 
-;; Keep emacs Custom-settings in separate file
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file)
 
 (setq settings-dir (expand-file-name "settings" user-emacs-directory))
 (setq modes-dir (expand-file-name "modes" user-emacs-directory))
@@ -183,11 +178,13 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path modes-dir)
 (add-to-list 'load-path packages-dir)
+(require 'benchmark)
 
 (defun to/my-require (symbol)
   "Requires a package and then prints that it was loaded"
-  (require symbol)
-  (message "Loaded config file: %s" (symbol-name symbol)))
+  (let (tt (benchmark-elapse (require symbol)))
+  (message "Loaded config file: %s in %s" (symbol-name symbol) 
+    (if (numberp tt) tt 0))))
 
 (defun to/do-list-dir (thedir)
   "Iterates over all files in THEDIR and loads them"
@@ -205,15 +202,16 @@
 
 (to/my-require 'basic-packages)
 (to/my-require 'settings)
+(to/my-require 'input)
 (to/my-require 'defuns)
+(to/my-require 'project-management)
 (to/my-require 'modes)
 (to/my-require 'setup-magit)
 (to/my-require 'setup-company)
 (to/my-require 'setup-flycheck)
-(to/my-require 'setup-ido)
+(to/my-require 'setup-helm)
 (to/my-require 'darkroom-settings)
 (to/my-require 'linum-settings)
-(to/my-require 'projectile-settings)
 (to/my-require 'keybindings)
 (to/my-require 'single-line-hooks)
 
@@ -224,6 +222,10 @@
 
 (to/my-require 'appearance)
 (to/my-require 'setup-diminish)
+
+;; Keep emacs Custom-settings in separate file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
 
 (setenv "SSH_ASKPASS" "git-gui --askpass")
 
