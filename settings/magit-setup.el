@@ -25,4 +25,4 @@
   (kill-buffer)
   (jump-to-register :magit-fullscreen))
 
-(provide 'setup-magit)
+(provide 'magit-setup)

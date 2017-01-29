@@ -58,6 +58,11 @@
       ediff-split-window-function 'split-window-horizontally
       ediff-window-setup-function 'ediff-setup-windows-plain)
 
+(setq gc-cons-threshold 50000000
+      large-file-warning-threshold 100000000)
+(fset 'yes-or-no-p 'y-or-n-p)
+
+
 
 
 (use-package uniquify
@@ -69,12 +74,5 @@
             (setq save-place t)
             save-place-file (concat user-emacs-directory "places"))
 
-(use-package dashboard
-            :init (dashboard-setup-startup-hook)
-            :config
-            (setq dashboard-items '((recents . 10)
-                                    (projects . 10)
-                                    (bookmarks . 5))))
 
-
-(provide 'settings)
+(provide 'basic-setup)

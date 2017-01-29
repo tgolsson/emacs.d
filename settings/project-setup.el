@@ -11,4 +11,4 @@
   (setq projectile-switch-project-action 'neotree-projectile-action))
 (use-package ibuffer-projectile)
 
-(provide 'project-management)
+(provide 'project-setup)

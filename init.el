@@ -200,18 +200,17 @@
   `(add-hook ,hook (lambda () (interactive) ,prog) (when (boundp 'local) local)
     (when (boundp 'append) append)))
 
-(to/my-require 'basic-packages)
-(to/my-require 'settings)
-(to/my-require 'input)
+(to/my-require 'basic-setup)
+(to/my-require 'communication-setup)
+(to/my-require 'input-setup)
 (to/my-require 'defuns)
-(to/my-require 'project-management)
-(to/my-require 'modes)
-(to/my-require 'setup-magit)
-(to/my-require 'setup-company)
-(to/my-require 'setup-flycheck)
-(to/my-require 'setup-helm)
-(to/my-require 'darkroom-settings)
-(to/my-require 'linum-settings)
+(to/my-require 'project-setup)
+(to/my-require 'modes-setup)
+(to/my-require 'magit-setup)
+(to/my-require 'company-setup)
+(to/my-require 'flycheck-setup)
+(to/my-require 'helm-setup)
+(to/my-require 'darkroom-setup)
 (to/my-require 'keybindings)
 (to/my-require 'single-line-hooks)
 
@@ -220,8 +219,9 @@
 (to/do-list-dir privates-dir)
 (to/do-list-dir experiments-dir)
 
-(to/my-require 'appearance)
-(to/my-require 'setup-diminish)
+;; Load appeareance and setup
+(to/my-require 'appearance-setup)
+(to/my-require 'diminish-setup)
 
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -230,6 +230,6 @@
 (setenv "SSH_ASKPASS" "git-gui --askpass")
 
 (to/easy-hook 'emacs-startup-hook (progn (to/my-require
-                                                 'modeline-settings))
+                                                 'modeline-setup))
                                                  t)
 

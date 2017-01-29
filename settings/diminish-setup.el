@@ -1,4 +1,6 @@
-;; DIMINISH
+;;
+;; Diminish
+;;
 (use-package diminish
   :config
   (diminish 'auto-fill-function)
@@ -14,4 +16,4 @@
   (eval-after-load "projectile" '(diminish 'projectile-mode))
   (eval-after-load "rainbow-mode" '(diminish 'rainbow-mode)))
 
-(provide 'setup-diminish)
+(provide 'diminish-setup)

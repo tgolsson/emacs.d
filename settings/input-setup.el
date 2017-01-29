@@ -33,7 +33,8 @@
       apropos-do-all t
       mouse-yank-at-point t
       require-final-newline t
-      fill-column 80)
+      fill-column 80
+      delete-selection-mode t)
 
 ;;
 ;; General input setqs
@@ -54,8 +55,48 @@
    ("C-<" .    mc/mark-previous-like-this)
    ("C->" .    mc/mark-next-like-this)
    ("C-S-ä" .  mc/mark-more-like-this-extended)
-   ("M-å" .    mc/mark-all-in-region)))
+   ("M-å" .    mc/mark-all-in-region))
+  :config
+  (unsupported-cmd isearch-forward-use-region ".")
+  (unsupported-cmd isearch-backward-use-region "."))
 
 
 
-(provide 'input)
+(use-package flycheck)
+(use-package guru-mode)
+(use-package speed-type)
+
+;;
+;; yas
+;;
+(use-package yasnippet
+  :bind   (:map yas-keymap
+                ("<return>" . yas-exit-all-snippets))
+  :bind    (:map yas-minor-mode-map
+                ("[tab]" . nil)
+                ("[?\t]" . nil)
+                ("<tab>" . nil))
+  :config
+  (yas-global-mode 1)
+  ;;  (add-to-list 'yas-snippet-dirs "~/.emacs.d/yas") ;; unneeded?
+  ;; (yas-reload-all)
+  (setq yas-wrap-around-region t))
+
+
+
+
+
+;;
+;; Guide-key
+;;
+(use-package guide-key
+  :config
+  (setq guide-key/guide-key-sequence t
+        guide-key/idle-delay 1
+        guide-key/recursive-key-sequence-flag t
+        guide-key/popup-window-position 'bottom)
+  (guide-key-mode 1))
+
+
+
+(provide 'input-setup)

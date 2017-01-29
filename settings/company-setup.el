@@ -2,10 +2,9 @@
 (use-package company
   :defer t
   :init
-  (require 'company-irony)
-  (require 'company-statistics)
-  (require 'company-yasnippet)
-  (require 'color)
+  (use-package company-irony)
+  (use-package company-statistics)
+  (use-package company-yasnippet)
   :config
   (setq company-tooltip-limit 20
         company-tooltip-align-annotations 't
@@ -15,4 +14,4 @@
   (company-statistics-mode))
 
 
-(provide 'setup-company)
+(provide 'company-setup)

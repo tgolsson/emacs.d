@@ -5,6 +5,7 @@
       ;; delete-trailing-whitespace does not work in mew-draft-mode.
       (delete-trailing-whitespace)))
 
+
 (defun rename-current-buffer-file ()
   "Renames current buffer and file it is visiting."
   (interactive)
@@ -21,8 +22,6 @@
           (set-buffer-modified-p nil)
           (message "File '%s' successfully renamed to '%s'"
                    name (file-name-nondirectory new-name)))))))
-
-
 
 
 (defun goto-line-with-feedback ()
@@ -47,7 +46,6 @@ Including indent-buffer, which should not be called automatically on save."
     (indent-buffer))
 
 
-
 (defun transpose-params ()
   "Presumes that params are in the form (p, p, p) or {p, p, p} or [p, p, p]"
   (interactive)
@@ -67,6 +65,7 @@ Including indent-buffer, which should not be called automatically on save."
 			(point))))
     (transpose-regions start-of-first end-of-first start-of-last end-of-last)))
 
+
 ;; shorthand for interactive lambdas
 (defmacro λ (&rest body)
   `(lambda ()
@@ -81,6 +80,7 @@ Including indent-buffer, which should not be called automatically on save."
     (deactivate-mark))
   (call-interactively 'isearch-forward))
 
+
 (defun isearch-backward-use-region ()
   (interactive)
   (when (region-active-p)
@@ -88,10 +88,6 @@ Including indent-buffer, which should not be called automatically on save."
     (deactivate-mark))
   (call-interactively 'isearch-backward))
 
-(eval-after-load "multiple-cursors"
-  '(progn
-     (unsupported-cmd isearch-forward-use-region ".")
-     (unsupported-cmd isearch-backward-use-region ".")))
 
 (defun check-expansion ()
   (save-excursion
@@ -102,9 +98,11 @@ Including indent-buffer, which should not be called automatically on save."
         (backward-char 1)
         (if (looking-at "->") t nil)))))
 
+
 (defun do-yas-expand ()
   (let ((yas/fallback-behavior 'return-nil))
     (yas/expand)))
+
 
 (defun tab-indent-or-complete ()
   (interactive)
@@ -113,6 +111,7 @@ Including indent-buffer, which should not be called automatically on save."
       (if (check-expansion)
           (company-complete-common)
         (indent-for-tab-command))))
+
 
 (defun to/kill-other-buffers (&optional kill-special)
   "Kill buffers that do not belong to a `projectile' project.
@@ -170,11 +169,13 @@ With prefix argument (`C-u'), also kill the special buffers."
                       (kill-buffer)
                       (setq numbufs (- numbufs 1))))))))))))
 
+
 (defun create-scratch-buffer nil
    "create a scratch buffer"
    (interactive)
    (switch-to-buffer (get-buffer-create "*scratch*"))
    (lisp-interaction-mode))
+
 
 (provide 'defuns)
 

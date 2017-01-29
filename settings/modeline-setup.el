@@ -64,7 +64,7 @@
                                  (set-face-attribute 'mode-line-buffer-id nil :inherit nil)
                                  (set-face-attribute 'mode-line-buffer-id-inactive nil :inherit nil))))
 
-(provide 'modeline-settings)
+(provide 'modeline-setup)
 
 
 

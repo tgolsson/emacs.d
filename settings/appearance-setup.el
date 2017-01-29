@@ -1,5 +1,5 @@
-(use-package rainbow-mode)
-(use-package fixme-mode)
+
+(require 'color)
 ;;
 ;; GUI
 ;;
@@ -11,7 +11,16 @@
   (menu-bar-mode -1))
 (setq inhibit-splash-screen t
       inhibit-startup-message t)
+(blink-cursor-mode -1)
 
+(setq scroll-margin 0
+      scroll-conservatively 100000
+      scroll-preserve-screen-position 1)
+
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
 ;;
 ;; Minimap
 ;;
@@ -77,6 +86,18 @@
   (hlinum-activate)  
   (setq linum-highlight-in-all-buffersp t))
 
-(provide 'appearance)
+
+(use-package rainbow-mode)
+(use-package fixme-mode)
+
+
+(use-package dashboard
+            :init (dashboard-setup-startup-hook)
+            :config
+            (setq dashboard-items '((recents . 10)
+                                    (projects . 10)
+                                    (bookmarks . 5))))
+
+(provide 'appearance-setup)
 
 

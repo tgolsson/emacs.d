@@ -21,6 +21,7 @@
 (use-package helm-swoop
   :bind (("M-s" . helm-swoop)
          ("C-x M-s" . helm-swoop)))
+
 (use-package helm-descbinds
   :bind (("C-h b" . helm-descbinds)))
 
@@ -33,6 +34,7 @@
   :bind (:map flycheck-mode-map ("C-c ! h" . helm-flycheck)))
 
 (use-package helm-describe-modes)
+
 (use-package helm-fuzzier
   :config
   (helm-fuzzier-mode 1))
@@ -41,6 +43,7 @@
   :bind ( ("C-x C-g" . helm-ls-git-ls)))
 
 (use-package helm-projectile
+  :defer 3 ;; to make sure projectile is loaded and doesn't kill the keybind
   :bind (("C-c p f" . helm-projectile))
   :config (helm-projectile-on))
 
@@ -54,4 +57,4 @@
 (use-package helm-w32-launcher
   :bind (("<f9>" . helm-w32-launcher)))
 
-(provide 'setup-helm)
+(provide 'helm-setup)

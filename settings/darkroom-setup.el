@@ -9,6 +9,6 @@
   (setq darkroom-margins 0.25))
 
 
-(provide 'darkroom-settings)
+(provide 'darkroom-setup)
 
 
