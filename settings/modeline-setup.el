@@ -1,8 +1,6 @@
-(require  'color)
+(require 'color)
 (require 'spaceline)
 (require 'spaceline-config)
-(require 'fancy-battery)
-(fancy-battery-mode)
 (set-face-attribute 'mode-line-buffer-id nil :inherit nil)
 (set-face-attribute 'mode-line-buffer-id-inactive nil :inherit nil)
 
@@ -25,9 +23,10 @@
 (defface pml-highlight
   '((t (:background "gray40")))
   "Basic face for highlighting.")
+
 (when (not (display-graphic-p))
-  (setq powerline-default-separator 'utf-8)
-  )
+  (setq powerline-default-separator 'utf-8))
+
 (spaceline-define-segment my-projectile
   "Show the current projectile root."
   (when (and (fboundp 'projectile-project-p)
@@ -38,9 +37,7 @@
 )
 
 (spaceline-emacs-theme 'my-projectile)
-;; 
-(spaceline-toggle-anzu-off)
-(spaceline-toggle-battery-on)
+(spaceline-toggle-anzu-on)
 (spaceline-toggle-line-on)
 (spaceline-toggle-buffer-encoding-abbrev-off)
 (spaceline-toggle-org-pomodoro-off)
@@ -52,6 +49,7 @@
 (spaceline-toggle-mu4e-alert-segment-on)
 (spaceline-toggle-buffer-size-off)
 (spaceline-toggle-buffer-position-off)
+
 (setq spaceline-minor-modes-separator " ")
 
 
@@ -64,9 +62,9 @@
                                  (set-face-attribute 'mode-line-inactive nil :box
                                                      `(:line-width 2 :color ,(color-lighten-name bg 0)))
                                  (set-face-attribute 'mode-line-buffer-id nil :inherit nil)
-                                 (set-face-attribute 'mode-line-buffer-id-inactive nil :inherit nil))
-                               ))
-(provide 'modeline-settings)
+                                 (set-face-attribute 'mode-line-buffer-id-inactive nil :inherit nil))))
+
+(provide 'modeline-setup)
 
 
 

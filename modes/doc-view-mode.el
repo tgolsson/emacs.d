@@ -1,7 +1,8 @@
 
 ;; For things like LaTeX viewing
-(add-hook 'doc-view-mode-hook (lambda () (interactive "")
-                                (auto-revert-mode 0)
-                                (linum-mode 0))
-          )
+(use-package doc-view
+  :init
+  (add-hook 'doc-view-mode-hook (lambda () (interactive "")
+                                  (auto-revert-mode 0)
+                                  (linum-mode 0))))
 

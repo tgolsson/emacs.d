@@ -17,8 +17,10 @@
         electric-pair-delete-pair
         end-of-visual-line
         forward-sexp
+        helm-smex
         ido-find-file
         indent-for-tab-command
+        indent-rigidly
         isearch-abort
         isearch-backward-regexp
         isearch-exit
@@ -33,6 +35,7 @@
 (setq mc/cmds-to-run-once
       '(
         comment-region
+        helm-maybe-exit-minibuffer
         isearch-delete-char
         next-buffer
         smex
