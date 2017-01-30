@@ -166,6 +166,10 @@
   (unless (package-installed-p package)
     (package-install package)))
 
+(when (and (fboundp 'server-running-p)
+           (not (server-running-p)))
+  (server-start))
+
 ;; store passphrases
 (require 'plstore)
 (setq plstore-cache-passphrase-for-symmetric-encryption t)
