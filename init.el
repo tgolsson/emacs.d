@@ -1,7 +1,6 @@
 (setq package-enable-at-startup nil)
 (package-initialize)
-(require 'use-package)
-(toggle-debug-on-error 1)
+; (toggle-debug-on-error 1)
 ;; GENERAL SETTINGS
 (require 'package) ;; You might already have this line
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -69,6 +68,8 @@
                      guide-key
                      guide-key-tip      ;
                      guru-mode
+                     helm
+                     helm-smex
                      hide-lines
                      hlinum
                      html-script-src
@@ -149,6 +150,7 @@
                      xcscope
                      xml-rpc
                      yasnippet ;; setup
+                     use-package
 		     ))
 
 
