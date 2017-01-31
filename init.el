@@ -1,12 +1,11 @@
 (setq package-enable-at-startup nil)
 (package-initialize)
-; (toggle-debug-on-error 1)
 ;; GENERAL SETTINGS
 (require 'package) ;; You might already have this line
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
 
-
+(setq use-package-always-ensure t)
 
 (setq package-list '(
                      ac-html
@@ -150,13 +149,12 @@
                      xcscope
                      xml-rpc
                      yasnippet ;; setup
-                     use-package
+		     use-package
 		     ))
 
 
 (package-initialize) 
-(unless package-archive-contents
-  (package-refresh-contents))
+(package-refresh-contents)
 
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
@@ -165,6 +163,10 @@
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
+
+(when (and (fboundp 'server-running-p)
+           (not (server-running-p)))
+  (server-start))
 
 ;; store passphrases
 (require 'plstore)

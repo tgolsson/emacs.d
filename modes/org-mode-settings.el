@@ -9,7 +9,7 @@
 ;; calfw
 
 (setq calendar-week-start-day 1)
-
+(require 'org-bullets)
 ;; Unicode characters
 (setq cfw:fchar-junction ?╋
       cfw:fchar-vertical-line ?┃
@@ -84,7 +84,11 @@
 (defun org-mode-settings ()
   (visual-line-mode 1)
   (setq org-list-demote-modify-bullet '(("1." . "-")))
-  )
+  (org-bullets-mode 1)
+  (require 'org-beautify-theme)
+  (setq org-pretty-entities 1)
+  (if window-system
+    (setq org-startup-with-inline-images t)))
 
 ;; org-gcal
 (require 'org-gcal)
@@ -101,8 +105,3 @@
          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
          ("\\paragraph{%s}" . "\\paragraph*{%s}")
          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-(add-hook 'org-mode-hook 'org-mode-settings)
-(global-set-key (kbd "C-c M-c") 'org-capture)
-
-

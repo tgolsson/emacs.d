@@ -88,7 +88,7 @@
 
 
 (use-package rainbow-mode)
-(use-package fixme-mode)
+(require 'fixme-mode)
 
 
 (use-package dashboard

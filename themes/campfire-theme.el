@@ -78,6 +78,11 @@
    `(fancy-battery-charging ((t (:foreground ,fg))))
    `(fancy-battery-critical ((t (:foreground ,hl2))))
    `(fancy-battery-discharging ((t (:foreground ,hl3))))
+
+   ;; org-mode
+   `(org-block-begin-line ((t (:foreground ,(color-lighten-name bg 20) :background ,bg))))
+   `(org-block-end-line ((t (:foreground ,(color-lighten-name bg 20) :background ,bg))))
+   `(org-block ((t (:foreground ,(color-darken-name fg 20) :background ,(color-lighten-name bg 10)))))
    ;; END CUSTOM FACE
   
   ))
