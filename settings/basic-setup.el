@@ -8,8 +8,15 @@
        (setq git-shell-executable (concat git-shell-path "\\bash.exe"))
        (add-to-list 'exec-path git-shell-path)
        (setenv "PATH" (concat git-shell-path ";" (getenv "PATH")))
+
        (setq browse-url-browser-function 'to/browse-url-win)
-       
+
+       (when (boundp 'w32-pipe-read-delay)
+         (setq w32-pipe-read-delay 0))
+       ;; Set the buffer size to 64K on Windows (from the original 4K)
+       (when (boundp 'w32-pipe-buffer-size)
+         (setq w32-pipe-buffer-size (* 64 1024))
+         (setq irony-server-w32-pipe-buffer-size (* 64 1024)))
        (message "Windows preferences set."))
 
 (defun to/other-setup () (interactive)
@@ -66,8 +73,9 @@
 
 
 (use-package uniquify
-            :config
-            (setq uniquify-buffer-name-style 'forward))
+  :ensure nil
+  :config
+  (setq uniquify-buffer-name-style 'forward))
 
 (use-package saveplace
             :config
