@@ -73,8 +73,7 @@
   :bind   (:map yas-keymap
                 ("<return>" . yas-exit-all-snippets))
   :bind    (:map yas-minor-mode-map
-                ("[tab]" . nil)
-                ("[?\t]" . nil)
+                ("C-i" . nil)
                 ("<tab>" . nil))
   :config
   (yas-global-mode 1)
