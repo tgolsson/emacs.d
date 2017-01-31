@@ -17,7 +17,11 @@
            helm-move-to-line-cycle-in-source t
            helm-ff-auto-update-initial-value t)
   (helm-mode t)
-  (helm-adaptive-mode t))
+  (helm-adaptive-mode t)
+  (use-package helm-flx
+    :config (helm-flx-mode +1)
+    (setq helm-flx-for-helm-find-files t
+          helm-flx-for-helm-locate t)))
 
 (use-package helm-swoop
   :bind (("M-s" . helm-swoop)
@@ -26,10 +30,7 @@
 (use-package helm-descbinds
   :bind (("C-h b" . helm-descbinds)))
 
-(use-package helm-flx
-  :config (helm-flx-mode +1)
-  (setq helm-flx-for-helm-find-files t
-         helm-flx-for-helm-locate t))
+
   
 (use-package helm-flycheck
   :bind (:map flycheck-mode-map ("C-c ! h" . helm-flycheck)))
