@@ -1,13 +1,12 @@
 (setq package-enable-at-startup nil)
 (package-initialize)
-(require 'use-package)
 (toggle-debug-on-error 1)
 ;; GENERAL SETTINGS
 (require 'package) ;; You might already have this line
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("melpa" . "http://melpa.org/packages/")))
 
-
+(setq use-package-always-ensure t)
 
 (setq package-list '(
                      ac-html
@@ -69,6 +68,8 @@
                      guide-key
                      guide-key-tip      ;
                      guru-mode
+                     helm
+                     helm-smex
                      hide-lines
                      hlinum
                      html-script-src
@@ -149,12 +150,12 @@
                      xcscope
                      xml-rpc
                      yasnippet ;; setup
+		     use-package
 		     ))
 
 
 (package-initialize) 
-(unless package-archive-contents
-  (package-refresh-contents))
+(package-refresh-contents)
 
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
