@@ -7,6 +7,7 @@
       (byte-compile-file buffer-file-name)))
 
 (use-package lisp-mode
+  :ensure nil
   :mode ("\\.el\\'" . emacs-lisp-mode)
   :bind (:map emacs-lisp-mode-map ("\r" . reindent-then-newline-and-indent))
   :config
