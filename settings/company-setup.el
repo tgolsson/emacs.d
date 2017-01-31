@@ -4,7 +4,7 @@
   :init
   (use-package company-irony)
   (use-package company-statistics)
-  (use-package company-yasnippet)
+  (require 'company-yasnippet)
   :config
   (setq company-tooltip-limit 20
         company-tooltip-align-annotations 't
