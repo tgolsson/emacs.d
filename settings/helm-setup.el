@@ -57,6 +57,7 @@
          ("M-X". helm-smex-major-mode-commands)))
 
 (use-package helm-w32-launcher
+  :if (eq 'system-type 'windows-nt)
   :bind (("<f9>" . helm-w32-launcher)))
 
 (provide 'helm-setup)

@@ -1,6 +1,5 @@
 (setq package-enable-at-startup nil)
 (package-initialize)
-(toggle-debug-on-error 1)
 ;; GENERAL SETTINGS
 (require 'package) ;; You might already have this line
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")

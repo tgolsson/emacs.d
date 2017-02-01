@@ -30,7 +30,7 @@
   (add-hook 'minimap-sb-mode-hook (lambda ()
                                     (setq mode-line-format nil)
                                     (visual-line-mode 1)))
-  (add-to-list 'minimap-major-modes '(latex-mode cmake-mode org-mode))
+  (add-to-list 'minimap-major-modes '(latex-mode cmake-mode org-mode))       
   (setq minimap-minimum-width 20
         minimap-automatically-delete-window t)
   (minimap-mode 1))
@@ -40,8 +40,8 @@
 ;; Theme and LNF
 ;;
 (show-paren-mode 1)
-(set-frame-font "Fira Mono for Powerline-9" t t)
-
+(set-frame-font "Source Code Pro for Powerline-9" t t)
+################################################################################
 (setq frame-background-mode 'dark)
 (mapc 'frame-set-background-mode (frame-list))
 (setq custom-safe-themes t
