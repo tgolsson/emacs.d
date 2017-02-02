@@ -18,11 +18,21 @@
 ;;
 (use-package cc-mode
   :defer t
+  :mode (("\\.h\\'" . c++-mode)
+         ("\\.hpp\\'" . c++-mode)
+         ("\\.cpp\\'" . c++-mode)
+         ("\\.cxx\\'" . c++-mode))  
   :bind (:map c-mode-base-map ("RET" . newline-and-indent))
   :init
   (setq-default c-default-style "linux"
                 c-basic-offset 4)
+  
+                
   (c-set-offset 'inline-open 0)
+  (c-set-offset 'innamespace 0)
+  (c-set-offset 'topmost-intro 0)
+  (c-set-offset 'comment-intro 0)
+  (c-set-offset 'member-init-intro 0)
   :config
   (add-hook 'c-mode-common-hook
             (lambda () (interactive "")
