@@ -227,6 +227,7 @@
 (to/my-require 'appearance-setup)
 (to/my-require 'diminish-setup)
 
+(to/my-require 'scimax-org-babel-python)
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
@@ -237,3 +238,4 @@
                                                  'modeline-setup))
                                                  t)
 
+(put 'upcase-region 'disabled nil)

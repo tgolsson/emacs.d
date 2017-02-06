@@ -508,7 +508,9 @@ Opens a buffer with links to what is found. This function installs pylint if nee
       ;; final cleanup and delete file
       (delete-file tempfile))))
 
-
+(add-to-list 'org-ctrl-c-ctrl-c-hook 'org-babel-async-execute:python)
+(require 'ob-python)
+(require 'beacon)
 (provide 'scimax-org-babel-python)
 
 ;;; scimax-org-babel-python.el ends here
