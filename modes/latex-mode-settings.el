@@ -12,6 +12,8 @@
 (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase Mode" t)
 
 (defun setup-latex-mode()
+
+  (bind-key "C-c 0" 'helm-bibtex)
   (turn-on-reftex)
 
   ;; Force PDF
@@ -76,10 +78,8 @@
      LaTeX-section-section
      LaTeX-section-label)))
 
-
-
- 	
 (add-hook 'plain-TeX-mode-hook
 	  (lambda () (set (make-variable-buffer-local 'TeX-electric-math)
 			  (cons "$" "$"))))
+
 (add-hook 'LaTeX-mode-hook 'setup-latex-mode) ; with Emacs latex mode
