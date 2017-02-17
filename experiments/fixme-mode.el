@@ -52,9 +52,9 @@ Without any argument, this toggles the mode. A positive prefix argument will
   " FIXME"
   '()
   :group 'fix-me
-  (font-lock-add-keywords nil '(("\\(BUG\\|bug\\) " 0 'bug-face t )))
-  (font-lock-add-keywords nil '(("\\(TODO\\|todo\\|\\) " 0 'todo-face t)))
-  (font-lock-add-keywords nil '(("\\(fixme\\|FIXME\\) " 0 'fixme-face t)))
+  (font-lock-add-keywords nil '(("\\<\\(BUG\\|bug\\)\\>" 0 'bug-face t)))
+  (font-lock-add-keywords nil '(("\\<\\(TODO\\|todo\\|\\)\\>" 0 'todo-face t)))
+  (font-lock-add-keywords nil '(("\\<\\(fixme\\|FIXME\\)\\>" 0 'fixme-face t)))
   )
 
 (add-hook 'prog-mode-hook (lambda () (interactive "") (fixme-mode 1)))
