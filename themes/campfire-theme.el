@@ -3,10 +3,9 @@
 (deftheme campfire
   "Created 2016-09-22.")
 
-(let (
-      (fg  "#c2b98f")
+(let ((fg  "#b2a99f")
       (hl  "#327e02")
-      (bg  (color-darken-name "#222" 0))
+      (bg  "#121215")
       (hl2 "#ff0000")
       (hl3 "#b0322f")
       (hl4 "#6f72f0"))

@@ -40,8 +40,7 @@
 ;; Theme and LNF
 ;;
 (show-paren-mode 1)
-(set-frame-font "Source Code Pro for Powerline-9" t t)
-################################################################################
+(set-frame-font "Source Code Pro-9" t t)
 (setq frame-background-mode 'dark)
 (mapc 'frame-set-background-mode (frame-list))
 (setq custom-safe-themes t
