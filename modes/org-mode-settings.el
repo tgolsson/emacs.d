@@ -2,7 +2,6 @@
 
 (require 'ob-core)
 (require 'org-projectile)
-(require 'org2blog-autoloads)
 (require 'calfw)
 (require 'calfw-org)
 (require 'ob-ditaa)
@@ -51,35 +50,13 @@
 (setq org-projectile:projects-file
       "/home/tgo/Dropbox/notes/todo-projects.org")
 
-;; Org2blog
-(setq org2blog/wp-buffer-template
-      "-----------------------
-#+TITLE: %s
-#+DATE: %s
-#+CATEGORY:
-#+TAGS: 
------------------------\n")
-(defun my-format-function (format-string)
-  (format format-string
-          org2blog/wp-default-title
-          (format-time-string "%d-%m-%Y" (current-time))))
-(setq org2blog/wp-buffer-format-function 'my-format-function)
-
-(setq org2blog/wp-use-sourcecode-shortcode t)
-(setq org2blog/wp-blog-alist
-      '(("tomolsson.se"
-         :url "http://www.tomolsson.se/xmlrpc.php"
-         :username "tgolsson"
-         :default-title "New post"
-         :default-categories ("Programming" "C++")
-                  :tags-as-categories nil)))
-
 ;; org-babel
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((octave . t)
    (shell . t)
-   (ditaa . t)))
+   (ditaa . t)
+   (python . t)))
 
 (defun org-mode-settings ()
   (visual-line-mode 1)
