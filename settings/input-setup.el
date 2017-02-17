@@ -36,6 +36,8 @@
       fill-column 80
       delete-selection-mode t)
 
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 ;;
 ;; General input setqs
 ;;
