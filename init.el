@@ -7,149 +7,131 @@
 
 (setq use-package-always-ensure t)
 
-(setq package-list '(
-                     ac-html
-                     ac-html-csswatcher
-                     ac-ispell
-                     ac-js2
-                     ac-octave
-                     ac-php-core
-                     alert
-                     android-mode
-                     arduino-mode ;; configured
-                     async
-                     auctex 
-                     auctex-latexmk
-                     auto-complete 
-                     auto-complete-auctex
-                     bison-mode  
-                     calfw  ;; configured
-                     cmake-font-lock ;; configured 
-                     cmake-mode ;; configured
-                     company
-                     company-arduino
-                     company-auctex
-                     company-c-headers
-                     company-emacs-eclim
-                     company-irony
-                     company-irony-c-headers
-                     company-jedi
-                     company-lua
-                     company-math
-                     company-statistics
-                     company-web
-                     concurrent
-                     ctable
-                     ; ctags
-                     darkroom ; configured
-                     dash
-                     dashboard
-                     deferred
-                     diminish
-                     discover-my-major ; configured
-                     draft-mode
-                     eclim
-                    ;; emacs-eclim
-                     epc
-                     epl
-                     epresent
-                     f
-                     fancy-battery
-                     fasd
-                     fancy-battery
-                     flycheck
-                     git-commit
-                     gntp
-                     google-contacts
-                     google-maps
-                     gradle-mode
-                     grizzl
-                     guide-key
-                     guide-key-tip      ;
-                     guru-mode
-                     helm
-                     helm-smex
-                     hide-lines
-                     hlinum
-                     html-script-src
-                     htmlize
-                     ibuffer-projectile
-                     ido-at-point
-                     ido-completing-read+
-                     ido-ubiquitous
-                     ido-vertical-mode
-                     irony
-                     java-snippets
-                     jdee
-                     jedi-core
-                     js2-highlight-vars
-                     js2-mode
-                     js2-refactor
-                     jtags
-                     less-css-mode
-                     let-alist
-                     log4e
-                     lua-mode
-                     magit
-                     magit-filenotify
-                     magit-popup
-                     makey
-                     markdown-mode
-                     markdown-mode+
-                     markdown-toc
-                     math-symbol-lists
-                     matlab-mode
-                     metaweblog
-                     minimap
-                     mu4e-maildirs-extension
-                     multiple-cursors
-                     neotree
-                     oauth2
-                     ob-browser
-                     ob-http
-                     org
-                     org-caldav
-                     org-gcal
-                     org-present
-                     org-projectile
-                     org2blog
-                     ox-html5slide
-                     ox-impress-js
-                     ox-ioslide
-                     ox-reveal
-		     page-break-lines
-                     powerline
-                     php-mode
-                     pkg-info
-                     popup
-                     popwin
-                     pos-tip
-                     projectile
-                     python-django
-                     python-environment
-                     rainbow-mode
-                     request
-                     request-deferred
-                     rtags
-                     spaceline
-                     seq
-                     simple-httpd
-                     sass-mode
-                     scss-mode
+(setq package-list '(android-mode ;; TODO 
+                     anzu ;; TODO
+                     arduino-mode ;; TODO 
+                     auctex ;; FIXUP
+                     auctex-latexmk ;; FIXUP
+                     beacon ;; MANUAL DEPENDENCY
+                     bind-key ;; DONE
+                     bison-mode ;; NOT USED
+                     calfw  ;; REMOVE?
+                     cmake-font-lock ;; FIXUP
+                     cmake-mode ;; FIXUP
+                     company ;; TODO 
+                     company-arduino ;; TODO
+                     company-auctex ;; TODO 
+                     company-emacs-eclim ;; TODO -- REMOVE?
+                     company-irony ;; FIXUP
+                     company-irony-c-headers ;; TODO
+                     company-jedi ;; fixup 
+                     company-lua ;; TODO 
+                     company-math ;; what does this even do
+                     company-statistics ;; fixup?
+                     company-web ;; fixup
+                     darkroom ;; fixup
+                     dashboard ;; DONE
+                     diminish ;; FIXUP
+                     discover-my-major ;; TODO
+                     draft-mode ;; what does this even do?
+                     eclim ;; OK?
+                     epresent ;; TEST
+                     expand-region ;; TODO
+                     fancy-battery ;; TODO 
+                     flycheck ;; TODO
+                     flycheck-irony ;; TODO
+                     git-commit ;; TODO 
+                     gradle-mode ;; TODO
+                     gscholar-bibtex ;; TODO
+                     guide-key ;; TODO 
+                     guide-key-tip ;; TODO 
+                     guru-mode ;; TODO 
+                     helm ;; TODO
+                     helm-bibtex ;; TODO
+                     helm-core ;; TODO
+                     helm-descbinds ;; TODO
+                     helm-describe-modes ;; todo
+                     helm-flx ;; TODO
+                     helm-flycheck ;; TODO
+                     helm-flyspell ;; TODO
+                     helm-fuzzier ;; TODO
+                     helm-ls-git ;; TODO
+                     helm-mu ;; TODO
+                     helm-projectile ;; TODO
+                     helm-smex ;; TODO
+                     helm-swoop ;; TODO
+                     helm-w32-launcher ;;  TODO
+                     hide-lines ;; TODO
+                     hlinum ;; TODO
+                     html-script-src ;; TODO
+                     htmlize ;; TODO
+                     ibuffer-projectile ;; TODO
+                     irony ;; TODO
+                     java-snippets ;; TODO
+                     jdee ;; TODO
+                     jedi-core ;; TODO
+                     js2-highlight-vars ;; TODO
+                     js2-mode ;; TODO
+                     js2-refactor ;; TODO
+                     jtags ;; TODO
+                     less-css-mode ;; TODO
+                     lua-mode ;; TODO
+                     magit ;; TODO
+                     magit-filenotify ;; TODO
+                     magit-popup ;; TODO
+                     markdown-mode ;; TODO
+                     markdown-mode+ ;; TODO
+                     markdown-preview-eww ;; TODO
+                     markdown-toc ;; TODO
+                     matlab-mode ;; TODO
+                     minimap ;; TODO
+                     mu4e-maildirs-extension ;; TODO
+                     multiple-cursors ;; TODO
+                     ob-browser ;; TODO
+                     ob-http ;; TODO
+                     org ;; TODO
+                     org-beautify-theme ;; TODO
+                     org-bullets ;; TODO
+                     org-caldav ;; TODO
+                     org-gcal ;; TODO
+                     org-mime ;; TODO
+                     org-present ;; TODO
+                     org-projectile ;; TODO
+                     ox-html5slide ;; TODO
+                     ox-impress-js ;; TODO
+                     ox-ioslide ;; TODO
+                     ox-reveal ;; TODO
+                     php-mode ;; TODO
+                     pkg-info ;; TODO
+                     popup ;; TODO
+                     popwin ;; TODO
+                     pos-tip ;; TODO
+                     powerline ;; TODO
+                     projectile ;; TODO
+                     python-django ;; TODO
+                     python-environment ;; TODO
+                     rainbow-mode ;; TODO
+                     request ;; TODO
+                     request-deferred ;; TODO
+                     rtags ;; TODO
+                     sass-mode ;; TODO 
+                     scss-mode ;; TODO 
+                     seq ;; TODO
+                     simple-httpd ;; TODO 
                      skewer-mode  ;; maybe remove
                      smex
                      smooth-scrolling
+                     spaceline
                      speed-type ; setup
-                     tiny
-                     w3m
-                     web-beautify
-                     web-completion-data
+                     tiny ;; TODO
+                     w3m ;; DONE
+                     web-beautify ;; TODO
+                     web-completion-data ;; 
                      web-mode
-                     with-editor
-                     xcscope
-                     xml-rpc
-                     yasnippet ;; setup
 		     use-package
+                     with-editor 
+                     xcscope ;; TODO 
+                     yasnippet ;; setup
 		     ))
 
 (prefer-coding-system 'utf-8) ;; fixes some packages containing non-iso-latin characets
@@ -223,7 +205,6 @@
 ;; Load appeareance and setup
 (to/my-require 'appearance-setup)
 (to/my-require 'diminish-setup)
-
 (to/my-require 'scimax-org-babel-python)
 
 
@@ -241,4 +222,4 @@
                                                  'modeline-setup))
                                                  t)
 
-(put 'upcase-region 'disabled nil)
+
