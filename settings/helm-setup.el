@@ -1,5 +1,6 @@
 
 (use-package helm
+
   :ensure t
   :bind
     (("C-x C-f" . helm-find-files)
@@ -18,13 +19,13 @@
      helm-ff-transformer-show-only-basename t
      helm-move-to-line-cycle-in-source t
      helm-ff-auto-update-initial-value t)
-    (helm-mode t)
-    (helm-adaptive-mode t)
-    (use-package helm-flx
-      :ensure t
-      :config (helm-flx-mode +1)
-      (setq helm-flx-for-helm-find-files t
-            helm-flx-for-helm-locate t)))
+  (helm-mode t)
+  (helm-adaptive-mode t)
+  (use-package helm-flx
+    :config (helm-flx-mode +1)
+    (setq helm-flx-for-helm-find-files t
+          helm-flx-for-helm-locate t
+          helm-buffer-file-name nil)))
 
 (use-package helm-swoop
   :ensure t

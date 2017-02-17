@@ -10,7 +10,18 @@
 	  (lambda ()
 	    (font-lock-add-keywords
              nil
-             '(("[^a-zA-Z]\\([_]+[a-zA-Z0-9_]+\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-variable-proper-face prepend))  'append)))
+             '(("[^a-zA-Z_]\\([msgMSG]?_[a-zA-Z0-9]+[a-zA-Z0-9_]+\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-variable-proper-face keep))  'append)))
+
+(defface c++-macro-face
+  '((t (:inherit font-lock-keyword-face :inherit 'font-lock-keyword-face)))
+  "Face for dunder macro, to highlight them slightly. Example: __FUNCTION__ and so on."
+  :group 'font-lock-faces )
+(defvar c++-macro-face 'c++-macro-face)
+(add-hook 'c-mode-common-hook
+	  (lambda ()
+	    (font-lock-add-keywords
+             nil
+             '(("[^a-zA-Z_]\\(__[a-zA-Z0-9_]+__\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-macro-face keep))  'append)))
 
 
 ;;

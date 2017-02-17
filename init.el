@@ -152,7 +152,7 @@
 		     use-package
 		     ))
 
-
+(prefer-coding-system 'utf-8) ;; fixes some packages containing non-iso-latin characets
 (package-initialize) 
 (package-refresh-contents)
 
@@ -164,13 +164,6 @@
   (unless (package-installed-p package)
     (package-install package)))
 
-(when (and (fboundp 'server-running-p)
-           (not (server-running-p)))
-  (server-start))
-
-;; store passphrases
-(require 'plstore)
-(setq plstore-cache-passphrase-for-symmetric-encryption t)
 
 
 (setq settings-dir (expand-file-name "settings" user-emacs-directory))
@@ -182,13 +175,11 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path modes-dir)
 (add-to-list 'load-path packages-dir)
-(require 'benchmark)
 
 (defun to/my-require (symbol)
   "Requires a package and then prints that it was loaded"
-  (let (tt (benchmark-elapse (require symbol)))
-  (message "Loaded config file: %s in %s" (symbol-name symbol) 
-    (if (numberp tt) tt 0))))
+  (require symbol)
+  (message "Loaded config file: %s" (symbol-name symbol)))
 
 (defun to/do-list-dir (thedir)
   "Iterates over all files in THEDIR and loads them"
@@ -205,8 +196,14 @@
     (when (boundp 'append) append)))
 
 (to/my-require 'basic-setup)
-(to/my-require 'communication-setup)
 (to/my-require 'input-setup)
+
+;; store passphrases
+(require 'plstore)
+(setq plstore-cache-passphrase-for-symmetric-encryption t)
+
+
+(to/my-require 'communication-setup)
 (to/my-require 'defuns)
 (to/my-require 'project-setup)
 (to/my-require 'modes-setup)
@@ -227,6 +224,13 @@
 (to/my-require 'appearance-setup)
 (to/my-require 'diminish-setup)
 
+(to/my-require 'scimax-org-babel-python)
+
+
+(when (and (fboundp 'server-running-p)
+           (not (server-running-p)))
+  (server-start))
+
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
@@ -237,3 +241,4 @@
                                                  'modeline-setup))
                                                  t)
 
+(put 'upcase-region 'disabled nil)
