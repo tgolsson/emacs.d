@@ -34,6 +34,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        abbrev-prefix-mark
         comment-region
         helm-maybe-exit-minibuffer
         isearch-delete-char
