@@ -119,8 +119,6 @@
                      seq ;; TODO
                      simple-httpd ;; TODO 
                      skewer-mode  ;; maybe remove
-                     smex
-                     smooth-scrolling
                      spaceline
                      speed-type ; setup
                      tiny ;; TODO

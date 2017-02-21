@@ -35,9 +35,9 @@
    `(font-lock-comment-face             ((t (:foreground ,(color-lighten-name bg 30)))))
    `(font-lock-comment-delimiter-face   ((t (:foreground ,(color-lighten-name bg 30)))))
 
-   ;; flyspell
-   `(flyspell-duplicate                 ((t (:foreground ,(color-lighten-name hl 5) :underline ( :color ,hl :style wave)))))
-   `(flyspell-incorrect                 ((t (:foreground  ,(color-lighten-name hl 5) :underline ( :color ,hl2 :style wave)))))
+   ;; flyspell faces
+   `(flyspell-duplicate                 ((t (:foreground ,fg :underline ( :color ,hl :style line)))))
+   `(flyspell-incorrect                 ((t (:foreground ,fg :underline ( :color ,hl2 :style wave)))))
    
    ;; linum
    `(linum-highlight-face               ((t (:inherit default :foreground ,hl2 ))))
@@ -50,7 +50,7 @@
    `(mu4e-read-face                     ((t (:inherit default :foreground ,(color-lighten-name fg 15 )))))
    `(mu4e-replied-face                  ((t (:inherit default :foreground ,hl))))
    
-   ;; minimap
+   ;; minimap faces
    `(minimap-active-region-background   ((t (:height 15 :background ,(color-lighten-name bg 20)))))
    `(minimap-inactive-region-background ((t (:height 15 :background ,bg))))
    `(minimap-font-face                  ((t (:foreground ,(color-lighten-name hl 40) :height 15))))
@@ -83,7 +83,19 @@
    `(org-block-end-line ((t (:foreground ,(color-lighten-name bg 20) :background ,bg))))
    `(org-block ((t (:foreground ,(color-darken-name fg 20) :background ,(color-lighten-name bg 10)))))
    ;; END CUSTOM FACE
-  
+
+   ;; ediff
+   `(ediff-odd-diff-B ((t (:background "#444449"))))
+   `(ediff-even-diff-B ((t (:background "#5a5555")))) 
+   `(ediff-odd-diff-A ((t (:background "#444449"))))
+   `(ediff-even-diff-A ((t (:background "#5a5555"))))
+
+   ;; helm
+   `(helm-selection ((t (:background ,hl :foreground ,bg))))
+   `(helm-selection-line ((t (:background ,(color-lighten-name bg 10) :foreground ,fg))))
+
+   ;; latex
+   `(font-latex-sectioning-5-face ((t (:foreground ,hl))))
   ))
   ;; (custom-theme-set-variables
   ;;  'campfire

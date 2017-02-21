@@ -6,19 +6,25 @@
       '(
         LaTeX-insert-left-brace
         TeX-insert-backslash
+        backward-sexp
         beginning-of-visual-line
         c-electric-colon
         c-electric-lt-gt
         c-electric-paren
+        c-electric-pound
         c-electric-semi&comma
         c-electric-slash
         c-electric-star
+        c-indent-line-or-region
         downcase-region
+        electric-newline-and-maybe-indent
         electric-pair-delete-pair
         end-of-visual-line
         forward-sexp
-        helm-smex
+        forward-symbol
+        helm-show-kill-ring
         ido-find-file
+        ignore
         indent-for-tab-command
         indent-rigidly
         isearch-abort
@@ -30,14 +36,22 @@
         message-beginning-of-line
         subword-left
         subword-right
+        upcase-region
+        yaml-electric-backspace
         ))
 
 (setq mc/cmds-to-run-once
       '(
         abbrev-prefix-mark
         comment-region
+        end-of-buffer-other-window
+        helm-descbinds
         helm-maybe-exit-minibuffer
+        helm-mini
+        helm-projectile-find-other-file
+        helm-smex
         isearch-delete-char
         next-buffer
+        scroll-other-window
         smex
         ))
