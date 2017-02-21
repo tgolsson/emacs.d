@@ -83,7 +83,12 @@
    `(org-block-end-line ((t (:foreground ,(color-lighten-name bg 20) :background ,bg))))
    `(org-block ((t (:foreground ,(color-darken-name fg 20) :background ,(color-lighten-name bg 10)))))
    ;; END CUSTOM FACE
-  
+
+   ;; ediff
+   `(ediff-odd-diff-B ((t (:background "#444449"))))
+   `(ediff-even-diff-B ((t (:background "#5a5555")))) 
+   `(ediff-odd-diff-A ((t (:background "#444449"))))
+   `(ediff-even-diff-A ((t (:background "#5a5555")))) 
   ))
   ;; (custom-theme-set-variables
   ;;  'campfire
