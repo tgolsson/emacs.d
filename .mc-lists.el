@@ -4,10 +4,13 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        LaTeX-babel-insert-hyphen
         LaTeX-insert-left-brace
         TeX-insert-backslash
+        TeX-insert-dollar
         backward-sexp
         beginning-of-visual-line
+        c-electric-brace
         c-electric-colon
         c-electric-lt-gt
         c-electric-paren
@@ -16,6 +19,7 @@
         c-electric-slash
         c-electric-star
         c-indent-line-or-region
+        comment-dwim
         downcase-region
         electric-newline-and-maybe-indent
         electric-pair-delete-pair
@@ -33,15 +37,21 @@
         isearch-forward-regexp
         isearch-printing-char
         kill-region
+        kill-visual-line
         message-beginning-of-line
+        query-replace
+        reindent-then-newline-and-indent
         subword-left
         subword-right
         upcase-region
         yaml-electric-backspace
+        latex/beginning-of-line
+        TeX-insert-sub-or-superscript
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        TeX-command-master
         abbrev-prefix-mark
         comment-region
         end-of-buffer-other-window
@@ -50,8 +60,11 @@
         helm-mini
         helm-projectile-find-other-file
         helm-smex
+        helm-swoop
         isearch-delete-char
         next-buffer
+        overwrite-mode
+        previous-buffer
         scroll-other-window
         smex
         ))

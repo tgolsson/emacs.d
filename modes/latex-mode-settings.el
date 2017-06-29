@@ -45,7 +45,6 @@
   
   (setq
    ;; Labels
-   
    LaTeX-eqnarray-label "eq"
    LaTeX-equation-label "eq"
    LaTeX-figure-label "fig"
@@ -56,6 +55,9 @@
    ispell-program-name "aspell" ; could be ispell as well, depending on your preferences
    ispell-dictionary "english" ;
 
+   ;; Editing
+   LaTeX-item-indent 0
+   
    ;; TeX config
    TeX-electric-sub-and-superscript t
    TeX-auto-save t

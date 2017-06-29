@@ -180,6 +180,11 @@ With prefix argument (`C-u'), also kill the special buffers."
    (switch-to-buffer (get-buffer-create "*scratch*"))
    (lisp-interaction-mode))
 
+(defun write-region-delete-and-open(start end filename)
+  "function takes current region, and writes it to specified file"
+  (interactive "r\nFFilename: ")
+  (write-region start end filename t)
+  (kill-region start end))
 
 (provide 'defuns)
 

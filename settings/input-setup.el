@@ -34,7 +34,8 @@
       mouse-yank-at-point t
       require-final-newline t
       fill-column 80
-      delete-selection-mode t)
+      delete-selection-mode t
+      confirm-kill-emacs 'y-or-n-p)
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
