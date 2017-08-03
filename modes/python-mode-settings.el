@@ -7,7 +7,7 @@
   ;; make these variables local
   (setq python-indent-offset 4)
   (jedi:setup)
-  
+  (flycheck-mode 1)
   (company-mode 1)
   (make-local-variable 'company-backends)
   (add-to-list 'company-backends '(company-jedi company-yasnippet))

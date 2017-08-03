@@ -15,7 +15,6 @@
                      beacon ;; MANUAL DEPENDENCY
                      bind-key ;; DONE
                      bison-mode ;; NOT USED
-                     calfw  ;; REMOVE?
                      cmake-font-lock ;; FIXUP
                      cmake-mode ;; FIXUP
                      company ;; TODO 
@@ -84,7 +83,6 @@
                      markdown-preview-eww ;; TODO
                      markdown-toc ;; TODO
                      matlab-mode ;; TODO
-                     minimap ;; TODO
                      mu4e-maildirs-extension ;; TODO
                      multiple-cursors ;; TODO
                      ob-browser ;; TODO

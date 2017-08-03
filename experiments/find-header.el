@@ -47,7 +47,13 @@
           (backward-char)
           (let* ((end (point))
                  (filename (buffer-substring-no-properties start end)))
-            (find-file (concat (projectile-project-root) "/" filename))))))))
+            (if (looking-at "\"")
+                (find-file
+                 (concat
+                  (file-name-directory (buffer-file-name)) "/" filename))
+              (find-file
+               (concat
+                (projectile-project-root) "/" filename)))))))))
 
 
 

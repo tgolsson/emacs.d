@@ -108,4 +108,13 @@
   (define-auto-insert "\\.el$" ["default-lisp.el" to/autoinsert-yas-expand])
   (define-auto-insert "/sprints/" ["sprint.org" to/autoinsert-yas-expand]))
 
+
+(bind-key "M-Q" 'delete-trailing-whitespace)
+
+(setq comint-prompt-read-only t)
+(defun to/preoutput-turn-buffer-read-only (text)
+  (propertize text 'read-only t))
+(add-hook 'comint-preoutput-filter-functions
+          'to/preoutput-turn-buffer-read-only)
+
 (provide 'input-setup)

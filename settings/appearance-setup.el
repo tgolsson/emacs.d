@@ -1,4 +1,3 @@
-
 (require 'color)
 ;;
 ;; GUI
@@ -11,36 +10,33 @@
   (menu-bar-mode -1))
 (setq inhibit-splash-screen t
       inhibit-startup-message t)
-(blink-cursor-mode -1)
+(blink-cursor-mode 0)
 
 (setq scroll-margin 0
       scroll-conservatively 100000
-      scroll-preserve-screen-position 1)
+      scroll-preserve-screen-position 0)
 
 (setq frame-title-format
       '((:eval (if (buffer-file-name)
                    (abbreviate-file-name (buffer-file-name))
                  "%b"))))
-;;
-;; Minimap
-;;
-(use-package minimap
-  :if window-system
-  :config  
-  (add-hook 'minimap-sb-mode-hook (lambda ()
-                                    (setq mode-line-format nil)
-                                    (visual-line-mode 1)))
-  (add-to-list 'minimap-major-modes '(latex-mode cmake-mode org-mode))       
-  (setq minimap-minimum-width 20
-        minimap-automatically-delete-window t)
-  (minimap-mode 1))
+
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 
 ;;
 ;; Theme and LNF
 ;;
 (show-paren-mode 1)
-(set-frame-font "Source Code Pro-9" t t)
+(set-frame-font
+ (if (display-graphic-p)
+     (case (window-system)
+       ('w32 "Source Code Pro-9.5")
+       ('x "Source Code Pro-9.5"))
+  (case (window-system)
+    ('w32 "Sauce Code Powerline-9.5"))
+  ('w32 "Source Code Pro for Powerline-9.5"))) t t)
+
 (setq frame-background-mode 'dark)
 (mapc 'frame-set-background-mode (frame-list))
 (setq custom-safe-themes t

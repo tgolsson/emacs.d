@@ -21,6 +21,7 @@
         c-indent-line-or-region
         comment-dwim
         downcase-region
+        downcase-word
         electric-newline-and-maybe-indent
         electric-pair-delete-pair
         end-of-visual-line
@@ -31,6 +32,7 @@
         ignore
         indent-for-tab-command
         indent-rigidly
+        insert-char
         isearch-abort
         isearch-backward-regexp
         isearch-exit
@@ -38,6 +40,7 @@
         isearch-printing-char
         kill-region
         kill-visual-line
+        markdown-exdent-or-delete
         message-beginning-of-line
         query-replace
         reindent-then-newline-and-indent
@@ -54,6 +57,7 @@
         TeX-command-master
         abbrev-prefix-mark
         comment-region
+        delete-horizontal-space
         end-of-buffer-other-window
         helm-descbinds
         helm-maybe-exit-minibuffer
@@ -61,10 +65,13 @@
         helm-projectile-find-other-file
         helm-smex
         helm-swoop
+        help-for-help
         isearch-delete-char
+        mouse-set-region
         next-buffer
         overwrite-mode
         previous-buffer
+        query-replace
         scroll-other-window
         smex
         ))

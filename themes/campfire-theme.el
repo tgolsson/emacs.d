@@ -14,6 +14,7 @@
    'campfire
    ;; base
    `(default                            ((t ( :foreground ,fg :background ,bg ))))
+   `(bold ((t (:inherit 'default :weight bold))))
    `(fringe                             ((t (:background ,bg :foreground ,hl2))))
    `(cursor                             ((t (:background ,hl)))) 
    `(fixed-pitch                        ((t (:family "Monospace"))))
