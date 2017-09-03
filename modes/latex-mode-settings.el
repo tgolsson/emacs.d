@@ -65,8 +65,9 @@
    TeX-parse-self t 
    TeX-auto-save t
    TeX-parse-selflf t
-   reftex-plug-into-AUCTeX t
    TeX-pdf-mode t
+   TeX-engine 'xetex
+   reftex-plug-into-AUCTeX t
    auctex-latexmk-inherit-TeX-PDF-mode t 
    TeX-style-path
    '("style/" "auto/"

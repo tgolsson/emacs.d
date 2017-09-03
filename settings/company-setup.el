@@ -1,6 +1,5 @@
 
 (use-package company
-  :defer t
   :init
   (use-package company-irony)
   (use-package company-statistics)
