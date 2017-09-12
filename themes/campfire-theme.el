@@ -86,45 +86,36 @@
 					 (t (:inherit shadow :foreground ,(color-lighten-name bg-term 10) :background ,bg-term))))
 
    ;; mu4e
-   `(mu4e-header-highlight-face         (
-                                         ((((type graphic)) (:inherit highlight))
-                                          (t (:inherit highlight)))))
-   `(mu4e-header-face                   (
-                                         ((((type graphic)) (:inherit default))
-                                          (t (:inherit default)))))
+   `(mu4e-header-highlight-face ((((type graphic)) (:inherit highlight))
+                                          (t (:inherit highlight))))
+   `(mu4e-header-face                   ((((type graphic)) (:inherit default))
+                                          (t (:inherit default))))
    `(mu4e-unread-face                   ((t (:inherit default :foreground ,(color-darken-name fg 15 ) :weight bold))))
-   `(mu4e-read-face                     (
-                                         ((((type graphic)) (:inherit default :foreground ,(color-lighten-name fg 15 )))
-                                          (t (:inherit default :foreground ,(color-lighten-name fg 15 ))))))
-   `(mu4e-replied-face                  (
-                                         ((((type graphic)) (:inherit default :foreground ,hl))
-                                          (t (:inherit default :foreground ,hl)))))
+   `(mu4e-read-face                     ((((type graphic)) (:inherit default :foreground ,(color-lighten-name fg 15 )))
+                                          (t (:inherit default :foreground ,(color-lighten-name fg 15 )))))
+   `(mu4e-replied-face                  ((((type graphic)) (:inherit default :foreground ,hl))
+                                          (t (:inherit default :foreground ,hl))))
 
    ;; minimap faces
    `(minimap-active-region-background   (
-                                         ((((type graphic)) (:height 15 :background ,(color-lighten-name bg 20)))
-                                          (t (:height 15 :background ,(color-lighten-name bg 20))))))
-   `(minimap-inactive-region-background (((((type graphic)) (:height 15 :background ,bg))
-                                          (t (:height 15 :background ,bg)))))
+                                         (((type graphic)) (:height 15 :background ,(color-lighten-name bg 20)))
+                                          (t (:height 15 :background ,(color-lighten-name bg 20)))))
+   `(minimap-inactive-region-background ((((type graphic)) (:height 15 :background ,bg))
+                                          (t (:height 15 :background ,bg))))
    `(minimap-font-face                  ((t (:foreground ,(color-lighten-name hl 40) :height 15))))
    `(minimap-highlight-selected         ((t (:foreground ,(color-lighten-name bg 40) :background ,hl))))
    
    ;; magit
-   `(magit-section-highlight            (
-					 ((((type graphic)) (:background ,(color-lighten-name bg 10)))
-					  (t (:background ,(color-lighten-name bg 10))))))
-   `(magit-branch-local                 (
-					 ((((type graphic)) (:foreground ,hl ))
-					  (t (:foreground ,hl )))))
-   `(magit-branch-remote                (
-					 ((((type graphic)) (:foreground ,hl3 ))
-					  (t (:foreground ,hl3 )))))
-   `(magit-branch-current               (
-					 ((((type graphic)) (:foreground ,hl4 ))
-					  (t (:foreground ,hl4 )))))
-   `(magit-section-heading              (
-					 ((((type graphic)) (:weight bold :foreground ,(color-lighten-name hl2 10)))
-					  (t (:weight bold :foreground ,(color-lighten-name hl2-term 10))))))
+   `(magit-section-highlight            ((((type graphic)) (:background ,(color-lighten-name bg 10)))
+					  (t (:background ,(color-lighten-name bg 10)))))
+   `(magit-branch-local                 ((((type graphic)) (:foreground ,hl ))
+					  (t (:foreground ,hl ))))
+   `(magit-branch-remote                ((((type graphic)) (:foreground ,hl3 ))
+					  (t (:foreground ,hl3 ))))
+   `(magit-branch-current               ((((type graphic)) (:foreground ,hl4 ))
+					  (t (:foreground ,hl4 ))))
+   `(magit-section-heading              ((((type graphic)) (:weight bold :foreground ,(color-lighten-name hl2 10)))
+					  (t (:weight bold :foreground ,(color-lighten-name hl2-term 10)))))
    
    ;; company
    `(company-tooltip                    ((((type graphic)) (:background ,(color-lighten-name bg 4) :inherit default ))
@@ -154,15 +145,12 @@
   
    
    ;; mode-line
-   `(fancy-battery-charging (
-			     ((((type graphic)) (:foreground ,fg))
-			      (t (:foreground ,fg-term)))))
-   `(fancy-battery-critical (
-			     ((((type graphic)) (:foreground ,hl2))
-			      (t (:foreground ,hl2-term)))))
-   `(fancy-battery-discharging (
-				((((type graphic)) (:foreground ,hl3))
-				 (t (:foreground ,hl3-term)))))
+   `(fancy-battery-charging ((((type graphic)) (:foreground ,fg))
+			      (t (:foreground ,fg-term))))
+   `(fancy-battery-critical ((((type graphic)) (:foreground ,hl2))
+                              (t (:foreground ,hl2-term))))
+   `(fancy-battery-discharging ((((type graphic)) (:foreground ,hl3))
+				 (t (:foreground ,hl3-term))))
 
    ;; org-mode
    `(org-block-begin-line ((t (:foreground ,(color-lighten-name bg 20) :background ,bg))))
@@ -172,30 +160,25 @@
    ;; END CUSTOM FACE
 
    ;; ediff
-   `(ediff-odd-diff-B (
-		       ((((type graphic)) (:background ,(color-lighten-name fg 10)))
-			(t (:background ,(color-lighten-name fg-term 10))))))
+   `(ediff-odd-diff-B ((((type graphic)) (:background ,(color-lighten-name fg 10)))
+			(t (:background ,(color-lighten-name fg-term 10)))))
 
-   `(ediff-odd-even-B (
-		       ((((type graphic)) (:background ,(color-darken-name fg 10)))
-			(t (:background ,(color-darken-name fg-term 10))))))
+   `(ediff-odd-even-B ((((type graphic)) (:background ,(color-darken-name fg 10)))
+			(t (:background ,(color-darken-name fg-term 10)))))
 
-   `(ediff-odd-diff-A (
-		       ((((type graphic)) (:background ,(color-lighten-name fg 10)))
-			(t (:background ,(color-lighten-name fg-term 10))))))
+   `(ediff-odd-diff-A  ((((type graphic)) (:background ,(color-lighten-name fg 10)))
+			(t (:background ,(color-lighten-name fg-term 10)))))
 
-   `(ediff-odd-even-A (
-		       ((((type graphic)) (:background ,(color-darken-name fg 10)))
-			(t (:background ,(color-darken-name fg-term 10))))))
+   `(ediff-odd-even-A ((((type graphic)) (:background ,(color-darken-name fg 10)))
+			(t (:background ,(color-darken-name fg-term 10)))))
    ;; helm
-   `(helm-selection (
-		     ((((type graphic)) (:background ,hl :foreground ,bg))
-		      (t (:background ,hl-term :foreground ,bg-term)))))
+   `(helm-selection ((((type graphic)) (:background ,hl :foreground ,bg))
+		      (t (:background ,hl-term :foreground ,bg-term))))
    `(helm-selection-line ((t (:background ,(color-lighten-name bg-term 10) :foreground ,fg-term))))
 
    ;; latex
-   `(font-latex-sectioning-5-face (((((type graphic)) (:foreground ,hl))
-				    (t (:foreground ,hl-term)))))))
+   `(font-latex-sectioning-5-face ((((type graphic)) (:foreground ,hl))
+				    (t (:foreground ,hl-term))))))
 
   ;; (custom-theme-set-variables
   ;;  'campfire

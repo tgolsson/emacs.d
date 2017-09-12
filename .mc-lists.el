@@ -8,6 +8,7 @@
         LaTeX-insert-left-brace
         TeX-insert-backslash
         TeX-insert-dollar
+        TeX-insert-sub-or-superscript
         backward-sexp
         beginning-of-visual-line
         c-electric-brace
@@ -40,6 +41,7 @@
         isearch-printing-char
         kill-region
         kill-visual-line
+        latex/beginning-of-line
         markdown-exdent-or-delete
         message-beginning-of-line
         query-replace
@@ -48,8 +50,6 @@
         subword-right
         upcase-region
         yaml-electric-backspace
-        latex/beginning-of-line
-        TeX-insert-sub-or-superscript
         ))
 
 (setq mc/cmds-to-run-once
@@ -59,6 +59,7 @@
         comment-region
         delete-horizontal-space
         end-of-buffer-other-window
+        fill-paragraph
         helm-descbinds
         helm-maybe-exit-minibuffer
         helm-mini

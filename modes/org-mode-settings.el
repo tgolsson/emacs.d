@@ -48,7 +48,8 @@
              (org-projectile:project-todo-entry "t" "* TODO %f %? \n%^G\n%a\n" "Project Todo"))
 
 (setq org-projectile:projects-file
-      "/home/tgo/Dropbox/notes/todo-projects.org")
+      "~/notes/todo-projects.org")
+
 
 ;; org-babel
 (org-babel-do-load-languages
