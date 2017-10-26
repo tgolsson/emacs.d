@@ -186,6 +186,31 @@ With prefix argument (`C-u'), also kill the special buffers."
   (write-region start end filename t)
   (kill-region start end))
 
+(defun random-uuid ()
+  "Insert a UUID. This uses a simple hashing of variable data.
+Example of a UUID: 1df63142-a513-c850-31a3-535fc3520c3d
+
+Note: this code uses https://en.wikipedia.org/wiki/Md5"
+  (interactive)
+  (let ((myStr (md5 (format "%s%s%s%s%s%s%s%s%s%s"
+                            (user-uid)
+                            (emacs-pid)
+                            (system-name)
+                            (user-full-name)
+                            (current-time)
+                            (emacs-uptime)
+                            (garbage-collect)
+                            (buffer-string)
+                            (random)
+                            (recent-keys)))))
+
+    (insert (format "%s-%s-4%s-%s%s-%s"
+                    (substring myStr 0 8)
+                    (substring myStr 8 12)
+                    (substring myStr 13 16)
+                    (format "%x" (+ 8 (random 4)))
+                    (substring myStr 17 20)
+                    (substring myStr 20 32)))))
 (provide 'defuns)
 
 
