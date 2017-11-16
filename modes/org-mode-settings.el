@@ -40,10 +40,10 @@
              ))
 
 (add-to-list 'org-capture-templates
-             (org-projectile:project-todo-entry "b"  "* BUG %f %? \n%^G\n%a\n"
+             (org-projectile-project-todo-entry "b"  "* BUG %f %? \n%^G\n%a\n"
                                                 "Project Bug"))
 (add-to-list 'org-capture-templates
-             (org-projectile:project-todo-entry "t" "* TODO %f %? \n%^G\n%a\n" "Project Todo"))
+             (org-projectile-project-todo-entry "t" "* TODO %f %? \n%^G\n%a\n" "Project Todo"))
 
 (setq org-projectile:projects-file
       "~/notes/todo-projects.org")

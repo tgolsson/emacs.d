@@ -4,8 +4,12 @@
    (concat "start chrome " url)))
 
 (defun to/windows-setup () (interactive)
-       (setq git-shell-path (concat "C:\\Program Files\\Git\\bin"))
-       (setq git-shell-executable (concat git-shell-path "\\bash.exe"))
+       (setq git-shell-path (concat "C:\\Program Files\\Git\\bin")
+             git-shell-executable (concat git-shell-path "\\bash.exe"))
+
+       ;; Disable lockfiles to make flask spaz less
+       (setq create-lockfiles nil)
+       
        (add-to-list 'exec-path git-shell-path)
        (setenv "PATH" (concat git-shell-path ";" (getenv "PATH")))
 
@@ -14,9 +18,11 @@
        (when (boundp 'w32-pipe-read-delay)
          (setq w32-pipe-read-delay 0))
        ;; Set the buffer size to 64K on Windows (from the original 4K)
+       
        (when (boundp 'w32-pipe-buffer-size)
-         (setq w32-pipe-buffer-size (* 64 1024))
-         (setq irony-server-w32-pipe-buffer-size (* 64 1024)))
+         (setq w32-pipe-buffer-size (* 64 1024)
+               irony-server-w32-pipe-buffer-size (* 64 1024)))
+       
        (message "Windows preferences set."))
 
 (defun to/other-setup () (interactive)
@@ -37,8 +43,9 @@
 ;;
 ;; Backups, bookmarks and save-place
 ;;
-(setq vc-make-backup-files t ;; Enable backups for git-files etc
-      backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
+(setq vc-make-backup-files t
+      backup-directory-alist `((".*" . ,temporary-file-directory))
+      auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       bookmark-default-file  (concat user-emacs-directory "bookmarks.em")
       bookmark-save-flag 1)
 
@@ -47,10 +54,12 @@
 ;; Recent files
 ;;
 (recentf-mode 1)
-(setq recentf-max-saved-items 100) ;; just 20 is too recent
+(setq recentf-max-saved-items 100)
 (add-to-list 'recentf-exclude "/elpa/")
 (add-to-list 'recentf-exclude "company-statistics-cache.el")
 (add-to-list 'recentf-exclude "bookmarks.em")
+(add-to-list 'recentf-exclude ".mc-lists.el")
+(add-to-list 'recentf-exclude "custom.el")
 
 ;;
 ;; Minibuffer-history
