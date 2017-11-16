@@ -46,7 +46,10 @@
 ;;  ((t) "Consolas")
 ;;  )
 
-(setq frame-background-mode 'dark)
+(setq frame-background-mode 'dark
+      font-lock-multiline t)
+
+(setq-default font-lock-multiline t)
 (mapc 'frame-set-background-mode (frame-list))
 (setq custom-safe-themes t
       custom-theme-directory (expand-file-name "themes" user-emacs-directory))
@@ -92,7 +95,7 @@
 
 
 (use-package rainbow-mode)
-(require 'fixme-mode)
+; (require 'fixme-mode)
 
 
 (use-package dashboard

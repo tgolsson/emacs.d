@@ -50,12 +50,14 @@
         subword-right
         upcase-region
         yaml-electric-backspace
+        yaml-electric-dash-and-dot
         ))
 
 (setq mc/cmds-to-run-once
       '(
         TeX-command-master
         abbrev-prefix-mark
+        beginning-of-defun
         comment-region
         delete-horizontal-space
         end-of-buffer-other-window

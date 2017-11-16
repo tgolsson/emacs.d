@@ -6,17 +6,18 @@
 (let
     ((fg  "#b2a99f")
      (hl  "#327e02")
-     (bg  "#121215")
+     (bg  "#121213")
      (hl2 "#ff0000")
      (hl3 "#b0322f")
      (hl4 "#6f72f0")
-     (fg-term  "#d7a787")
+     (fg-term  "#a7a7a7")
      (hl-term "#5f8700")
-     (bg-term  "#000000")
+     (bg-term  "#121212")
      (hl2-term "#ff0000")
-     (hl3-term "#aff500")
+     (hl3-term "#af5f00")
      (hl4-term "#5f87ff"))
   ;; define actual faces
+  
   (custom-theme-set-faces
    'campfire
    ;; base

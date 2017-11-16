@@ -2,8 +2,6 @@
 
 (require 'ob-core)
 (require 'org-projectile)
-(require 'calfw)
-(require 'calfw-org)
 (require 'ob-ditaa)
 ;; calfw
 
@@ -68,18 +66,15 @@
   (if window-system
     (setq org-startup-with-inline-images t)))
 
-;; org-gcal
-(require 'org-gcal)
-
-(setq org-latex-classes t)
-(add-to-list 'org-latex-classes
-      '("org-article"
-         "\\documentclass[twocolumn]{article}
-         [NO-DEFAULT-PACKAGES]
-         [PACKAGES]
-         [EXTRA]"
-         ("\\section{%s}" . "\\section*{%s}")
-         ("\\subsection{%s}" . "\\subsection*{%s}")
-         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-         ("\\paragraph{%s}" . "\\paragraph*{%s}")
-         ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+;; (setq org-latex-classes t)
+;; (add-to-list 'org-latex-classes
+;;       '("org-article"
+;;          "\\documentclass[twocolumn]{article}
+;;          [NO-DEFAULT-PACKAGES]
+;;          [PACKAGES]
+;;          [EXTRA]"
+;;          ("\\section{%s}" . "\\section*{%s}")
+;;          ("\\subsection{%s}" . "\\subsection*{%s}")
+;;          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;          ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))

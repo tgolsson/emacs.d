@@ -6,7 +6,7 @@
 
 
 ;; SPACELINE
-(let ((bg "#121215")
+(let ((bg "#121213")
       (fg "#c2b99f"))
   ;; active
   (set-face-attribute 'mode-line           nil
@@ -61,7 +61,7 @@
 
 ;; (add-hook 'window-setup-hook
 ;;           (lambda () 
-;;             (let ((bg "#121215")
+;;             (let ((bg "#121213")
 ;;                   (fg "#c2b99f"))
 ;;               (set-face-attribute 'mode-line nil :box 
 ;;                                   `(:line-width 2 :color ,(color-lighten-name bg
@@ -79,7 +79,7 @@
 ;;                                   :foreground "b2a99f")
 ;;               )
 
-(let ((bg "#121215")                                                                      
+(let ((bg "#121213")                                                                      
       (fg "#c2b99f"))                                                               
   (set-face-attribute 'mode-line nil :box                                                 
                       `(:line-width 2 :color ,(color-lighten-name bg 10) :style nil ))                                                                          
