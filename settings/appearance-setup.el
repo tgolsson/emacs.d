@@ -32,11 +32,11 @@
 (set-frame-font
  (if (display-graphic-p)
      (case (window-system)
-       ('w32 "Source Code Pro-9.5"
-             'x "Source Code Pro-9.5"))
+       ('w32 "Source Code Pro-9.5")
+       ('x "Source Code Pro-9.5"))
   (case (window-system)
     ('w32 "Sauce Code Powerline-9.5")
-  ('x "Source Code Pro for Powerline-9.5"))) t t)
+    ('x "Source Code Pro for Powerline-9.5"))) t t)
 
 ;; (cond
 ;;  ((member "Source Code Pro" (font-family-list))
@@ -53,7 +53,7 @@
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
 (add-hook 'emacs-startup-hook (lambda () (interactive) (load-theme 'campfire t)))
 
-(when window-system 
+(when window-system
   (define-fringe-bitmap 'right-curly-arrow
     [#b00000000
      #b00000000
@@ -84,10 +84,10 @@
       linum-eager t)
 
 (use-package hlinum
-  :config 
+  :config
   (global-linum-mode 1)
   (linum-mode 1)
-  (hlinum-activate)  
+  (hlinum-activate)
   (setq linum-highlight-in-all-buffersp t))
 
 
@@ -103,5 +103,3 @@
                                     (bookmarks . 5))))
 
 (provide 'appearance-setup)
-
-

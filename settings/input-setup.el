@@ -106,6 +106,7 @@
   (add-hook 'find-file-hook 'auto-insert)
   (auto-insert-mode 1)
   (define-auto-insert "\\.el$" ["default-lisp.el" to/autoinsert-yas-expand])
+  (define-auto-insert "\\.py$" ["default-python.py" to/autoinsert-yas-expand])
   (define-auto-insert "/sprints/" ["sprint.org" to/autoinsert-yas-expand]))
 
 
