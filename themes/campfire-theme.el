@@ -6,17 +6,18 @@
 (let
     ((fg  "#b2a99f")
      (hl  "#327e02")
-     (bg  "#121215")
+     (bg  "#121213")
      (hl2 "#ff0000")
      (hl3 "#b0322f")
      (hl4 "#6f72f0")
-     (fg-term  "#d7a787")
+     (fg-term  "#a7a7a7")
      (hl-term "#5f8700")
-     (bg-term  "#000000")
+     (bg-term  "#121212")
      (hl2-term "#ff0000")
-     (hl3-term "#aff500")
+     (hl3-term "#af5f00")
      (hl4-term "#5f87ff"))
   ;; define actual faces
+  
   (custom-theme-set-faces
    'campfire
    ;; base
@@ -160,17 +161,52 @@
    ;; END CUSTOM FACE
 
    ;; ediff
-   `(ediff-odd-diff-B ((((type graphic)) (:background ,(color-lighten-name fg 10)))
-			(t (:background ,(color-lighten-name fg-term 10)))))
 
-   `(ediff-odd-even-B ((((type graphic)) (:background ,(color-darken-name fg 10)))
-			(t (:background ,(color-darken-name fg-term 10)))))
+   `(ediff-odd-diff-Ancestor ((((type graphic)) (:foreground ,bg :background ,(color-lighten-name fg 5)))
+			      (t (:foreground ,bg-term :background ,(color-lighten-name fg-term 5)))))
+   
+   `(ediff-even-diff-Ancestor ((((type graphic)) (:foreground ,bg :background ,(color-darken-name fg 5)))
+			       (t (:foreground ,bg-term :background ,(color-darken-name fg-term 5)))))
+   
 
-   `(ediff-odd-diff-A  ((((type graphic)) (:background ,(color-lighten-name fg 10)))
-			(t (:background ,(color-lighten-name fg-term 10)))))
+   `(ediff-fine-diff-C ((((type graphic)) (:foreground ,bg :background ,(color-darken-name hl4 10)))
+			(t (:foreground ,bg-term :background ,(color-darken-name hl4-term 10)))))
 
-   `(ediff-odd-even-A ((((type graphic)) (:background ,(color-darken-name fg 10)))
-			(t (:background ,(color-darken-name fg-term 10)))))
+   `(ediff-odd-diff-C ((((type graphic)) (:foreground ,bg :background ,(color-lighten-name hl4 5)))
+			(t (:foreground ,bg-term :background ,(color-lighten-name hl4-term 5)))))
+
+   `(ediff-even-diff-C ((((type graphic)) (:foreground ,bg :background ,(color-darken-name hl4 5)))
+			(t (:foreground ,bg-term :background ,(color-darken-name hl4-term 5)))))
+
+   `(ediff-current-diff-C ((((type graphic)) (:foreground ,bg :background ,(color-darken-name hl4 0)))
+			(t (:foreground ,bg-term :background ,(color-darken-name hl4-term 0)))))
+
+
+   
+   `(ediff-fine-diff-B ((((type graphic)) (:background ,(color-darken-name hl3 10)))
+			(t (:background ,(color-darken-name hl3-term 10)))))
+   `(ediff-odd-diff-B ((((type graphic)) (:foreground ,bg :background ,(color-lighten-name hl3 5)))
+			(t (:foreground ,bg-term :background ,(color-lighten-name hl3-term 5)))))
+
+   `(ediff-even-diff-B ((((type graphic)) (:background ,(color-darken-name hl3 5)))
+			(t (:background ,(color-darken-name hl3-term 5)))))
+
+   `(ediff-current-diff-B ((((type graphic)) (:foreground ,bg :background ,(color-darken-name hl3 0)))
+			(t (:foreground ,bg-term :background ,(color-darken-name hl3-term 0)))))
+
+   
+   `(ediff-fine-diff-A ((((type graphic)) (:background ,(color-darken-name hl 10)))
+		       (t (:background ,(color-darken-name hl-term 10)))))
+   
+   `(ediff-odd-diff-A  ((((type graphic)) (:foreground ,bg :background ,(color-lighten-name hl 5)))
+			(t (:foreground ,bg-term :background ,(color-lighten-name hl-term 5)))))
+
+   `(ediff-even-diff-A ((((type graphic)) (:background ,(color-darken-name hl 5)))
+		       (t (:background ,(color-darken-name hl-term 5)))))
+
+   `(ediff-current-diff-A ((((type graphic)) (:background ,(color-darken-name hl 0)))
+		       (t (:background ,(color-darken-name hl-term 0)))))
+   
    ;; helm
    `(helm-selection ((((type graphic)) (:background ,hl :foreground ,bg))
 		      (t (:background ,hl-term :foreground ,bg-term))))

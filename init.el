@@ -166,7 +166,7 @@
         (dolist (file (directory-files thedir t "\.el$" nil))
           (load (file-name-sans-extension file)))
         (message "Loaded all files in: %s" thedir))
-    (message "Did not load files in: %s, not accessible", thedir)))
+    (message "Did not load files in: %s, not accessible" thedir)))
 
 (defmacro to/easy-hook
     (hook prog &optional local append  )
@@ -217,5 +217,4 @@
 (to/easy-hook 'emacs-startup-hook (progn (to/my-require
                                                  'modeline-setup))
                                                  t)
-
 

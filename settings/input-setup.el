@@ -107,7 +107,8 @@
   (auto-insert-mode 1)
   (define-auto-insert "\\.el$" ["default-lisp.el" to/autoinsert-yas-expand])
   (define-auto-insert "\\.py$" ["default-python.py" to/autoinsert-yas-expand])
-  (define-auto-insert "/sprints/" ["sprint.org" to/autoinsert-yas-expand]))
+  (define-auto-insert "/sprints/" ["sprint.org" to/autoinsert-yas-expand])
+  (define-auto-insert "test_.*.py" ["test.py" to/autoinsert-yas-expand]))
 
 
 (bind-key "M-Q" 'delete-trailing-whitespace)
