@@ -9,7 +9,7 @@
 
        ;; Disable lockfiles to make flask spaz less
        (setq create-lockfiles nil)
-       
+
        (add-to-list 'exec-path git-shell-path)
        (setenv "PATH" (concat git-shell-path ";" (getenv "PATH")))
 
@@ -18,11 +18,11 @@
        (when (boundp 'w32-pipe-read-delay)
          (setq w32-pipe-read-delay 0))
        ;; Set the buffer size to 64K on Windows (from the original 4K)
-       
+
        (when (boundp 'w32-pipe-buffer-size)
          (setq w32-pipe-buffer-size (* 64 1024)
                irony-server-w32-pipe-buffer-size (* 64 1024)))
-       
+
        (message "Windows preferences set."))
 
 (defun to/other-setup () (interactive)
@@ -36,7 +36,7 @@
 
 ;;
 ;; Commands
-;; 
+;;
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)
 
@@ -79,8 +79,6 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 
-
-
 (use-package uniquify
   :ensure nil
   :config
@@ -91,5 +89,10 @@
             (setq save-place t)
             save-place-file (concat user-emacs-directory "places"))
 
+;;
+;; User setup
+;;
+(setq user-full-name "Tom Olsson"
+      user-mail-address "mail@tomolsson.se")
 
 (provide 'basic-setup)

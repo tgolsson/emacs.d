@@ -11,6 +11,7 @@
         TeX-insert-sub-or-superscript
         backward-sexp
         beginning-of-visual-line
+        c-beginning-of-statement
         c-electric-brace
         c-electric-colon
         c-electric-lt-gt
@@ -21,6 +22,7 @@
         c-electric-star
         c-indent-line-or-region
         comment-dwim
+        delete-trailing-whitespace
         downcase-region
         downcase-word
         electric-newline-and-maybe-indent
@@ -70,6 +72,7 @@
         helm-swoop
         help-for-help
         isearch-delete-char
+        mouse-save-then-kill
         mouse-set-region
         next-buffer
         overwrite-mode
