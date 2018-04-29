@@ -34,17 +34,9 @@
      (case (window-system)
        ('w32 "Source Code Pro for Powerline-9.5")
        ('x "Source Code Pro-9.5"))
-  (case (window-system)
-    ('w32 "Sauce Code Powerline-9.5")
-    ('x "Source Code Pro for Powerline-9.5"))) t t)
-
-;; (cond
-;;  ((member "Source Code Pro" (font-family-list))
-;;   (set-frame-font "Source Code Pro-9" t t))
-;;  ((member "Sauce Code Powerline" (font-family-list))
-;;   (set-frame-font "Sauce Code Powerline-9" t t))
-;;  ((t) "Consolas")
-;;  )
+   (case (window-system)
+     ('w32 "Sauce Code Powerline-9.5")
+     ('x "Source Code Pro for Powerline-9.5"))) t t)
 
 (setq frame-background-mode 'dark
       font-lock-multiline t)

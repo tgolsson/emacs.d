@@ -6,7 +6,7 @@
                          ("melpa" . "http://melpa.org/packages/")))
 
 (setq use-package-always-ensure t)
-(setq load-prefer-newer t)
+;; (setq load-prefer-newer t)
 (setq package-list '(android-mode ;; TODO 
                      anzu ;; TODO
                      arduino-mode ;; TODO 
@@ -38,6 +38,7 @@
                      expand-region ;; TODO
                      fancy-battery ;; TODO 
                      flycheck ;; TODO
+                     flycheck-pos-tip ;;
                      flycheck-irony ;; TODO
                      git-commit ;; TODO 
                      gradle-mode ;; TODO

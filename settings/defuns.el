@@ -1,3 +1,5 @@
+(require 'cl)
+
 (defun untabify-buffer ()
   (interactive)
   (untabify 1 (point-max))
@@ -186,6 +188,7 @@ With prefix argument (`C-u'), also kill the special buffers."
   (write-region start end filename t)
   (kill-region start end))
 
+
 (defun random-uuid ()
   "Insert a UUID. This uses a simple hashing of variable data.
 Example of a UUID: 1df63142-a513-c850-31a3-535fc3520c3d
@@ -211,6 +214,52 @@ Note: this code uses https://en.wikipedia.org/wiki/Md5"
                     (format "%x" (+ 8 (random 4)))
                     (substring myStr 17 20)
                     (substring myStr 20 32)))))
+
+(defun* yank-arg ()
+  "Yanks the arg at point, abiding by the syntax-table of the current mode"
+  (interactive)
+  (let (bounds start end)
+    (setq bounds (bounds-of-thing-at-point 'symbol))
+    (if bounds
+        (progn
+          (setq start (car bounds))
+          (setq end (cdr bounds)))
+      (cond
+       ((eq (char-syntax (char-after)) ?\()
+        (progn
+          (setq start (point))
+          (forward-sexp)
+          (setq end (point))))
+       ((eq (char-syntax (char-before)) ?\()
+        (progn
+          (backward-char)
+          (setq start (point))
+          (forward-sexp)
+          (setq end (point))))
+       ((eq (char-syntax (char-before)) ?\))
+        (progn
+          (setq end (point))
+          (backward-sexp)
+          (setq start (point))))
+       (t
+        (progn
+          (message "No arg at point to yank!")
+          (return-from yank-arg)))))
+
+    (goto-char end)
+    (cond ((eq (char-syntax (char-after)) ?\() ; Followed by a sexp
+           (progn (forward-sexp)
+                  (setq end (point))))
+          ((looking-at "[ ,]") ; Whitespace or comma - zap until next symbol
+           (while (looking-at "[ ,]")
+             (forward-char))
+           (setq end (point))))
+    (goto-char start)
+    (while (looking-back "[[:space:],\n]")
+      (backward-char))
+    (setq start (point))
+    (kill-region start end)))
+
 (provide 'defuns)
 
 

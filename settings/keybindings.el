@@ -19,6 +19,7 @@
 (global-set-key (kbd "C-c n")                'cleanup-buffer)
 (global-set-key (kbd "C-c C-n")              'cleanup-buffer)
 (global-set-key (kbd "C-c C-<return>")       'delete-blank-lines)
+
 ;; DMM
 (global-set-key (kbd "C-h C-m")              'discover-my-major)
 (global-set-key (kbd "C-h M-m")              'discover-my-mode)
@@ -38,6 +39,8 @@
 ;;(global-set-key [tab]                      'tab-indent-or-complete)
 ;(define-key company-active-map [tab]        'tab-indent-or-complete)
 
+;; programming mode
+(define-key prog-mode-map (kbd "M-W") 'yank-arg)
 
 
 ;; company

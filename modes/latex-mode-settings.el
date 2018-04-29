@@ -15,7 +15,7 @@
 
   (bind-key "C-c 0" 'helm-bibtex)
   (turn-on-reftex)
-
+  
   ;; Force PDF
   (setq-default TeX-master nil)
   (setq auctex-latexmk-inherit-TeX-PDF-mode t)
@@ -80,6 +80,8 @@
      LaTeX-section-toc
      LaTeX-section-section
      LaTeX-section-label)))
+
+(define-key LaTeX-mode-map (kbd "M-W") 'yank-arg)
 
 (add-hook 'plain-TeX-mode-hook
 	  (lambda () (set (make-variable-buffer-local 'TeX-electric-math)
