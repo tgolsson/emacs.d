@@ -1,5 +1,8 @@
+(with-eval-after-load 'flycheck
+  (flycheck-pos-tip-mode))
 (require 'flycheck)
-(require 'flycheck-pos-tip)
+
+
 (defun to/adjust-flycheck-automatic-syntax-eagerness ()
     "Adjust how often we check for errors based on if there are any.
 This lets us fix any errors as quickly as possible, but in a
