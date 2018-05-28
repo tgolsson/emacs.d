@@ -260,6 +260,14 @@ Note: this code uses https://en.wikipedia.org/wiki/Md5"
     (setq start (point))
     (kill-region start end)))
 
+(defun toggle-maximize-buffer () "Maximize buffer"
+  (interactive)
+  (if (= 1 (length (window-list)))
+      (jump-to-register '_) 
+    (progn
+      (window-configuration-to-register '_)
+      (delete-other-windows))))
+
 (provide 'defuns)
 
 
