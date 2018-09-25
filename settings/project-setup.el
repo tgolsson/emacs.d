@@ -1,8 +1,13 @@
-
-
 (use-package projectile
-  :bind ("C-x M-k" . to/kill-other-buffers)
-  :config 
+  :ensure t
+  :demand t  
+  ;; :bind (("C-x M-k" . to/kill-other-buffers)
+  ;;        ("C-c p a" . projectile-find-other-file))
+
+  :init
+
+  :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-global-mode 1)
   (setq projectile-switch-project-action 'magit-status
         projectile-globally-ignored-directories (append
@@ -11,6 +16,16 @@
         projectile-globally-ignored-file-suffixes (append
                                                    '(".pyc")
                                                    projectile-globally-ignored-file-suffixes)))
+
+;; (use-package helm-projectile
+;;   :ensure t
+;;   :demand t
+;;   :config
+;;   (progn
+;;     (setq projectile-completion-system 'helm)
+;;     (helm-projectile-on)
+;;     )
+;;   )
 
 (use-package ibuffer-projectile)
 

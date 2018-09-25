@@ -33,7 +33,7 @@
  (if (display-graphic-p)
      (case (window-system)
        ('w32 "Source Code Pro for Powerline-9.5")
-       ('x "Source Code Pro-9.5"))
+       ('x "Source Code Pro-9"))
    (case (window-system)
      ('w32 "Sauce Code Powerline-9.5")
      ('x "Source Code Pro for Powerline-9.5"))) t t)

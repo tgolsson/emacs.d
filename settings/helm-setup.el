@@ -1,6 +1,5 @@
 
 (use-package helm
-
   :ensure t
   :bind
     (("C-x C-f" . helm-find-files)
@@ -63,11 +62,6 @@
 (use-package helm-ls-git
   :ensure t
   :bind ( ("C-x M-g" . helm-ls-git-ls)))
-
-(use-package helm-projectile
-  :defer 3 ;; to make sure projectile is loaded and doesn't kill the keybind
-  :bind (("C-c p f" . helm-projectile))
-  :config (helm-projectile-on))
 
 (use-package helm-mu
   :ensure t

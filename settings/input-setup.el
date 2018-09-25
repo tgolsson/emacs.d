@@ -108,7 +108,43 @@
   (define-auto-insert "\\.el$" ["default-lisp.el" to/autoinsert-yas-expand])
   (define-auto-insert "\\.py$" ["default-python.py" to/autoinsert-yas-expand])
   (define-auto-insert "/sprints/" ["sprint.org" to/autoinsert-yas-expand])
-  (define-auto-insert "test_.*.py" ["test.py" to/autoinsert-yas-expand]))
+  (define-auto-insert "test_.*.py" ["test.py" to/autoinsert-yas-expand])
+   ;; autoinsert C/C++ header
+    (define-auto-insert
+      (cons "\\.\\([Hh]\\|hh\\|hpp\\)\\'" "My C / C++ header")
+      '(nil
+    	"// " (file-name-nondirectory buffer-file-name) "\n"
+    	"//\n"
+        "// Copyright © Tom Olsson\n"
+    	"//\n"
+    	"// Description:\n"
+    	"//\n"
+    	(make-string 70 ?/) "\n\n"
+        "// last-edit-by: <" (user-full-name) "> \n"
+    	"// $Log:$\n"
+    	"//\n"
+    	(make-string 70 ?/) "\n\n"
+        "#pragma once\n\n"
+    	))
+    
+    ;; auto insert C/C++
+    (define-auto-insert
+      (cons "\\.\\([Cc]\\|cc\\|cpp\\)\\'" "My C++ implementation")
+      '(nil
+    	"// " (file-name-nondirectory buffer-file-name) "\n"
+    	"//\n"
+        "// Copyright © Tom Olsson\n"
+    	"// \n"
+    	"// Description:\n"
+    	"//\n"
+    	(make-string 70 ?/) "\n\n"
+    	"// last-edit-by: <" (user-full-name) "> \n"
+    	"// $Log:$\n"
+    	"//\n"
+        (make-string 70 ?/) "\n\n"
+        "#include \"" (concat (file-name-sans-extension (file-name-nondirectory buffer-file-name)) ".h") "\""
+    	)))
+
 
 
 (bind-key "M-Q" 'delete-trailing-whitespace)
