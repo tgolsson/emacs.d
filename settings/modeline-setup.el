@@ -73,10 +73,10 @@
 ;;                                   nil)
               
 ;;               (set-face-attribute 'spaceline-unmodified nil :background
-;;           "#119900" :foreground "b2a99f")
-;;               (set-face-attribute 'spaceline-modified nil :background "#991100" :foreground "b2a99f")
+;;           "#119900" :foreground "#b2a99f")
+;;               (set-face-attribute 'spaceline-modified nil :background "#991100" :foreground "#b2a99f")
 ;;               (set-face-attribute 'spaceline-read-only nil :background "#110099"
-;;                                   :foreground "b2a99f")
+;;                                   :foreground "#b2a99f")
 ;;               )
 
 (let ((bg "#121213")                                                                      
@@ -90,9 +90,9 @@
                                           nil)                                                                
                       
                       (set-face-attribute 'spaceline-unmodified nil :background                               
-                                          "#119900" :foreground "b2a99f")                                                             
-                      (set-face-attribute 'spaceline-modified nil :background "#991100" :foreground "b2a99f") 
+                                          "#119900" :foreground "#b2a99f")                                                             
+                      (set-face-attribute 'spaceline-modified nil :background "#991100" :foreground "#b2a99f") 
                       (set-face-attribute 'spaceline-read-only nil :background "#110099"                      
-                                          :foreground "b2a99f"))
+                                          :foreground "#b2a99f"))
 (spaceline-compile)
 (provide 'modeline-setup)

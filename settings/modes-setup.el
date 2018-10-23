@@ -27,4 +27,7 @@
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.launch\\'" . xml-mode))
 
+;; Work
+(add-to-list 'auto-mode-alist '("\\.build\\'" . nxml-mode))
+
 (provide 'modes-setup)

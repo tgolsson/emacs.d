@@ -38,7 +38,7 @@
   (setq-default c-default-style "linux"
                 c-basic-offset 4)
   
-                
+  
   (c-set-offset 'inline-open 0)
   (c-set-offset 'innamespace 0)
   (c-set-offset 'topmost-intro 0)
@@ -51,6 +51,7 @@
                      (irony-mode 1)
                      (company-irony 1)
                      (electric-pair-mode 1)
+                     (flycheck-mode)
                      (make-local-variable 'company-backends)
                      (add-to-list 'company-backends '
                                   (company-irony company-irony-c-headers

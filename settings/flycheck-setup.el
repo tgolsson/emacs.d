@@ -1,5 +1,18 @@
+(with-eval-after-load 'flycheck
+  (flycheck-pos-tip-mode))
 (require 'flycheck)
-(require 'flycheck-pos-tip)
+
+(use-package flycheck-clang-analyzer
+  :ensure t
+  :after flycheck
+  :config (flycheck-clang-analyzer-setup))
+
+(use-package flycheck-clang-tidy
+  :ensure t
+  :after flycheck
+  :config (flycheck-clang-tidy-setup))
+
+
 (defun to/adjust-flycheck-automatic-syntax-eagerness ()
     "Adjust how often we check for errors based on if there are any.
 This lets us fix any errors as quickly as possible, but in a

@@ -95,4 +95,11 @@
 (setq user-full-name "Tom Olsson"
       user-mail-address "mail@tomolsson.se")
 
+(use-package ctags-update
+  :config
+  (add-to-list 'ctags-update-other-options "--exclude=Build"))
+
+(use-package helm-etags-plus
+  :ensure t)
+
 (provide 'basic-setup)
