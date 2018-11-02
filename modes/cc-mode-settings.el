@@ -53,6 +53,7 @@
                      (electric-pair-mode 1)
                      (flycheck-mode)
                      (make-local-variable 'company-backends)
+                     (add-hook 'before-save-hook 'clang-format-buffer t t)
                      (add-to-list 'company-backends '
                                   (company-irony company-irony-c-headers
                              company-yasnippet)) )) ) )
