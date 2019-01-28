@@ -5,6 +5,7 @@
 (add-to-list  'auto-mode-alist '("\\.inl$"   . c++-mode)) 
 (add-to-list  'auto-mode-alist '("\\.c$"   . c-mode))
 (add-to-list 'auto-mode-alist '("\.ino$" . arduino-mode))
+(add-to-list 'auto-mode-alist '("\.rs$" . rust-mode))
 
 ;; WEB
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
