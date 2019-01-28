@@ -232,29 +232,31 @@
   "indents current code as netlogo"
   (interactive (region-beginning) (region-end))
   (save-excursion
-    (goto-char start)
-    (setq netlogo-indent-here (netlogo-indent-previous-indent))
-    (while (< (point) (region-end))
 
-      (if (line-has-string "^[\s-]+;;;")
-          (progn (beginning-of-line) (fixup-whitespace))
-        (if (line-has-string "^[\s-]+;\\([^;]\\|$\\)")
-            (progn(beginning-of-line) (fixup-whitespace) (indent-to comment-column))
-          (progn
-            (setq netlogo-indent-change (netlogo-indent-change-for-line))
-            (beginning-of-line)
-            (message (word-at-point))
-            (fixup-whitespace)
-            (if (>= netlogo-indent-change 0)
-                (progn ; positive change - applies to next line
-                  (indent-to-column netlogo-indent-here)
-                  (setq netlogo-indent-here (+ netlogo-indent-here netlogo-indent-change)))
-              (progn ; negative change - applied instantly
-                (setq netlogo-indent-here (+ netlogo-indent-here netlogo-indent-change))
-                (indent-to-column netlogo-indent-here)))
-            )))
-      (next-line))))
+    (let ((end-line (line-number-at-pos end)))
+      (goto-char start)
+      (setq netlogo-indent-here (netlogo-indent-previous-indent))
 
+      (while (< (line-number-at-pos) end-line)
+        (if (line-has-string "^[\s-]+;;;")
+            (progn (beginning-of-line) (fixup-whitespace))
+          (if (line-has-string "^[\s-]+;\\([^;]\\|$\\)")
+              (progn(beginning-of-line) (fixup-whitespace) (indent-to comment-column))
+            (progn  
+              (setq netlogo-indent-change (netlogo-indent-change-for-line))
+              (beginning-of-line)            
+              (fixup-whitespace)
+              (if (>= netlogo-indent-change 0)
+                  (progn ; positive change - applies to next line
+                    (indent-to-column netlogo-indent-here)
+                    (setq netlogo-indent-here (+ netlogo-indent-here netlogo-indent-change)))
+                (progn ; negative change - applied instantly
+                  (setq netlogo-indent-here (+ netlogo-indent-here netlogo-indent-change))
+                  (indent-to-column netlogo-indent-here)))
+              )
+            ))
+        (end-of-line)
+        (forward-line)))))
 
 (define-derived-mode netlogo-mode prog-mode "NetLogo"
               "Major mode for editing NetLogo files"
@@ -276,7 +278,6 @@
 
   ;; for comments
   (make-local-variable 'comment-start)
-  (setq comment-start ";")
-  (message "bob"))
+  (setq comment-start ";"))
 
 (provide 'netlogo-mode)
