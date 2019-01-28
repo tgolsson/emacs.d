@@ -36,6 +36,9 @@
 ;;
 ;;; Code:
 
+(use-package cargo
+  :ensure t
+  :defer t)
 (use-package rust-mode
   :ensure t
   :defer t
@@ -60,10 +63,19 @@
     (company-mode 1)
     (cargo-minor-mode)
     (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
-    (add-to-list 'exec-path "C:/Users/Tom/.cargo/bin")
-    (setq racer-cargo-home "C:/Users/Tom/.cargo/bin")
-    (setq racer-cmd "C:/Users/Tom/.cargo/bin/racer.exe")
+    (if (eq system-type 'windows-nt)
+        (progn
+          (add-to-list 'exec-path "C:/Users/Tom/.cargo/bin")
+          (setq racer-cargo-home "C:/Users/Tom/.cargo/bin")
+          (setq racer-cmd "C:/Users/Tom/.cargo/bin/racer.exe"))
+      (progn
+        (add-to-list 'exec-path "~/.cargo/bin")
+        (setq racer-cargo-home "~/.cargo/bin")
+        (setq racer-cmd "~/.cargo/bin/racer")
+        (setq racer-rust-src-path "/home/tgo/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"))
 
+      )
+    (flycheck-rust-setup)
     )
   (add-hook 'rust-mode-hook 'my-rust-mode-hook)
   (add-hook 'rust-mode-hook #'racer-mode)
