@@ -71,6 +71,7 @@
         helm-smex
         helm-swoop
         help-for-help
+        insert-file
         isearch-delete-char
         mouse-save-then-kill
         mouse-set-region

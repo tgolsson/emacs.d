@@ -268,6 +268,20 @@ Note: this code uses https://en.wikipedia.org/wiki/Md5"
       (window-configuration-to-register '_)
       (delete-other-windows))))
 
+(defun move-forward-out-of-param ()
+  (while (not (looking-at ")\\|, \\| ?}\\| ?\\]"))
+    (cond
+     ((point-is-in-string-p) (move-point-forward-out-of-string))
+     ((looking-at "(\\|{\\|\\[") (forward-list))
+     (t (forward-char)))))
+
+(defun move-backward-out-of-param ()
+  (while (not (looking-back "(\\|, \\|{ ?\\|\\[ ?"))
+    (cond
+     ((point-is-in-string-p) (move-point-backward-out-of-string))
+     ((looking-back ")\\|}\\|\\]") (backward-list))
+     (t (backward-char)))))
+
 (provide 'defuns)
 
 
