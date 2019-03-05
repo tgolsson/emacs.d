@@ -1,7 +1,6 @@
 ;; active Babel languages
 
 (require 'ob-core)
-(require 'org-projectile)
 (require 'ob-ditaa)
 ;; calfw
 
@@ -30,23 +29,23 @@
         (sequence "BUG(r)" "KNOWNCAUSE(k)" "|" "FIXED(f)"))))
 ;; Org-agenda
 (setq org-agenda-files (list "~/Dropbox/notes"))
-;; Org-projectile
+;; ;; Org-projectile
 
-(setq org-capture-templates
-      (quote (
-              ("m" "* Current region" entry (file org-default-notes-file)
-               "* MEMO %? \n%^G\n%i\n" :kill-buffer)
-              )
-             ))
+;; (setq org-capture-templates
+;;       (quote (
+;;               ("m" "* Current region" entry (file org-default-notes-file)
+;;                "* MEMO %? \n%^G\n%i\n" :kill-buffer)
+;;               )
+;;              ))
 
-(add-to-list 'org-capture-templates
-             (org-projectile-project-todo-entry "b"  "* BUG %f %? \n%^G\n%a\n"
-                                                "Project Bug"))
-(add-to-list 'org-capture-templates
-             (org-projectile-project-todo-entry "t" "* TODO %f %? \n%^G\n%a\n" "Project Todo"))
+;; (add-to-list 'org-capture-templates
+;;              (org-projectile-project-todo-entry "b"  "* BUG %f %? \n%^G\n%a\n"
+;;                                                 "Project Bug"))
+;; (add-to-list 'org-capture-templates
+;;              (org-projectile-project-todo-entry "t" "* TODO %f %? \n%^G\n%a\n" "Project Todo"))
 
-(setq org-projectile:projects-file
-      "~/notes/todo-projects.org")
+;; (setq org-projectile:projects-file
+;;       "~/notes/todo-projects.org")
 
 
 ;; org-babel

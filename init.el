@@ -95,7 +95,6 @@
                      org-gcal ;; TODO
                      org-mime ;; TODO
                      org-present ;; TODO
-                     org-projectile ;; TODO
                      ox-html5slide ;; TODO
                      ox-impress-js ;; TODO
                      ox-ioslide ;; TODO

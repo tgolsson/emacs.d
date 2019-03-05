@@ -8,7 +8,7 @@
 ;;
 ;;; Commentary:
 ;;
-;;  
+;;
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -43,7 +43,7 @@
   (require 'rust-mode)
   (use-package company-racer)
   (use-package flycheck-rust)
-  
+
   (use-package racer
     :ensure t
     :defer t
@@ -51,23 +51,25 @@
     (define-key rust-mode-map (kbd "M-\"") #'racer-find-definition)
     (add-hook 'racer-mode-hook #'eldoc-mode)
     (setq company-tooltip-align-annotations t)
-    
+
     )
-  
+
   (defun my-rust-mode-hook()
+    (message "rust-mode")
     (set (make-local-variable 'compile-command) "cargo run")
-    (flycheck-mode 1)
-    (company-mode 1)
-    (cargo-minor-mode)
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
     (add-to-list 'exec-path "C:/Users/Tom/.cargo/bin")
     (setq racer-cargo-home "C:/Users/Tom/.cargo/bin")
     (setq racer-cmd "C:/Users/Tom/.cargo/bin/racer.exe")
 
-    )
+
+    (company-mode 1)
+    (cargo-minor-mode 1)
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+    (flycheck-mode 1)
+    (rust-enable-format-on-save))
+
   (add-hook 'rust-mode-hook 'my-rust-mode-hook)
-  (add-hook 'rust-mode-hook #'racer-mode)
-  ) 
+  (add-hook 'rust-mode-hook #'racer-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; rust-mode.el ends here
