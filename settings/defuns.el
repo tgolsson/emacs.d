@@ -282,6 +282,13 @@ Note: this code uses https://en.wikipedia.org/wiki/Md5"
      ((looking-back ")\\|}\\|\\]") (backward-list))
      (t (backward-char)))))
 
+
+
+(defun current-quotes-char ()
+  (nth 3 (syntax-ppss)))
+
+(defalias 'point-is-in-string-p 'current-quotes-char)
+
 (provide 'defuns)
 
 

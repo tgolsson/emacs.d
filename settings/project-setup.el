@@ -8,14 +8,20 @@
 
   :config
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (projectile-global-mode 1)
+    (projectile-global-mode 1)
+    (helm-projectile-on)
   (setq projectile-switch-project-action 'magit-status
         projectile-globally-ignored-directories (append
                                                  '("*__pycache__*" "*.egg-info")
                                                  projectile-globally-ignored-directories)
         projectile-globally-ignored-file-suffixes (append
                                                    '(".pyc")
-                                                   projectile-globally-ignored-file-suffixes)))
+                                                   projectile-globally-ignored-file-suffixes)
+
+
+        projectile-indexing-method 'alien
+        projectile-enable-caching 't
+        projectile-git-command "fd . -0"))
 
 ;; (use-package helm-projectile
 ;;   :ensure t

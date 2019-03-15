@@ -91,14 +91,8 @@
                      org ;; TODO
                      org-beautify-theme ;; TODO
                      org-bullets ;; TODO
-                     org-caldav ;; TODO
                      org-gcal ;; TODO
                      org-mime ;; TODO
-                     org-present ;; TODO
-                     ox-html5slide ;; TODO
-                     ox-impress-js ;; TODO
-                     ox-ioslide ;; TODO
-                     ox-reveal ;; TODO
                      php-mode ;; TODO
                      pkg-info ;; TODO
                      popup ;; TODO
@@ -140,7 +134,10 @@
 ;; install the missing packages
 (dolist (package package-list)
   (unless (package-installed-p package)
-    (package-install package)))
+    (progn
+      (message "%s" package)
+      (package-install package)
+      )))
 
 
 
@@ -153,7 +150,6 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path modes-dir)
 (add-to-list 'load-path packages-dir)
-
 (defun to/my-require (symbol)
   "Requires a package and then prints that it was loaded"
   (require symbol)

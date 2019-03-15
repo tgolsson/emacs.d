@@ -6,6 +6,7 @@
 (set-keyboard-coding-system 'utf-8) 
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
+(define-coding-system-alias 'cp65001 'utf-8)
 
 
 ;;
@@ -146,6 +147,10 @@
     	)))
 
 
+(use-package hideshow
+  :config
+  (define-key hs-minor-mode-map (kbd "C-c h") (lookup-key hs-minor-mode-map (kbd "C-c @")))
+  (define-key hs-minor-mode-map (kbd "C-c @") nil))
 
 (bind-key "M-Q" 'delete-trailing-whitespace)
 

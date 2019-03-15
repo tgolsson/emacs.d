@@ -36,9 +36,11 @@
 ;;
 ;;; Code:
 
+
 (use-package cargo
   :ensure t
   :defer t)
+
 (use-package rust-mode
   :ensure t
   :defer t
@@ -46,7 +48,6 @@
   (require 'rust-mode)
   (use-package company-racer)
   (use-package flycheck-rust)
-
   (use-package racer
     :ensure t
     :defer t
@@ -77,7 +78,13 @@
     (cargo-minor-mode 1)
     (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
     (flycheck-mode 1)
-    (rust-enable-format-on-save))
+    (hs-minor-mode 1)
+    (flycheck-pos-tip-mode 0)
+    (flycheck-inline-mode 1)
+    (rust-enable-format-on-save)
+    (add-to-list 'company-backends '
+                 (company-racer company-yasnippet))
+)
 
   (add-hook 'rust-mode-hook 'my-rust-mode-hook)
   (add-hook 'rust-mode-hook #'racer-mode))
