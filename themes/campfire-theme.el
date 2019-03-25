@@ -40,7 +40,7 @@
    `(highlight                          ((((type graphic)) (:background ,(color-lighten-name bg 10)))
                                          (t (:background ,(color-lighten-name bg-term 10)))))
    `(region                             ((((type graphic)) (:background ,(color-darken-name bg 10)))
-                                         (t (:background ,(color-darken-name bg-term 10)))))
+                                         (t (:background "#080808"))))
    `(link                               ((((type graphic)) (:foreground ,(color-lighten-name
                                                                           hl4 20) :weight bold))
                                          (t (:foreground ,(color-lighten-name hl4-term 20) :weight bold))))
