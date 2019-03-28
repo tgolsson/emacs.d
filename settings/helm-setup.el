@@ -17,7 +17,8 @@
      helm-recentf-fuzzy-match    t
      helm-ff-transformer-show-only-basename t
      helm-move-to-line-cycle-in-source t
-     helm-ff-auto-update-initial-value t)
+     helm-ff-auto-update-initial-value t
+     helm-ag-insert-at-point 'symbol)
   (helm-mode t)
   (helm-adaptive-mode t)
   (use-package helm-flx
