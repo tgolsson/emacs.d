@@ -62,15 +62,15 @@
 ;;
 ;; Rtags
 ;; 
-(use-package rtags
-  :bind (( "M-." .  rtags-find-symbol-at-point)
-         ( "M-," .  rtags-find-references-at-point)
-         ( "C-." .  rtags-find-symbol)
-         ( "C-," .  rtags-find-references)
-         ( "C-<" .  rtags-find-virtuals-at-point)
-         ( "M-i" .  rtags-imenu))
-  :config 
-  (setq rtags-completions-enabled t))
+;; (use-package rtags
+;;   :bind (( "M-." .  rtags-find-symbol-at-point)
+;;          ( "M-," .  rtags-find-references-at-point)
+;;          ( "C-." .  rtags-find-symbol)
+;;          ( "C-," .  rtags-find-references)
+;;          ( "C-<" .  rtags-find-virtuals-at-point)
+;;          ( "M-i" .  rtags-imenu))
+;;   :config 
+;;   (setq rtags-completions-enabled t))
 
 
 ;;
