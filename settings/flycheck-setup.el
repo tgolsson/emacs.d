@@ -40,6 +40,8 @@ clean buffer we're an order of magnitude laxer about checking."
   '(custom-set-variables
     '(flycheck-display-errors-function #'flycheck-pos-tip-error-messages)))
 
+(flycheck-add-next-checker 'python-flake8 'python-pylint)
+
 (defun flycheck-handle-idle-change ()
     "Handle an expired idle time since the last change.
 This is an overwritten version of the original
