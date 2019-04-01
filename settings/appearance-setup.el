@@ -29,15 +29,21 @@
 ;;
 (show-paren-mode 1)
 
-(set-frame-font
- (if (display-graphic-p)
-     (case (window-system)
-       ('w32 "Source Code Pro for Powerline-9.5")
-       ('x "Source Code Pro-9"))
-   (case (window-system)
-     ('w32 "Sauce Code Powerline-9.5")
-     ('x "Source Code Pro for Powerline-9.5"))) t t)
+;; (set-frame-font
+;;  (if (display-graphic-p)
+;;      (case (window-system)
+;;        ('w32 "Source Code Pro for Powerline-9.5")
+;;        ('x "Source Code Pro-9"))
+;;    (case (window-system)
+;;      ('w32 "Sauce Code Powerline-9.5")
+;;      ('x "Source Code Pro for Powerline-9.5"))) t t)
 
+
+(when (window-system)
+  (set-frame-font "Fira Code-7.5"))
+
+(add-hook 'prog-mode-hook (lambda () "foo" (interactive) (when (window-system)
+                                                      (fira-code-mode))))
 (setq frame-background-mode 'dark
       font-lock-multiline t)
 
