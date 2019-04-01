@@ -3,7 +3,6 @@
 (require 'python-django)
 
 (defun my-python-mode ()
-
   ;; make these variables local
   (setq python-indent-offset 4)
   (jedi:setup)
@@ -11,12 +10,14 @@
   (company-mode 1)
   (make-local-variable 'company-backends)
   (add-to-list 'company-backends '(company-jedi company-yasnippet))
-  (setq python-django-qmgmt-runserver-default-bindaddr "0.0.0.0:8000") 
-  )
-
-
-
-
+  (flycheck-inline-mode 1)
+  (setq jedi:server-command '("~/.emacs.d/.python-environments/default/bin/jediepcserver")
+        python-environment-virtualenv '("virtualenv" "-p" "python3"
+                                        "--system-site-packages" "--quiet")
+        python-django-qmgmt-runserver-default-bindaddr "0.0.0.0:8000"
+        flycheck-python-pycompile-executable "/usr/bin/python3"
+        flycheck-python-flake8-executable "/usr/bin/python3"
+        flycheck-python-pylint-executable "/usr/bin/python3"))
 
 (add-hook 'python-mode-hook 'my-python-mode)
 
