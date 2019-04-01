@@ -39,10 +39,9 @@
 ;;(global-set-key [tab]                      'tab-indent-or-complete)
 ;(define-key company-active-map [tab]        'tab-indent-or-complete)
 
+(global-set-key (kbd "M-i") 'helm-etags-select)
 ;; programming mode
 (define-key prog-mode-map (kbd "M-W") 'yank-arg)
-
-
 ;; company
 
 (define-key company-active-map (kbd "TAB")   'tab-indent-or-complete)
