@@ -71,7 +71,9 @@
         (add-to-list 'exec-path "~/.cargo/bin")
         (setq racer-cargo-home "~/.cargo/bin")
         (setq racer-cmd "~/.cargo/bin/racer")
-        (setq racer-rust-src-path "/home/tgo/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"))
+        (setq racer-rust-src-path
+              "/home/tgolsson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
+        (setq company-racer-rust-src "/home/tgolsson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"))
       )
 
     (company-mode 1)
