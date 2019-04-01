@@ -15,5 +15,6 @@
   (eval-after-load "subword" '(diminish 'subword-mode))
   (eval-after-load "projectile" '(diminish 'projectile-mode))
   (eval-after-load "rainbow-mode" '(diminish 'rainbow-mode))
-  (eval-after-load "fixme-mode" '(diminish 'fixme-mode)))
+  (eval-after-load "fixme-mode" '(diminish 'fixme-mode))
+  (eval-after-load "fira-code-mode" '(diminish 'fira-code-mode)))  
 (provide 'diminish-setup)
