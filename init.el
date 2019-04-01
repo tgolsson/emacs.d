@@ -7,125 +7,175 @@
 
 (setq use-package-always-ensure t)
 ;; (setq load-prefer-newer t)
-(setq package-list '(android-mode ;; TODO 
-                     anzu ;; TODO
-                     arduino-mode ;; TODO 
-                     auctex ;; FIXUP
-                     auctex-latexmk ;; FIXUP
-                     beacon ;; MANUAL DEPENDENCY
-                     bind-key ;; DONE
-                     bison-mode ;; NOT USED
-                     cmake-font-lock ;; FIXUP
-                     cmake-mode ;; FIXUP
-                     company ;; TODO 
-                     company-arduino ;; TODO
-                     company-auctex ;; TODO 
-                     company-emacs-eclim ;; TODO -- REMOVE?
-                     company-irony ;; FIXUP
-                     company-irony-c-headers ;; TODO
-                     company-jedi ;; fixup 
-                     company-lua ;; TODO 
-                     company-math ;; what does this even do
-                     company-statistics ;; fixup?
-                     company-web ;; fixup
-                     darkroom ;; fixup
-                     dashboard ;; DONE
-                     diminish ;; FIXUP
-                     discover-my-major ;; TODO
-                     draft-mode ;; what does this even do?
-                     eclim ;; OK?
-                     epresent ;; TEST
-                     expand-region ;; TODO
-                     fancy-battery ;; TODO 
-                     flycheck ;; TODO
-                     flycheck-pos-tip ;;
-                     flycheck-irony ;; TODO
-                     git-commit ;; TODO 
-                     gradle-mode ;; TODO
-                     gscholar-bibtex ;; TODO
-                     guide-key ;; TODO 
-                     guide-key-tip ;; TODO 
-                     guru-mode ;; TODO 
-                     helm ;; TODO
-                     helm-bibtex ;; TODO
-                     helm-core ;; TODO
-                     helm-descbinds ;; TODO
-                     helm-describe-modes ;; todo
-                     helm-flx ;; TODO
-                     helm-flycheck ;; TODO
-                     helm-flyspell ;; TODO
-                     helm-fuzzier ;; TODO
-                     helm-ls-git ;; TODO
-                     helm-mu ;; TODO
-                     helm-projectile ;; TODO
-                     helm-smex ;; TODO
-                     helm-swoop ;; TODO
-                     helm-w32-launcher ;;  TODO
-                     hide-lines ;; TODO
-                     hlinum ;; TODO
-                     html-script-src ;; TODO
-                     htmlize ;; TODO
-                     ibuffer-projectile ;; TODO
-                     irony ;; TODO
-                     java-snippets ;; TODO
-                     jdee ;; TODO
-                     jedi-core ;; TODO
-                     js2-highlight-vars ;; TODO
-                     js2-mode ;; TODO
-                     js2-refactor ;; TODO
-                     jtags ;; TODO
-                     less-css-mode ;; TODO
-                     lua-mode ;; TODO
-                     magit ;; TODO
-                     magit-filenotify ;; TODO
-                     magit-popup ;; TODO
-                     markdown-mode ;; TODO
-                     markdown-mode+ ;; TODO
-                     markdown-preview-eww ;; TODO
-                     markdown-toc ;; TODO
-                     matlab-mode ;; TODO
-                     mu4e-maildirs-extension ;; TODO
-                     multiple-cursors ;; TODO
-                     ob-browser ;; TODO
-                     ob-http ;; TODO
-                     org ;; TODO
-                     org-beautify-theme ;; TODO
-                     org-bullets ;; TODO
-                     org-gcal ;; TODO
-                     org-mime ;; TODO
-                     php-mode ;; TODO
-                     pkg-info ;; TODO
-                     popup ;; TODO
-                     popwin ;; TODO
-                     pos-tip ;; TODO
-                     powerline ;; TODO
-                     projectile ;; TODO
-                     python-django ;; TODO
-                     python-environment ;; TODO
-                     rainbow-mode ;; TODO
-                     request ;; TODO
-                     request-deferred ;; TODO
-                     rtags ;; TODO
-                     sass-mode ;; TODO 
-                     scss-mode ;; TODO 
-                     seq ;; TODO
-                     simple-httpd ;; TODO 
-                     skewer-mode  ;; maybe remove
-                     spaceline
-                     speed-type ; setup
-                     tiny ;; TODO
-                     w3m ;; DONE
-                     web-beautify ;; TODO
-                     web-completion-data ;; 
-                     web-mode
-		     use-package
-                     with-editor 
-                     xcscope ;; TODO 
-                     yasnippet ;; setup
+
+(setq package-list '(
+                     alert ; needs review
+                     android-mode ; needs review
+                     anzu ; needs review
+                     arduino-mode ; needs review
+                     auctex ; needs review
+                     auctex-latexmk ; needs review
+                     beacon ; needs review
+                     bind-key ; needs review
+                     bison-mode ; needs review
+                     cargo ; needs review
+                     cl-generic ; needs review
+                     clang-format ; needs review
+                     cmake-font-lock ; needs review
+                     cmake-mode ; needs review
+                     company ; needs review
+                     company-arduino ; needs review
+                     company-auctex ; needs review
+                     company-c-headers ; needs review
+                     company-glsl ; needs review
+                     company-irony ; needs review
+                     company-irony-c-headers ; needs review
+                     company-jedi ; needs review
+                     company-lua ; needs review
+                     company-math ; needs review
+                     company-racer ; needs review
+                     company-statistics ; needs review
+                     company-web ; needs review
+                     conda ; needs review
+                     copy-as-format ; needs review
+                     ctags-update ; needs review
+                     darkroom ; needs review
+                     dashboard ; needs review
+                     demo-it ; needs review
+                     diminish ; needs review
+                     discover-my-major ; needs review
+                     docker ; needs review
+                     docker-tramp ; needs review
+                     dockerfile-mode ; needs review
+                     draft-mode ; needs review
+                     dumb-jump ; needs review
+                     elfeed ; needs review
+                     elfeed-goodies ; needs review
+                     elfeed-org ; needs review
+                     epresent ; needs review
+                     exec-path-from-shell ; needs review
+                     expand-region ; needs review
+                     fancy-battery ; needs review
+                     fasd ; needs review
+                     flx-ido ; needs review
+                     flycheck ; needs review
+                     flycheck-clang-analyzer ; needs review
+                     flycheck-clang-tidy ; needs review
+                     flycheck-inline ; needs review
+                     flycheck-irony ; needs review
+                     flycheck-pos-tip ; needs review
+                     flycheck-rust ; needs review
+                     flymake-gjshint ; needs review
+                     flymake-sass ; needs review
+                     gif-screencast ; needs review
+                     git-commit ; needs review
+                     gitignore-mode ; needs review
+                     glsl-mode ; needs review
+                     gradle-mode ; needs review
+                     graphviz-dot-mode ; needs review
+                     gscholar-bibtex ; needs review
+                     guide-key ; needs review
+                     guide-key-tip ; needs review
+                     guru-mode ; needs review
+                     helm ; needs review
+                     helm-ag ; needs review
+                     helm-bibtex ; needs review
+                     helm-core ; needs review
+                     helm-descbinds ; needs review
+                     helm-describe-modes ; needs review
+                     helm-etags-plus ; needs review
+                     helm-flx ; needs review
+                     helm-flycheck ; needs review
+                     helm-flymake ; needs review
+                     helm-flyspell ; needs review
+                     helm-fuzzier ; needs review
+                     helm-ls-git ; needs review
+                     helm-mu ; needs review
+                     helm-projectile ; needs review
+                     helm-smex ; needs review
+                     helm-swoop ; needs review
+                     helm-w32-launcher ; needs review
+                     hide-lines ; needs review
+                     hlinum ; needs review
+                     html-script-src ; needs review
+                     htmlize ; needs review
+                     ibuffer-projectile ; needs review
+                     irony ; needs review
+                     java-snippets ; needs review
+                     jdee ; needs review
+                     jedi-core ; needs review
+                     js-auto-format-mode ; needs review
+                     js2-highlight-vars ; needs review
+                     js2-mode ; needs review
+                     js2-refactor ; needs review
+                     jtags ; needs review
+                     latex-extra ; needs review
+                     less-css-mode ; needs review
+                     lua-mode ; needs review
+                     magit ; needs review
+                     magit-filenotify ; needs review
+                     magit-popup ; needs review
+                     magit-todos ; needs review
+                     markdown-mode ; needs review
+                     markdown-mode+ ; needs review
+                     markdown-preview-eww ; needs review
+                     markdown-toc ; needs review
+                     math-symbol-lists ; needs review
+                     matlab-mode ; needs review
+                     modern-cpp-font-lock ; needs review
+                     multiple-cursors ; needs review
+                     ob-browser ; needs review
+                     ob-http ; needs review
+                     org ; needs review
+                     org-beautify-theme ; needs review
+                     org-bullets ; needs review
+                     org-mime ; needs review
+                     p4 ; needs review
+                     php-mode ; needs review
+                     pkg-info ; needs review
+                     popup ; needs review
+                     popwin ; needs review
+                     pos-tip ; needs review
+                     powerline ; needs review
+                     powershell ; needs review
+                     projectile ; needs review
+                     python-django ; needs review
+                     python-environment ; needs review
+                     racer ; needs review
+                     rainbow-mode ; needs review
+                     request ; needs review
+                     request-deferred ; needs review
+                     rotate ; needs review
+                     rtags ; needs review
+                     rust-mode ; needs review
+                     sass-mode ; needs review
+                     scss-mode ; needs review
+                     seq ; needs review
+                     simple-httpd ; needs review
+                     skewer-mode ; needs review
+                     slack ; needs review
+                     smex ; needs review
+                     smooth-scrolling ; needs review
+                     spaceline ; needs review
+                     speed-type ; needs review
+                     take-off ; needs review
+                     tiny ; needs review
+                     use-package ; needs review
+                     visual-fill-column ; needs review
+                     w3m ; needs review
+                     web-beautify ; needs review
+                     web-completion-data ; needs review
+                     web-mode ; needs review
+                     wgrep ; needs review
+                     with-editor ; needs review
+                     xcscope ; needs review
+                     yaml-mode ; needs review
+                     yapfify ; needs review
+                     yasnippet ; needs review
 		     ))
 
 (prefer-coding-system 'utf-8) ;; fixes some packages containing non-iso-latin characets
-(package-initialize) 
+(package-initialize)
 (package-refresh-contents)
 
 (when (memq window-system '(mac ns))
@@ -135,9 +185,8 @@
 (dolist (package package-list)
   (unless (package-installed-p package)
     (progn
-      (message "%s" package)
-      (package-install package)
-      )))
+      (message "Installing: %s" package)
+      (package-install package))))
 
 
 
@@ -214,4 +263,3 @@
 (to/easy-hook 'emacs-startup-hook (progn (to/my-require
                                                  'modeline-setup))
                                                  t)
-
