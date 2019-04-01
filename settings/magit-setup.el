@@ -6,7 +6,7 @@
   :bind (("C-x g" . magit-status))
   :bind (:map magit-status-mode-map ( "q" . magit-quit-session))
   :config 
-  (setq magit-completing-read-function 'magit-ido-completing-read)
+;  (setq magit-completing-read-function 'magit-ido-completing-read)
   ;(add-hook 'magit-status-mode-hook 'magit-filenotify-mode)
   (add-hook 'after-save-hook 'magit-after-save-refresh-status)
   (custom-set-faces
