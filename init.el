@@ -177,6 +177,7 @@
 (setq plstore-cache-passphrase-for-symmetric-encryption t)
 
 
+(to/my-require 'fira-code-mode)
 (to/my-require 'communication-setup)
 (to/my-require 'defuns)
 (to/my-require 'project-setup)
