@@ -263,7 +263,7 @@ Note: this code uses https://en.wikipedia.org/wiki/Md5"
 (defun toggle-maximize-buffer () "Maximize buffer"
   (interactive)
   (if (= 1 (length (window-list)))
-      (jump-to-register '_) 
+      (jump-to-register '_)
     (progn
       (window-configuration-to-register '_)
       (delete-other-windows))))
@@ -289,6 +289,21 @@ Note: this code uses https://en.wikipedia.org/wiki/Md5"
 
 (defalias 'point-is-in-string-p 'current-quotes-char)
 
+(defun to/regen-rusty-tags-projectile ()
+  "generate tags files for all rust projects below the dominating .projectile file"
+  (interactive)
+  (start-process
+   "rusty-tags" ;; process-name
+   "*rusty-tags*" ;; buffer-name
+   "rusty-tags" ;; executable name
+
+   ;; rest = args
+   "-o"
+   "-s"
+   (expand-file-name (locate-dominating-file
+                      default-directory
+                      ".projectile"))
+   ;; generate for emacs
+   "emacs"))
+
 (provide 'defuns)
-
-
