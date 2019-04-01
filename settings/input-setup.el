@@ -1,9 +1,9 @@
 ;;
 ;; Let's get modern...
-;; 
-(setq locale-coding-system 'utf-8) 
+;;
+(setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8) 
+(set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 (define-coding-system-alias 'cp65001 'utf-8)
@@ -51,7 +51,7 @@
 ;; Multi-cursors
 ;;
 (use-package multiple-cursors
-  :bind  
+  :bind
   (("M-ö" .    mc/edit-lines)
    ("C-M-ö" .  mc/edit-ends-of-lines)
    ("M-Ö" .    mc/edit-beginnings-of-lines)
@@ -127,7 +127,7 @@
     	(make-string 70 ?/) "\n\n"
         "#pragma once\n\n"
     	))
-    
+
     ;; auto insert C/C++
     (define-auto-insert
       (cons "\\.\\([Cc]\\|cc\\|cpp\\)\\'" "My C++ implementation")
@@ -159,5 +159,10 @@
   (propertize text 'read-only t))
 (add-hook 'comint-preoutput-filter-functions
           'to/preoutput-turn-buffer-read-only)
+
+(use-package expand-region
+  :ensure t
+  :bind ("C-@" . er/expand-region))
+
 
 (provide 'input-setup)
