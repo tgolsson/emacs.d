@@ -11,9 +11,3 @@ $1
 '''
 
 $0
-
-def main():
-    raise NotImplementedError('This module does not define a main()-method.')
-
-if __name__ == '__main__':
-    main()
