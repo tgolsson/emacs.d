@@ -108,6 +108,7 @@
   (auto-insert-mode 1)
   (define-auto-insert "\\.el$" ["default-lisp.el" to/autoinsert-yas-expand])
   (define-auto-insert "\\.py$" ["default-python.py" to/autoinsert-yas-expand])
+  (define-auto-insert "\\.rs$" ["default-rust.rs" to/autoinsert-yas-expand])
   (define-auto-insert "/sprints/" ["sprint.org" to/autoinsert-yas-expand])
   (define-auto-insert "test_.*.py" ["test.py" to/autoinsert-yas-expand])
    ;; autoinsert C/C++ header
