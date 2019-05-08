@@ -59,7 +59,6 @@
     )
 
   (defun my-rust-mode-hook()
-    (message "rust-mode")
     (set (make-local-variable 'compile-command) "cargo run")
 
     (if (eq system-type 'windows-nt)
