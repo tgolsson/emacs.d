@@ -13,6 +13,12 @@
    '(magit-diff-added ((t (:background "black" :foreground "green3"))))
    '(magit-diff-removed ((t (:background "black" :foreground "red3"))))))
 
+(use-package magithub
+  :after magit
+  :config
+  (magithub-feature-autoinject t)
+  (setq magithub-clone-default-directory "~/Repos"))
+
 (use-package magit-filenotify)
 
 (defadvice magit-status (around magit-fullscreen activate)
