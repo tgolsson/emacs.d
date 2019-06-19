@@ -41,7 +41,29 @@
   :ensure t
   :defer t)
 
+;; (use-package lsp-mode
+;;   :commands lsp
+;;   :config (require 'lsp-clients)
+;;   (setq
+;;    lsp-prefer-flymake nil))
+
+;; (use-package lsp-ui :commands lsp-ui-mode
+;;   :config
+;;   (setq
+;;    lsp-ui-sideline-enable nil
+;;    lsp-ui-flycheck-enable t
+;;    lsp-ui-flycheck-list-position 'right
+;;    lsp-ui-flycheck-live-reporting t))
+
+;; (use-package company-lsp :commands company-lsp)
+;; (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+
+
+;; (use-package flycheck-rust
+;;   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
 (use-package rust-mode
+  ;; :hook (rust-mode . lsp)
   :ensure t
   :defer t
   :init
@@ -54,41 +76,37 @@
     :config
     (define-key rust-mode-map (kbd "M-\"") #'racer-find-definition)
     (add-hook 'racer-mode-hook #'eldoc-mode)
-    (setq company-tooltip-align-annotations t)
+    (setq company-tooltip-align-annotations t))
 
-    )
+    (defun my-rust-mode-hook()
+      (set (make-local-variable 'compile-command) "cargo run")
 
-  (defun my-rust-mode-hook()
-    (set (make-local-variable 'compile-command) "cargo run")
-
-    (if (eq system-type 'windows-nt)
+      (if (eq system-type 'windows-nt)
+          (progn
+            (add-to-list 'exec-path "C:/Users/Tom/.cargo/bin")
+            (setq racer-cargo-home "C:/Users/Tom/.cargo/bin")
+            (setq racer-cmd "C:/Users/Tom/.cargo/bin/racer.exe"))
         (progn
-          (add-to-list 'exec-path "C:/Users/Tom/.cargo/bin")
-          (setq racer-cargo-home "C:/Users/Tom/.cargo/bin")
-          (setq racer-cmd "C:/Users/Tom/.cargo/bin/racer.exe"))
-      (progn
-        (add-to-list 'exec-path "~/.cargo/bin")
-        (setq racer-cargo-home "~/.cargo/bin")
-        (setq racer-cmd "~/.cargo/bin/racer")
-        (setq racer-rust-src-path
-              "/home/tgolsson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
-        (setq company-racer-rust-src "/home/tgolsson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"))
-      )
+          (add-to-list 'exec-path "~/.cargo/bin")
+          (setq racer-cargo-home "~/.cargo/bin")
+          (setq racer-cmd "~/.cargo/bin/racer")
+          (setq racer-rust-src-path
+                "/home/tgolsson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
+          (setq company-racer-rust-src
+                "/home/tgolsson/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")))     
 
-    (company-mode 1)
-    (cargo-minor-mode 1)
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
-    (flycheck-mode 1)
-    (hs-minor-mode 1)
-    (flycheck-pos-tip-mode 0)
-    (flycheck-inline-mode 1)
-    (rust-enable-format-on-save)
-    (add-to-list 'company-backends '
-                 (company-racer company-yasnippet))
-)
-
-  (add-hook 'rust-mode-hook 'my-rust-mode-hook)
-  (add-hook 'rust-mode-hook #'racer-mode))
+      (company-mode 1)
+      (cargo-minor-mode 1)
+      (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+      (flycheck-mode 1)
+      (hs-minor-mode 1)
+      (flycheck-pos-tip-mode 0)
+      (flycheck-inline-mode 1)
+      (rust-enable-format-on-save)
+      (add-to-list 'company-backends '
+                   (company-racer company-yasnippet)))
+    (add-hook 'rust-mode-hook 'my-rust-mode-hook)
+    (add-hook 'rust-mode-hook #'racer-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; rust-mode.el ends here
