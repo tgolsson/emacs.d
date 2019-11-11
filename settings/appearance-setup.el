@@ -38,9 +38,8 @@
 ;;      ('w32 "Sauce Code Powerline-9.5")
 ;;      ('x "Source Code Pro for Powerline-9.5"))) t t)
 
-
 (when (window-system)
-  (set-frame-font "Fira Code-7.5"))
+  (set-frame-font "Fira Emacs 8"))
 
 (add-hook 'prog-mode-hook (lambda () "foo" (interactive) (when (window-system)
                                                       (fira-code-mode))))
@@ -52,7 +51,10 @@
 (setq custom-safe-themes t
       custom-theme-directory (expand-file-name "themes" user-emacs-directory))
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-(add-hook 'emacs-startup-hook (lambda () (interactive) (load-theme 'campfire t)))
+(add-hook 'emacs-startup-hook (lambda () (interactive)
+                                (load-theme 'material t)
+                                (enable-theme 'material)
+                                ))
 
 (when window-system
   (define-fringe-bitmap 'right-curly-arrow

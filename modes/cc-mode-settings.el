@@ -84,8 +84,23 @@
   :config
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
-
-
-
-
+;; Redefinition of function from gud.el
+(defun gud-find-expr (&rest args)
+  (let ((expr (if (and transient-mark-mode mark-active)
+		  (buffer-substring (region-beginning) (region-end))
+		(apply gud-find-expr-function args))))
+    (save-match-data
+      (if (string-match "\n" expr)
+	  (error "Expression must not include a newline"))
+      (with-current-buffer gud-comint-buffer
+	(save-excursion
+	  (goto-char (process-mark (get-buffer-process gud-comint-buffer)))
+	  (forward-line 0)
+	  (when (looking-at comint-prompt-regexp)
+	    (set-marker gud-delete-prompt-marker (point))
+	    (set-marker-insertion-type gud-delete-prompt-marker t))
+	  (unless (eq (buffer-local-value 'gud-minor-mode gud-comint-buffer)
+		      'jdb)
+	    (message (concat expr " = "))))))
+    expr))
 (provide 'cc-mode-settings)

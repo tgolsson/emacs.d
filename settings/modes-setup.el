@@ -30,5 +30,6 @@
 
 ;; Work
 (add-to-list 'auto-mode-alist '("\\.build\\'" . nxml-mode))
+(add-to-list 'auto-mode-alist '("meson.build\\'" . meson-mode))
 
 (provide 'modes-setup)

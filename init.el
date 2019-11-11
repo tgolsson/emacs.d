@@ -195,10 +195,13 @@
 (setq experiments-dir (expand-file-name "experiments" user-emacs-directory))
 (setq packages-dir (expand-file-name "packages" user-emacs-directory))
 (setq privates-dir (expand-file-name "private" user-emacs-directory))
+(setq experiments-dir (expand-file-name "experiments" user-emacs-directory))
 
+(add-to-list 'load-path experiments-dir)
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path modes-dir)
 (add-to-list 'load-path packages-dir)
+
 (defun to/my-require (symbol)
   "Requires a package and then prints that it was loaded"
   (require symbol)
@@ -226,7 +229,8 @@
 (setq plstore-cache-passphrase-for-symmetric-encryption t)
 
 
-(to/my-require 'fira-code-mode)
+ (to/my-require 'fira-code-data)
+; (to/my-require 'fira-code-mode)
 (to/my-require 'communication-setup)
 (to/my-require 'defuns)
 (to/my-require 'project-setup)

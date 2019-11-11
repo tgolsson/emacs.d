@@ -1,23 +1,21 @@
 (require 'color)
 (require 'spaceline)
 (require 'spaceline-config)
-(set-face-attribute 'mode-line-buffer-id nil :inherit nil)
-(set-face-attribute 'mode-line-buffer-id-inactive nil :inherit nil)
+;; (set-face-attribute 'mode-line-buffer-id nil :inherit nil)
+;; (set-face-attribute 'mode-line-buffer-id-inactive nil :inherit nil)
 
-
-;; SPACELINE
-(let ((bg "#121213")
-      (fg "#c2b99f"))
-  ;; active
-  (set-face-attribute 'mode-line           nil
-                      :background (color-lighten-name bg 10) :foreground
-                      (color-lighten-name fg 10))
-  (set-face-attribute 'powerline-active1   nil :inherit 'mode-line :background (color-lighten-name bg 20) :foreground (color-lighten-name fg 20))
-  (set-face-attribute 'powerline-active2   nil :inherit 'mode-line :background (color-lighten-name bg 10) :foreground (color-lighten-name fg 10))
-  ;; inactive
-  (set-face-attribute 'mode-line-inactive  nil :background (color-darken-name bg  1) :foreground (color-lighten-name  fg 0))
-  (set-face-attribute 'powerline-inactive1 nil :inherit 'mode-line-inactive :background (color-lighten-name bg 10) :foreground (color-lighten-name fg 10))
-  (set-face-attribute 'powerline-inactive2 nil :inherit 'mode-line-inactive :background (color-darken-name bg 1) :foreground (color-lighten-name  fg  0)))
+;; (let ((bg "#262626")
+;;       (fg "#ffffff"))
+;;   ;; active
+;;   (set-face-attribute 'mode-line           nil
+;;                       :background (color-lighten-name bg 10) :foreground
+;;                       (color-lighten-name fg 10))
+;;   (set-face-attribute 'powerline-active1   nil :inherit 'mode-line :background (color-lighten-name bg 20) :foreground (color-lighten-name fg 20))
+;;   (set-face-attribute 'powerline-active2   nil :inherit 'mode-line :background (color-lighten-name bg 10) :foreground (color-lighten-name fg 10))
+;;   ;; inactive
+;;   (set-face-attribute 'mode-line-inactive  nil :background (color-darken-name bg  1) :foreground (color-lighten-name  fg 0))
+;;   (set-face-attribute 'powerline-inactive1 nil :inherit 'mode-line-inactive :background (color-lighten-name bg 10) :foreground (color-lighten-name fg 10))
+;;   (set-face-attribute 'powerline-inactive2 nil :inherit 'mode-line-inactive :background (color-darken-name bg 1) :foreground (color-lighten-name  fg  0)))
 
 (setq powerline-height 20)
 
@@ -28,7 +26,7 @@
 (setq powerline-default-separator nil)
 (when (not (display-graphic-p))
   (setq powerline-default-separator 'utf-8))
- 
+
 (spaceline-define-segment my-projectile
   "Show the current projectile root."
   (when (and (fboundp 'projectile-project-p)
@@ -49,7 +47,7 @@
 (spaceline-toggle-workspace-number-off)
 (spaceline-toggle-window-number-off)
 (spaceline-toggle-line-column-on)
-(spaceline-toggle-mu4e-alert-segment-on)
+(spaceline-toggle-mu4e-alert-segment-off)
 (spaceline-toggle-buffer-size-off)
 (spaceline-toggle-buffer-position-off)
 (spaceline-toggle-hud-off)
@@ -60,18 +58,18 @@
 
 
 ;; (add-hook 'window-setup-hook
-;;           (lambda () 
+;;           (lambda ()
 ;;             (let ((bg "#121213")
 ;;                   (fg "#c2b99f"))
-;;               (set-face-attribute 'mode-line nil :box 
+;;               (set-face-attribute 'mode-line nil :box
 ;;                                   `(:line-width 2 :color ,(color-lighten-name bg
 ;;           10) :style nil ))
-;;               (set-face-attribute 'mode-line-inactive nil :box  
+;;               (set-face-attribute 'mode-line-inactive nil :box
 ;;                                   `(:line-width 2 :color ,(color-darken-name bg 0) :style nil))
 ;;               (set-face-attribute 'mode-line-buffer-id nil :inherit nil)
 ;;               (set-face-attribute 'mode-line-buffer-id-inactive nil :inherit
 ;;                                   nil)
-              
+
 ;;               (set-face-attribute 'spaceline-unmodified nil :background
 ;;           "#119900" :foreground "#b2a99f")
 ;;               (set-face-attribute 'spaceline-modified nil :background "#991100" :foreground "#b2a99f")
@@ -79,20 +77,31 @@
 ;;                                   :foreground "#b2a99f")
 ;;               )
 
-(let ((bg "#121213")                                                                      
-      (fg "#c2b99f"))                                                               
-  (set-face-attribute 'mode-line nil :box                                                 
-                      `(:line-width 2 :color ,(color-lighten-name bg 10) :style nil ))                                                                          
-  (set-face-attribute 'mode-line-inactive nil :box                                        
-                      `(:line-width 2 :color ,(color-darken-name bg 0) :style nil))       
-                      (set-face-attribute 'mode-line-buffer-id nil :inherit nil)                              
-                      (set-face-attribute 'mode-line-buffer-id-inactive nil :inherit                          
-                                          nil)                                                                
-                      
-                      (set-face-attribute 'spaceline-unmodified nil :background                               
-                                          "#119900" :foreground "#b2a99f")                                                             
-                      (set-face-attribute 'spaceline-modified nil :background "#991100" :foreground "#b2a99f") 
-                      (set-face-attribute 'spaceline-read-only nil :background "#110099"                      
-                                          :foreground "#b2a99f"))
+(let ((bg "#263238")
+      (fg "#ffffff"))
+  (set-face-attribute 'mode-line nil
+                      :box `(:line-width 2 :color ,(color-lighten-name bg 20) :style nil )
+                      :background (color-lighten-name bg 5) )
+  (set-face-attribute 'mode-line-inactive nil
+                      :box `(:line-width 2 :color ,(color-darken-name bg 5) :style nil)                      
+                      :background (color-darken-name bg 5))
+  (set-face-attribute 'mode-line-buffer-id nil
+                      :inherit nil
+                      :background (color-lighten-name bg 5))
+  (set-face-attribute 'mode-line-buffer-id-inactive nil
+                      :inherit nil
+                      :background (color-darken-name bg 5))
+  (set-face-attribute 'spaceline-unmodified nil :background "#119900" :foreground "#b2a99f")
+  (set-face-attribute 'spaceline-modified nil :background "#99150" :foreground "#b2a99f")
+  (set-face-attribute 'spaceline-read-only nil :background "#15099" :foreground "#b2a99f")
+  (set-face-attribute 'powerline-active2 nil :background (color-lighten-name bg 5))
+  (set-face-attribute 'powerline-active1 nil :background (color-lighten-name bg 5))
+  (set-face-attribute 'powerline-active0 nil :background (color-lighten-name bg 5))
+  (set-face-attribute 'powerline-inactive2 nil :background (color-darken-name bg 5))
+  (set-face-attribute 'powerline-inactive1 nil :background (color-darken-name bg 5))
+  (set-face-attribute 'powerline-inactive0 nil :background (color-darken-name bg 5))
+  )
+
+
 (spaceline-compile)
 (provide 'modeline-setup)
