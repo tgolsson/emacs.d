@@ -1,8 +1,8 @@
-;;; MY-CSHARP-MODE --- Summary
+;;; KUBERNETES --- Summary
 ;;
-;; Author: Tom Olsson <mail@tomolsson.se>
-;; Copyright © 2019, Tom Olsson, all rights reserved.
-;; Created:  5 June 2019
+;; Author: Tom Olsson <tom.olsson@embark-studios.com>
+;; Copyright © 2020, Tom Olsson, all rights reserved.
+;; Created:  7 January 2020
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -36,8 +36,11 @@
 ;;
 ;;; Code:
 
+(use-package kubernetes
+  :ensure t
+  :commands (kubernetes-overview)
+  :bind (("C-x l" . kubernetes-overview)))
 
-(use-package csharp-mode
-  :defer t)
+(provide 'kubernetes-porcelain)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; my-csharp-mode.el ends here
+;;; kubernetes.el ends here

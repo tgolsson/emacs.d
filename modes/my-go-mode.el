@@ -1,8 +1,8 @@
-;;; MY-CSHARP-MODE --- Summary
+;;; MY-GO-MODE --- Summary
 ;;
-;; Author: Tom Olsson <mail@tomolsson.se>
+;; Author: Tom Olsson <tom.olsson@embark-studios.com>
 ;; Copyright © 2019, Tom Olsson, all rights reserved.
-;; Created:  5 June 2019
+;; Created:  7 November 2019
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -36,8 +36,29 @@
 ;;
 ;;; Code:
 
+(use-package go-mode
+  :mode "\\.go\\'"
+  :init
+  (use-package company-go)
+  (use-package flycheck-golangci-lint)
+  (use-package go-eldoc)
+  (use-package go-gopath)
+  (use-package go-impl)
+  (use-package go-projectile)
+  (use-package godoctor)
+  (use-package lsp-mode)
+  :config
+  (add-hook 'go-mode-hook
+            (lambda ()
+              (define-key go-mode-map (kbd "C-c C-e") #'go-gopath-set-gopath)
+              (go-eldoc-setup)
+              (company-mode 1)
+              (make-local-variable 'company-backends)
+              (set (make-local-variable 'company-backends) '(company-lsp))
+              (setq lsp-prefer-flymake nil)
+              (lsp)
+              (lsp-mode)
+              (add-hook 'before-save-hook 'gofmt-before-save))))
 
-(use-package csharp-mode
-  :defer t)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; my-csharp-mode.el ends here
+;;; my-go-mode.el ends here

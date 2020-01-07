@@ -1,8 +1,8 @@
-;;; MY-CSHARP-MODE --- Summary
+;;; PROTO-MODE --- Summary
 ;;
 ;; Author: Tom Olsson <mail@tomolsson.se>
 ;; Copyright © 2019, Tom Olsson, all rights reserved.
-;; Created:  5 June 2019
+;; Created:  1 July 2019
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -36,8 +36,17 @@
 ;;
 ;;; Code:
 
+  (defconst my-protobuf-style
+    '((c-basic-offset . 4)
+      (indent-tabs-mode . nil)))
 
-(use-package csharp-mode
-  :defer t)
+(use-package protobuf-mode
+  :init
+  (add-hook 'protobuf-mode-hook (lambda () (interactive "")
+                                  (company-mode 0)
+                                  (irony-mode 0)
+                                  (c-add-style "my-style" my-protobuf-style t))))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; my-csharp-mode.el ends here
+;;; proto-mode.el ends here

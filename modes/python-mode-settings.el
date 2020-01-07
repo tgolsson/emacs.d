@@ -17,7 +17,14 @@
         python-django-qmgmt-runserver-default-bindaddr "0.0.0.0:8000"
         flycheck-python-pycompile-executable "/usr/bin/python3"
         flycheck-python-flake8-executable "/usr/bin/python3"
-        flycheck-python-pylint-executable "/usr/bin/python3"))
+        flycheck-python-pylint-executable "/usr/bin/python3"
+
+        jedi:use-shortcuts t)
+  (local-set-key (kbd "M-.") 'jedi:goto-definition)
+  (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker)
+  (flycheck-add-next-checker 'python-flake8 'python-pylint))
 
 (add-hook 'python-mode-hook 'my-python-mode)
 
+;; ;; CTAGS
+;; (global-set-key (kbd "M-.")                  'ctags-search)

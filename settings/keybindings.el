@@ -1,5 +1,4 @@
-;; CTAGS
-(global-set-key (kbd "M-.")                  'ctags-search)
+
 (global-set-key (kbd "<f7>")                 'ctags-create-or-update-tags-table)
 
 (global-set-key (kbd "M-/")                  'hippie-expand)

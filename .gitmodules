@@ -1,0 +1,3 @@
+[submodule "packages/emacs-bazel-mode"]
+	path = packages/emacs-bazel-mode
+	url = git@github.com:bazelbuild/emacs-bazel-mode.git

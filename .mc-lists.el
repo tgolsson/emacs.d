@@ -22,12 +22,14 @@
         c-electric-star
         c-indent-line-or-region
         comment-dwim
+        csharp-maybe-insert-codedoc
         delete-trailing-whitespace
         downcase-region
         downcase-word
         electric-newline-and-maybe-indent
         electric-pair-delete-pair
         end-of-visual-line
+        fill-paragraph
         forward-sexp
         forward-symbol
         helm-show-kill-ring
@@ -46,8 +48,12 @@
         latex/beginning-of-line
         markdown-exdent-or-delete
         message-beginning-of-line
+        org-beginning-of-line
+        org-self-insert-command
+        python-indent-shift-right
         query-replace
         reindent-then-newline-and-indent
+        scroll-right
         subword-left
         subword-right
         upcase-region

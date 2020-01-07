@@ -181,6 +181,17 @@
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 
+(defun set-exec-path-from-shell-PATH ()
+  (let ((path-from-shell (replace-regexp-in-string
+                          "[ \t\n]*$"
+                          ""
+                          (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+    (setenv "PATH" path-from-shell)
+    (setq eshell-path-env path-from-shell) ; for eshell users
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(when window-system (set-exec-path-from-shell-PATH))
+
 ;; install the missing packages
 (dolist (package package-list)
   (unless (package-installed-p package)
@@ -188,7 +199,7 @@
       (message "Installing: %s" package)
       (package-install package))))
 
-
+(defun risky-local-variable-p (sym &optional _ignored) nil)
 
 (setq settings-dir (expand-file-name "settings" user-emacs-directory))
 (setq modes-dir (expand-file-name "modes" user-emacs-directory))
@@ -201,6 +212,7 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path modes-dir)
 (add-to-list 'load-path packages-dir)
+(add-to-list 'load-path (expand-file-name "emacs-bazel-mode" packages-dir))
 
 (defun to/my-require (symbol)
   "Requires a package and then prints that it was loaded"
@@ -242,6 +254,7 @@
 (to/my-require 'darkroom-setup)
 (to/my-require 'keybindings)
 (to/my-require 'single-line-hooks)
+(to/my-require 'kubernetes-porcelain)
 
 ;; Load modes
 (to/do-list-dir modes-dir)

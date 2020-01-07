@@ -12,5 +12,8 @@
         company-minimum-prefix-length 1)
   (company-statistics-mode))
 
+(use-package company-quickhelp
+  :init
+  (company-quickhelp-mode))
 
 (provide 'company-setup)

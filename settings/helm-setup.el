@@ -2,25 +2,41 @@
 (use-package helm
   :ensure t
   :bind
-    (("C-x C-f" . helm-find-files)
-     ("C-x b" . helm-mini)
-     ("M-y" . helm-show-kill-ring)
-     ("C-h a" . helm-apropos)
-     ("C-h i" . helm-info-emacs)
-     ("<f6>" . helm-recentf)
-     ("C-x r l" . helm-filtered-bookmarks)
-     ("C-x c!" . helm-calcul-expression))
+  (("C-x C-f" . helm-find-files)
+   ("C-x b" . helm-mini)
+   ("M-y" . helm-show-kill-ring)
+   ("C-h a" . helm-apropos)
+   ("C-h i" . helm-info-emacs)
+   ("<f6>" . helm-recentf)
+   ("C-x r l" . helm-filtered-bookmarks)
+   ("C-x c!" . helm-calcul-expression))
   :config
-    (setq
-     helm-mode-fuzzy-match t
-     helm-buffers-fuzzy-matching t
-     helm-recentf-fuzzy-match    t
-     helm-ff-transformer-show-only-basename t
-     helm-move-to-line-cycle-in-source t
-     helm-ff-auto-update-initial-value t
-     helm-ag-insert-at-point 'symbol)
+  (define-key helm-map (kbd "<left>") 'helm-previous-source)
+  (define-key helm-map (kbd "<right>") 'helm-next-source)
+  (setq
+   helm-mode-fuzzy-match t
+   helm-buffers-fuzzy-matching t
+   helm-recentf-fuzzy-match    t
+   helm-ff-transformer-show-only-basename t
+   helm-move-to-line-cycle-in-source t
+   helm-ff-auto-update-initial-value t
+   helm-ag-insert-at-point 'symbol)
   (helm-mode t)
   (helm-adaptive-mode t)
+  ;; for helm-find-files
+  (customize-set-variable 'helm-ff-lynx-style-map t)
+
+  ;; for helm-imenu
+  (customize-set-variable 'helm-imenu-lynx-style-map t)
+
+  ;; for semantic
+  (customize-set-variable 'helm-semantic-lynx-style-map t)
+
+  ;; for helm-occur
+  (customize-set-variable 'helm-occur-use-ioccur-style-keys t)
+
+  ;; for helm-grep
+  (customize-set-variable 'helm-grep-use-ioccur-style-keys t)
   (use-package helm-flx
     :config (helm-flx-mode +1)
     (setq helm-flx-for-helm-find-files t
@@ -47,7 +63,7 @@
 (use-package helm-descbinds
   :ensure t
   :bind (("C-h b" . helm-descbinds)))
-  
+
 (use-package helm-flycheck
   :ensure t
   :bind (:map flycheck-mode-map ("C-c ! h" . helm-flycheck)))

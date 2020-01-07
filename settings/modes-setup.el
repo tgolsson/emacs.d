@@ -1,4 +1,5 @@
 ;; C, C++, Ardunio
+(add-to-list  'auto-mode-alist '("\\.as$"   . c++-mode))
 (add-to-list  'auto-mode-alist '("\\.h$"   . c++-mode))
 (add-to-list  'auto-mode-alist '("\\.hpp$"   . c++-mode))
 (add-to-list  'auto-mode-alist '("\\.cpp$"   . c++-mode))
@@ -17,6 +18,7 @@
 (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode)) 
 (add-to-list 'auto-mode-alist '("\\.hbs" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.svelte" . web-mode))
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 
 ;; OTHER MODES
