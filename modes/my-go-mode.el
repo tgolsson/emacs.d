@@ -50,15 +50,21 @@
   :config
   (add-hook 'go-mode-hook
             (lambda ()
-              (define-key go-mode-map (kbd "C-c C-e") #'go-gopath-set-gopath)
-              (go-eldoc-setup)
+              ;; (define-key go-mode-map (kbd "C-c C-e") #'go-gopath-set-gopath)
+              ;; (add-hook 'before-save-hook 'gofmt-before-save)
+              ;; (go-eldoc-setup)
               (company-mode 1)
+              ;; (go-projectile-tools-add-path)
+
               (make-local-variable 'company-backends)
               (set (make-local-variable 'company-backends) '(company-lsp))
               (setq lsp-prefer-flymake nil)
               (lsp)
-              (lsp-mode)
+
               (add-hook 'before-save-hook 'gofmt-before-save))))
+              (lsp-mode 1)
+))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; my-go-mode.el ends here
