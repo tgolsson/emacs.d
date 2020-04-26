@@ -59,7 +59,6 @@
                      fasd ; needs review
                      flx-ido ; needs review
                      flycheck ; needs review
-                     flycheck-clang-analyzer ; needs review
                      flycheck-clang-tidy ; needs review
                      flycheck-inline ; needs review
                      flycheck-irony ; needs review

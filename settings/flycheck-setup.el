@@ -5,10 +5,10 @@
 (use-package flycheck-inline
   :config )
 
-(use-package flycheck-clang-analyzer
-  :ensure t
-  :after flycheck
-  :config (flycheck-clang-analyzer-setup))
+;; (use-package flycheck-clang-analyzer
+;;   :ensure t
+;;   :after flycheck
+;;   :config (flycheck-clang-analyzer-setup))
 
 (use-package flycheck-clang-tidy
   :ensure t

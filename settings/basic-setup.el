@@ -12,7 +12,7 @@
 
        (add-to-list 'exec-path git-shell-path)
        (add-to-list 'exec-path "C:/Users/Tom/.cargo/bin")
-       (setenv "PATH" (concat git-shell-path ";" (getenv "PATH") ";C:/Users/Tom/.cargo/bin" ))
+;       (setenv "PATH" (concat git-shell-path ";" (getenv "PATH") ";C:/Users/Tom/.cargo/bin" ))
 
        (setq browse-url-browser-function 'to/browse-url-win)
 

@@ -21,7 +21,8 @@
 
         projectile-indexing-method 'alien
         projectile-enable-caching 't
-        projectile-git-command "fd . -0"))
+        projectile-git-command "fd . -0"
+        projectile-git-submodule-command "git submodule --quiet foreach 'echo $path'"))
 
 ;; (use-package helm-projectile
 ;;   :ensure t

@@ -60,11 +60,9 @@
               (set (make-local-variable 'company-backends) '(company-lsp))
               (setq lsp-prefer-flymake nil)
               (lsp)
-
-              (add-hook 'before-save-hook 'gofmt-before-save))))
               (lsp-mode 1)
-))
-  )
+              (add-hook 'before-save-hook 'gofmt-before-save))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; my-go-mode.el ends here
