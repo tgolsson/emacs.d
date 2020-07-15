@@ -177,7 +177,7 @@
 (package-initialize)
 (package-refresh-contents)
 
-(when (memq window-system '(mac ns))
+(when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
 (defun set-exec-path-from-shell-PATH ()

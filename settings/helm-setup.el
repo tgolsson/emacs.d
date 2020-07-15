@@ -40,25 +40,15 @@
   (use-package helm-flx
     :config (helm-flx-mode +1)
     (setq helm-flx-for-helm-find-files t
-          helm-flx-for-helm-locate t
-          helm-buffer-file-name nil)))
+	  helm-flx-for-helm-locate t
+	  helm-buffer-file-name nil))
+  )
 
 (use-package helm-swoop
   :ensure t
   :bind (("M-s" . helm-swoop)
          ("C-x M-s" . helm-swoop)))
 
-(use-package helm-bibtex
-  :ensure t
-  :bind (("C-c 0" . helm-bibtex)
-         ("C-c 1" . helm-bibtex-with-local-bibliography))
-  :config
-  (setq bibtex-completion-additional-search-fields '(keywords)
-        helm-bibtex-full-frame nil)
-  (helm-delete-action-from-source "Insert citation" helm-source-bibtex)
-  (helm-add-action-to-source "Insert citation"
-                             'helm-bibtex-insert-citation
-                             helm-source-bibtex 0))
 
 (use-package helm-descbinds
   :ensure t
@@ -71,28 +61,13 @@
 (use-package helm-describe-modes
   :ensure t)
 
-(use-package helm-fuzzier
-  :ensure t
-  :config
-  (helm-fuzzier-mode 1))
-
 (use-package helm-ls-git
   :ensure t
   :bind ( ("C-x M-g" . helm-ls-git-ls)))
-
-(use-package helm-mu
-  :ensure t
-  :if (require 'mu4e nil 'noerror))
 
 (use-package helm-smex
   :ensure t
   :bind (("<remap> <execute-extended-command>" . helm-smex)
          ("M-X". helm-smex-major-mode-commands)))
-
-(use-package helm-w32-launcher
-  :ensure t
-  :disabled (eq 'system-type 'windows-nt)
-  :if (eq 'system-type 'windows-nt)
-  :bind (("<f9>" . helm-w32-launcher)))
 
 (provide 'helm-setup)

@@ -49,6 +49,7 @@
         markdown-exdent-or-delete
         message-beginning-of-line
         org-beginning-of-line
+        org-end-of-line
         org-self-insert-command
         python-indent-shift-right
         query-replace

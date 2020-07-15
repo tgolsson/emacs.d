@@ -47,16 +47,18 @@
 ;;   (setq
 ;;    lsp-prefer-flymake nil))
 
-;; (use-package lsp-ui :commands lsp-ui-mode
-;;   :config
-;;   (setq
-;;    lsp-ui-sideline-enable nil
-;;    lsp-ui-flycheck-enable t
-;;    lsp-ui-flycheck-list-position 'right
-;;    lsp-ui-flycheck-live-reporting t))
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :config
+  (define-key lsp-mode-map (kbd "C-c C-l") lsp-command-map)
+  (setq
+   lsp-ui-sideline-enable t
+   lsp-ui-flycheck-enable t
+   lsp-ui-flycheck-list-position 'right
+   lsp-ui-flycheck-live-reporting t))
 
 ;; (use-package company-lsp :commands company-lsp)
-;; (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+(use-package helm-lsp)
 
 
 ;; (use-package flycheck-rust
@@ -68,7 +70,7 @@
   :defer t
   :init
   (require 'rust-mode)
-  (use-package company-racer)
+  ;; (use-package company-racer)
   (use-package flycheck-rust)
   (use-package racer
     :ensure t
@@ -83,22 +85,25 @@
           (progn
             (add-to-list 'exec-path "C:/Users/Tom/.cargo/bin"))
         (progn
-          (add-to-list 'exec-path "~/.cargo/bin")))     
+          (add-to-list 'exec-path "~/.cargo/bin")))
 
       (setq lsp-rust-analyzer-server-command "rust-analyzer"
             lsp-rust-server 'rust-analyzer)
-      (lsp-mode 1)
       (lsp)
+      (lsp-mode 1)
+      (lsp-lens-mode 1)
+      (lsp-rust-analyzer-inlay-hints-mode)
       (company-mode 1)
       (cargo-minor-mode 1)
       (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
       (flycheck-mode 1)
       (hs-minor-mode 1)
       (flycheck-pos-tip-mode 0)
-      (flycheck-inline-mode 1)
+      (flycheck-inline-mode 0)
       (rust-enable-format-on-save)
       (add-to-list 'company-backends '
                    (company-lsp company-yasnippet))
+      (setq lsp-ui-doc-use-childframe nil)
       )
     (add-hook 'rust-mode-hook 'my-rust-mode-hook))
 

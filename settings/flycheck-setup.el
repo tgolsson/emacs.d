@@ -1,9 +1,7 @@
-(with-eval-after-load 'flycheck
-  (flycheck-pos-tip-mode))
 (require 'flycheck)
 
-(use-package flycheck-inline
-  :config )
+;; (use-package flycheck-inline
+;;   :config )
 
 ;; (use-package flycheck-clang-analyzer
 ;;   :ensure t

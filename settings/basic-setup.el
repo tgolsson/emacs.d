@@ -121,4 +121,9 @@
 (use-package helm-etags-plus
   :ensure t)
 
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+
 (provide 'basic-setup)
