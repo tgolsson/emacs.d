@@ -80,6 +80,7 @@
         help-for-help
         insert-file
         isearch-delete-char
+        lsp-ui-doc--handle-mouse-movement
         mouse-save-then-kill
         mouse-set-region
         next-buffer

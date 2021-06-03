@@ -1,6 +1,33 @@
 
 (use-package helm
   :ensure t
+  :init
+  (use-package helm-swoop
+    :ensure t
+    :bind (("M-s" . helm-swoop)
+           ("C-x M-s" . helm-swoop)))
+
+
+  (use-package helm-descbinds
+    :ensure t
+    :bind (("C-h b" . helm-descbinds)))
+
+  (use-package helm-flycheck
+    :ensure t
+    :bind (:map flycheck-mode-map ("C-c ! h" . helm-flycheck)))
+
+  (use-package helm-describe-modes
+    :ensure t)
+
+  (use-package helm-ls-git
+    :ensure t
+    :bind ( ("C-x M-g" . helm-ls-git-ls)))
+
+  (use-package helm-smex
+    :ensure t
+    :bind (("<remap> <execute-extended-command>" . helm-smex)
+           ("M-X". helm-smex-major-mode-commands)))
+
   :bind
   (("C-x C-f" . helm-find-files)
    ("C-x b" . helm-mini)
@@ -19,6 +46,7 @@
    helm-recentf-fuzzy-match    t
    helm-ff-transformer-show-only-basename t
    helm-move-to-line-cycle-in-source t
+   helm-ff-keep-cached-candidates nil
    helm-ff-auto-update-initial-value t
    helm-ag-insert-at-point 'symbol)
   (helm-mode t)
@@ -44,30 +72,5 @@
 	  helm-buffer-file-name nil))
   )
 
-(use-package helm-swoop
-  :ensure t
-  :bind (("M-s" . helm-swoop)
-         ("C-x M-s" . helm-swoop)))
-
-
-(use-package helm-descbinds
-  :ensure t
-  :bind (("C-h b" . helm-descbinds)))
-
-(use-package helm-flycheck
-  :ensure t
-  :bind (:map flycheck-mode-map ("C-c ! h" . helm-flycheck)))
-
-(use-package helm-describe-modes
-  :ensure t)
-
-(use-package helm-ls-git
-  :ensure t
-  :bind ( ("C-x M-g" . helm-ls-git-ls)))
-
-(use-package helm-smex
-  :ensure t
-  :bind (("<remap> <execute-extended-command>" . helm-smex)
-         ("M-X". helm-smex-major-mode-commands)))
 
 (provide 'helm-setup)

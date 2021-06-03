@@ -1,27 +1,27 @@
-;;
-;; face for constant like mHello
-;;
-(defface c++-variable-proper-face
-  '((t (:inherit font-lock-variable-name-face :inherit 'font-lock-variable-name-face)))
-  "Face for single-letter prepended variable names, to highlight them slightly. Example: g_MyGlobal, l_MyLocal and so on."
-  :group 'font-lock-faces )
-(defvar c++-variable-proper-face 'c++-variable-proper-face)
-(add-hook 'c-mode-common-hook
-	  (lambda ()
-	    (font-lock-add-keywords
-             nil
-             '(("[^a-zA-Z_]\\([msgMSG]?_[a-zA-Z0-9]+[a-zA-Z0-9_]+\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-variable-proper-face keep))  'append)))
+;; ;;
+;; ;; face for constant like mHello
+;; ;;
+;; (defface c++-variable-proper-face
+;;   '((t (:inherit font-lock-variable-name-face :inherit 'font-lock-variable-name-face)))
+;;   "Face for single-letter prepended variable names, to highlight them slightly. Example: g_MyGlobal, l_MyLocal and so on."
+;;   :group 'font-lock-faces )
+;; (defvar c++-variable-proper-face 'c++-variable-proper-face)
+;; (add-hook 'c-mode-common-hook
+;; 	  (lambda ()
+;; 	    (font-lock-add-keywords
+;;              nil
+;;              '(("[^a-zA-Z_]\\([msgMSG]?_[a-zA-Z0-9]+[a-zA-Z0-9_]+\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-variable-proper-face keep))  'append)))
 
-(defface c++-macro-face
-  '((t (:inherit font-lock-keyword-face :inherit 'font-lock-keyword-face)))
-  "Face for dunder macro, to highlight them slightly. Example: __FUNCTION__ and so on."
-  :group 'font-lock-faces )
-(defvar c++-macro-face 'c++-macro-face)
-(add-hook 'c-mode-common-hook
-	  (lambda ()
-	    (font-lock-add-keywords
-             nil
-             '(("[^a-zA-Z_]\\(__[a-zA-Z0-9_]+__\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-macro-face keep))  'append)))
+;; (defface c++-macro-face
+;;   '((t (:inherit font-lock-keyword-face :inherit 'font-lock-keyword-face)))
+;;   "Face for dunder macro, to highlight them slightly. Example: __FUNCTION__ and so on."
+;;   :group 'font-lock-faces )
+;; (defvar c++-macro-face 'c++-macro-face)
+;; (add-hook 'c-mode-common-hook
+;; 	  (lambda ()
+;; 	    (font-lock-add-keywords
+;;              nil
+;;              '(("[^a-zA-Z_]\\(__[a-zA-Z0-9_]+__\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-macro-face keep))  'append)))
 
 
 ;;
@@ -32,19 +32,18 @@
   :mode (("\\.h\\'" . c++-mode)
          ("\\.hpp\\'" . c++-mode)
          ("\\.cpp\\'" . c++-mode)
-         ("\\.cxx\\'" . c++-mode))  
+         ("\\.cxx\\'" . c++-mode)
+         ("\\.c\\'" . c-mode))
   :bind (:map c-mode-base-map ("RET" . newline-and-indent))
   :init
   (setq-default c-default-style "linux"
                 c-basic-offset 4)
-  
-  
+  :config
   (c-set-offset 'inline-open 0)
   (c-set-offset 'innamespace 0)
   (c-set-offset 'topmost-intro 0)
   (c-set-offset 'comment-intro 0)
   (c-set-offset 'member-init-intro 0)
-  :config
   (add-hook 'c-mode-common-hook
             (lambda () (interactive "")
               (progn (company-mode 1)
@@ -61,7 +60,7 @@
 
 ;;
 ;; Rtags
-;; 
+;;
 ;; (use-package rtags
 ;;   :bind (( "M-." .  rtags-find-symbol-at-point)
 ;;          ( "M-," .  rtags-find-references-at-point)
@@ -69,7 +68,7 @@
 ;;          ( "C-," .  rtags-find-references)
 ;;          ( "C-<" .  rtags-find-virtuals-at-point)
 ;;          ( "M-i" .  rtags-imenu))
-;;   :config 
+;;   :config
 ;;   (setq rtags-completions-enabled t))
 
 
@@ -77,10 +76,13 @@
 ;; irony-mode
 ;;
 (use-package irony
+  :hook cc-mode
   :defer t
   :init
-  (require 'company-irony-c-headers)
-  (require 'company-irony)
+  (use-package company-irony-c-headers
+    :commands company-irony-c-headers)
+  (use-package company-irony
+    :commands company-irony)
   :config
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
@@ -103,4 +105,5 @@
 		      'jdb)
 	    (message (concat expr " = "))))))
     expr))
+
 (provide 'cc-mode-settings)

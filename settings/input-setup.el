@@ -8,7 +8,6 @@
 (prefer-coding-system 'utf-8)
 (define-coding-system-alias 'cp65001 'utf-8)
 
-
 ;;
 ;; Transient mark mode
 ;;
@@ -22,7 +21,6 @@
 ;;
 (global-subword-mode 1)
 (electric-pair-mode 1)
-
 
 ;;
 ;; General input setqs
@@ -64,40 +62,9 @@
   (unsupported-cmd isearch-forward-use-region ".")
   (unsupported-cmd isearch-backward-use-region "."))
 
-
-
-(use-package flycheck)
-(use-package guru-mode)
-(use-package speed-type)
-
-;;
-;; yas
-;;
-(use-package yasnippet
-  :bind   (:map yas-keymap
-                ("<return>" . yas-exit-all-snippets))
-  :bind    (:map yas-minor-mode-map
-                ("C-i" . nil)
-                ("<tab>" . nil))
+(use-package which-key
   :config
-  (yas-global-mode 1)
-  (setq yas-wrap-around-region t))
-
-
-
-
-
-;;
-;; Guide-key
-;;
-(use-package guide-key
-  :config
-  (setq guide-key/guide-key-sequence t
-        guide-key/idle-delay 1
-        guide-key/recursive-key-sequence-flag t
-        guide-key/popup-window-position 'bottom)
-  (guide-key-mode 1))
-
+  (which-key-mode 1))
 
 (use-package autoinsert
   :init
@@ -117,7 +84,7 @@
       '(nil
     	"// " (file-name-nondirectory buffer-file-name) "\n"
     	"//\n"
-        "// Copyright © Tom Olsson\n"
+        "// Copyright © Tom Solberg\n"
     	"//\n"
     	"// Description:\n"
     	"//\n"
@@ -135,7 +102,7 @@
       '(nil
     	"// " (file-name-nondirectory buffer-file-name) "\n"
     	"//\n"
-        "// Copyright © Tom Olsson\n"
+        "// Copyright © Tom Solberg\n"
     	"// \n"
     	"// Description:\n"
     	"//\n"
@@ -147,23 +114,21 @@
         "#include \"" (concat (file-name-sans-extension (file-name-nondirectory buffer-file-name)) ".h") "\""
     	)))
 
-
-(use-package hideshow
-  :config
-  (define-key hs-minor-mode-map (kbd "C-c h") (lookup-key hs-minor-mode-map (kbd "C-c @")))
-  (define-key hs-minor-mode-map (kbd "C-c @") nil))
-
-(bind-key "M-Q" 'delete-trailing-whitespace)
-
 (setq comint-prompt-read-only t)
+;; (use-package hideshow
+;;   :config
+;;   (define-key hs-minor-mode-map (kbd "C-c h") (lookup-key hs-minor-mode-map (kbd "C-c @")))
+;;   (define-key hs-minor-mode-map (kbd "C-c @") nil))
+
+
+
 (defun to/preoutput-turn-buffer-read-only (text)
   (propertize text 'read-only t))
 (add-hook 'comint-preoutput-filter-functions
           'to/preoutput-turn-buffer-read-only)
 
-(use-package expand-region
-  :ensure t
-  :bind ("C-@" . er/expand-region))
-
+;; (use-package expand-region
+;;   :ensure t
+;;   :bind ("C-@" . er/expand-region))
 
 (provide 'input-setup)

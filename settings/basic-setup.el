@@ -28,8 +28,7 @@
 
 (defun to/other-setup () (interactive)
     (setq browse-url-browser-function 'browse-url-generic
-          browse-url-generic-program "firefox")
-    (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e"))
+          browse-url-generic-program "firefox"))
 
 (if (eq system-type 'windows-nt)
     (to/windows-setup)
@@ -41,14 +40,22 @@
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)
 
-;;
-;; Backups, bookmarks and save-place
-;;
-(setq vc-make-backup-files t
-      backup-directory-alist `((".*" . ,temporary-file-directory))
+(setq
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
+      backup-directory-alist `((".*" . ,temporary-file-directory))
       bookmark-default-file  (concat user-emacs-directory "bookmarks.em")
-      bookmark-save-flag 1)
+      bookmark-save-flag 1
+      ediff-diff-options "-w"
+      ediff-split-window-function 'split-window-horizontally
+      ediff-window-setup-function 'ediff-setup-windows-plain
+      gc-cons-threshold 50000000
+      history-length 1000
+      large-file-warning-threshold 100000000
+      recentf-max-saved-items 2000
+      user-full-name "Tom Solberg"
+      user-mail-address "me@sbg.dev"
+      vc-make-backup-files t
+      )
 
 ;;
 ;; Compilation mode
@@ -67,34 +74,19 @@
                         (bury-buffer buf)
                         (switch-to-prev-buffer (get-buffer-window buf) 'kill))
                       buffer)))
+
 (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
 
-;;
-;; Recent files
-;;
 (recentf-mode 1)
-(setq recentf-max-saved-items 100)
+(savehist-mode 1)
+
 (add-to-list 'recentf-exclude "/elpa/")
 (add-to-list 'recentf-exclude "company-statistics-cache.el")
 (add-to-list 'recentf-exclude "bookmarks.em")
 (add-to-list 'recentf-exclude ".mc-lists.el")
 (add-to-list 'recentf-exclude "custom.el")
 
-;;
-;; Minibuffer-history
-;;
-(savehist-mode 1)
-(setq history-length 1000)
 
-;;
-;; A saner ediff
-;;
-(setq ediff-diff-options "-w"
-      ediff-split-window-function 'split-window-horizontally
-      ediff-window-setup-function 'ediff-setup-windows-plain)
-
-(setq gc-cons-threshold 50000000
-      large-file-warning-threshold 100000000)
 (fset 'yes-or-no-p 'y-or-n-p)
 
 
@@ -104,26 +96,9 @@
   (setq uniquify-buffer-name-style 'forward))
 
 (use-package saveplace
-            :config
-            (setq save-place t)
-            save-place-file (concat user-emacs-directory "places"))
+  :init (setq save-place-file (concat user-emacs-directory "places"))
+  :config (save-place-mode))
 
-;;
-;; User setup
-;;
-(setq user-full-name "Tom Olsson"
-      user-mail-address "mail@tomolsson.se")
-
-(use-package ctags-update
-  :config
-  (add-to-list 'ctags-update-other-options "--exclude=Build"))
-
-(use-package helm-etags-plus
-  :ensure t)
-
-(use-package editorconfig
-  :ensure t
-  :config
-  (editorconfig-mode 1))
+(use-package editorconfig :ensure t)
 
 (provide 'basic-setup)

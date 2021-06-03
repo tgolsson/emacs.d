@@ -1,17 +1,18 @@
-(require 'flycheck)
+(use-package flycheck
+  :commands flycheck-mode
+  :init
+  (use-package flycheck-clang-tidy
+    :ensure t
+    :hook (cc-mode . flycheck-clang-tidy-setup)
+    :after flycheck)
 
-;; (use-package flycheck-inline
-;;   :config )
-
-;; (use-package flycheck-clang-analyzer
-;;   :ensure t
-;;   :after flycheck
-;;   :config (flycheck-clang-analyzer-setup))
-
-(use-package flycheck-clang-tidy
-  :ensure t
-  :after flycheck
-  :config (flycheck-clang-tidy-setup))
+  (make-variable-buffer-local 'flycheck-idle-change-delay)
+  :config
+  (custom-set-variables
+   '(flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
+  (add-hook 'flycheck-after-syntax-check-hook
+	    'to/adjust-flycheck-automatic-syntax-eagerness)
+  )
 
 
 (defun to/adjust-flycheck-automatic-syntax-eagerness ()
@@ -23,22 +24,15 @@ clean buffer we're an order of magnitude laxer about checking."
 
 ;; Each buffer gets its own idle-change-delay because of the
 ;; buffer-sensitive adjustment above.
-(make-variable-buffer-local 'flycheck-idle-change-delay)
 
-(add-hook 'flycheck-after-syntax-check-hook
-	  'to/adjust-flycheck-automatic-syntax-eagerness)
+
+
 
 ;; Remove newline checks, since they would trigger an immediate check
 ;; when we want the idle-change-delay to be in effect while editing.
 (setq flycheck-check-syntax-automatically '(save
 					    idle-change
 					    mode-enabled))
-
-(eval-after-load 'flycheck
-  '(custom-set-variables
-    '(flycheck-display-errors-function #'flycheck-pos-tip-error-messages)))
-
-; (flycheck-add-next-checker 'python-flake8 'python-pylint)
 
 (defun flycheck-handle-idle-change ()
     "Handle an expired idle time since the last change.

@@ -1,42 +1,29 @@
 (require 'color)
+
 (require 'spaceline)
 (require 'spaceline-config)
-;; (set-face-attribute 'mode-line-buffer-id nil :inherit nil)
-;; (set-face-attribute 'mode-line-buffer-id-inactive nil :inherit nil)
 
-;; (let ((bg "#262626")
-;;       (fg "#ffffff"))
-;;   ;; active
-;;   (set-face-attribute 'mode-line           nil
-;;                       :background (color-lighten-name bg 10) :foreground
-;;                       (color-lighten-name fg 10))
-;;   (set-face-attribute 'powerline-active1   nil :inherit 'mode-line :background (color-lighten-name bg 20) :foreground (color-lighten-name fg 20))
-;;   (set-face-attribute 'powerline-active2   nil :inherit 'mode-line :background (color-lighten-name bg 10) :foreground (color-lighten-name fg 10))
-;;   ;; inactive
-;;   (set-face-attribute 'mode-line-inactive  nil :background (color-darken-name bg  1) :foreground (color-lighten-name  fg 0))
-;;   (set-face-attribute 'powerline-inactive1 nil :inherit 'mode-line-inactive :background (color-lighten-name bg 10) :foreground (color-lighten-name fg 10))
-;;   (set-face-attribute 'powerline-inactive2 nil :inherit 'mode-line-inactive :background (color-darken-name bg 1) :foreground (color-lighten-name  fg  0)))
+(setq powerline-height 20
+      spaceline-byte-compile t
+      powerline-default-separator nil
+      spaceline-minor-modes-separator " ")
 
-(setq powerline-height 20)
-
-(defface pml-highlight
-  '((t (:background "gray40")))
-  "Basic face for highlighting.")
-
-(setq powerline-default-separator nil)
 (when (not (display-graphic-p))
   (setq powerline-default-separator 'utf-8))
 
-(spaceline-define-segment my-projectile
-  "Show the current projectile root."
-  (when (and (fboundp 'projectile-project-p)
-             (stringp (projectile-project-p))
-             (not (string= (projectile-project-name) (buffer-name))))
-    (concat "P: " (projectile-project-name)))
-  :when active
-)
+
+;; (spaceline-define-segment my-projectile
+;;   "Show the current projectile root."
+;;   (when (and (fboundp 'projectile-project-p)
+;;              (stringp (projectile-project-p))
+;;              (not (string= (projectile-project-name) (buffer-name))))
+;;     (concat "P: " (projectile-project-name)))
+;;   :when active
+;;   )
+
 (setq spaceline-highlight-face-func 'spaceline-highlight-face-modified)
-(spaceline-emacs-theme 'my-projectile)
+
+(spaceline-emacs-theme)
 (spaceline-toggle-anzu-on)
 (spaceline-toggle-helm-number-on)
 (spaceline-toggle-line-on)
@@ -53,9 +40,9 @@
 (spaceline-toggle-hud-off)
 (spaceline-toggle-selection-info-on)
 
-(setq spaceline-minor-modes-separator " ")
 (spaceline-helm-mode t)
-
+(spaceline-info-mode t)
+(spaceline-compile)
 
 ;; (add-hook 'window-setup-hook
 ;;           (lambda ()
@@ -77,31 +64,30 @@
 ;;                                   :foreground "#b2a99f")
 ;;               )
 
-(let ((bg "#263238")
-      (fg "#ffffff"))
-  (set-face-attribute 'mode-line nil
-                      :box `(:line-width 2 :color ,(color-lighten-name bg 20) :style nil )
-                      :background (color-lighten-name bg 5) )
-  (set-face-attribute 'mode-line-inactive nil
-                      :box `(:line-width 2 :color ,(color-darken-name bg 5) :style nil)                      
-                      :background (color-darken-name bg 5))
-  (set-face-attribute 'mode-line-buffer-id nil
-                      :inherit nil
-                      :background (color-lighten-name bg 5))
-  (set-face-attribute 'mode-line-buffer-id-inactive nil
-                      :inherit nil
-                      :background (color-darken-name bg 5))
-  (set-face-attribute 'spaceline-unmodified nil :background "#119900" :foreground "#b2a99f")
-  (set-face-attribute 'spaceline-modified nil :background "#99150" :foreground "#b2a99f")
-  (set-face-attribute 'spaceline-read-only nil :background "#15099" :foreground "#b2a99f")
-  (set-face-attribute 'powerline-active2 nil :background (color-lighten-name bg 5))
-  (set-face-attribute 'powerline-active1 nil :background (color-lighten-name bg 5))
-  (set-face-attribute 'powerline-active0 nil :background (color-lighten-name bg 5))
-  (set-face-attribute 'powerline-inactive2 nil :background (color-darken-name bg 5))
-  (set-face-attribute 'powerline-inactive1 nil :background (color-darken-name bg 5))
-  (set-face-attribute 'powerline-inactive0 nil :background (color-darken-name bg 5))
-  )
+;; (let ((bg "#263238")
+;;       (fg "#ffffff"))
+;;   (set-face-attribute 'mode-line nil
+;;                       :box `(:line-width 2 :color ,(color-lighten-name bg 20) :style nil )
+;;                       :background (color-lighten-name bg 5) )
+;;   (set-face-attribute 'mode-line-inactive nil
+;;                       :box `(:line-width 2 :color ,(color-darken-name bg 5) :style nil)
+;;                       :background (color-darken-name bg 5))
+;;   (set-face-attribute 'mode-line-buffer-id nil
+;;                       :inherit nil
+;;                       :background (color-lighten-name bg 5))
+;;   (set-face-attribute 'mode-line-buffer-id-inactive nil
+;;                       :inherit nil
+;;                       :background (color-darken-name bg 5))
+;;   (set-face-attribute 'spaceline-unmodified nil :background "#119900" :foreground "#b2a99f")
+;;   (set-face-attribute 'spaceline-modified nil :background "#99150" :foreground "#b2a99f")
+;;   (set-face-attribute 'spaceline-read-only nil :background "#15099" :foreground "#b2a99f")
+;;   (set-face-attribute 'powerline-active2 nil :background (color-lighten-name bg 5))
+;;   (set-face-attribute 'powerline-active1 nil :background (color-lighten-name bg 5))
+;;   (set-face-attribute 'powerline-active0 nil :background (color-lighten-name bg 5))
+;;   (set-face-attribute 'powerline-inactive2 nil :background (color-darken-name bg 5))
+;;   (set-face-attribute 'powerline-inactive1 nil :background (color-darken-name bg 5))
+;;   (set-face-attribute 'powerline-inactive0 nil :background (color-darken-name bg 5))
+;;   )
 
 
-(spaceline-compile)
 (provide 'modeline-setup)

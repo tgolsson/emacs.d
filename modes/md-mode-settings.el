@@ -1,12 +1,15 @@
-(use-package company-emoji)
+
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown")
+  :init
+  (setq markdown-command "multimarkdown")
+  (use-package company-emoji
+    :commands company-emoji)
   (add-hook 'markdown-mode-hook
-            (lambda () 
+            (lambda ()
               (abbrev-mode 1)
               (auto-fill-mode 0)
               (font-lock-mode 1)

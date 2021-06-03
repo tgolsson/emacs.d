@@ -13,7 +13,8 @@
  (magit-diff:-M "1" "t")
  (magit-dispatch nil)
  (magit-ediff nil)
- (magit-fetch nil)
+ (magit-fetch nil
+              ("--tags"))
  (magit-gitignore nil)
  (magit-log
   ("-n256" "--graph" "--decorate"))
@@ -29,11 +30,14 @@
  (magit-rebase nil)
  (magit-remote
   ("-f"))
+ (magit-remote\.<remote>\.*url "git@github.com:tgolsson/egui_wgpu_backend.git" "git@github.com:hasenbanck/egui_wgpu_backend.git" "git@github.com:tgolsson/rust-tfrecord.git" "git@github.com:jerry73204/rust-tfrecord.git")
  (magit-reset nil)
- (magit-revert nil
-               ("--edit"))
+ (magit-revert
+  ("--edit")
+  nil)
  (magit-run nil)
  (magit-stash nil
               ("--include-untracked"))
  (magit-submodule nil)
- (magithub-dispatch-popup nil))
+ (magithub-dispatch-popup nil)
+ (transient-dwim-dispatch nil))

@@ -2,6 +2,8 @@
 ;; Diminish
 ;;
 (use-package diminish
+  :demand t
+  :defer 10
   :config
   (diminish 'auto-fill-function)
   (eval-after-load "minimap" '(diminish 'minimap-mode))
@@ -16,5 +18,6 @@
   (eval-after-load "projectile" '(diminish 'projectile-mode))
   (eval-after-load "rainbow-mode" '(diminish 'rainbow-mode))
   (eval-after-load "fixme-mode" '(diminish 'fixme-mode))
-  (eval-after-load "fira-code-mode" '(diminish 'fira-code-mode)))  
+  (eval-after-load "fira-code-mode" '(diminish 'fira-code-mode)))
+
 (provide 'diminish-setup)
