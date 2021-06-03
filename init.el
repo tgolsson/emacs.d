@@ -1,3 +1,10 @@
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 
 ;; PRE-INIT
  (setq gc-cons-threshold 100000000
@@ -210,11 +217,11 @@
 ;; (when window-system (set-exec-path-from-shell-PATH))
 
 ;; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (progn
-      (message "Installing: %s" package)
-      (package-install package))))
+;; (dolist (package package-list)
+;;   (unless (package-installed-p package)
+;;     (progn
+;;       (message "Installing: %s" package)
+;;       (package-install package))))
 
 (defun risky-local-variable-p (sym &optional _ignored) nil)
 
@@ -230,9 +237,7 @@
   (if (file-accessible-directory-p thedir)
       (progn
         (dolist (file (directory-files thedir t "\.el$" nil))
-          (measure-time file (load (file-name-sans-extension file) t t)))
-        (message "Loaded all files in: %s" thedir))
-    (message "Did not load files in: %s, not accessible" thedir)))
+          (load (file-name-sans-extension file) t t)))))
 
 (defmacro to/easy-hook
     (hook prog &optional local append)
@@ -241,8 +246,7 @@
 
 (defun to/my-require (symbol)
   "Requires a package and then prints that it was loaded"
-    (measure-time (format "Loaded config file: %s" (symbol-name symbol))
-                  (require symbol)))
+  (require symbol))
 
 (setq settings-dir (expand-file-name "settings" user-emacs-directory)
       modes-dir (expand-file-name "modes" user-emacs-directory)
@@ -258,7 +262,7 @@
 (add-to-list 'load-path packages-dir)
 (add-to-list 'load-path (expand-file-name "emacs-bazel-mode" packages-dir))
 
-(measure-time "Loading all settings:"              
+(measure-time "Loading all settings:"
               (to/my-require 'basic-setup)
               (to/my-require 'input-setup)
               (to/my-require 'cascadia-code)
@@ -276,7 +280,7 @@
               (to/my-require 'diminish-setup))
 
 ;; Load modes
-(measure-time "Loading all auxillaries:" 
+(measure-time "Loading all auxillaries:"
               (to/do-list-dir modes-dir)
               (to/do-list-dir privates-dir)
               (to/do-list-dir experiments-dir))
@@ -286,11 +290,11 @@
 ;; (to/my-require 'fira-code-mode)
 ;; (to/my-require 'darkroom-setup)
 
-(measure-time "Starting server:" 
+(measure-time "Starting server:"
               (when (and (fboundp 'server-running-p) (not (server-running-p)))
                 (server-start)))
 
-(measure-time "Loading custom:" 
+(measure-time "Loading custom:"
 ;; Keep emacs Custom-settings in separate file
               (load custom-file))
 
