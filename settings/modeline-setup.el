@@ -91,10 +91,10 @@
 
 (use-package doom-modeline
   :ensure t
-  :init (doom-modeline-mode 1))
-
-;; (use-package doom-modeline
-;;   :ensure t
-;;   :hook (after-init . doom-modeline-mode))
+  :init
+  (doom-modeline-mode 1)
+  (set-face-attribute 'mode-line nil :underline nil)
+  :config
+  (set-face-attribute 'mode-line nil :underline nil))
 
 (provide 'modeline-setup)

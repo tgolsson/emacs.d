@@ -19,6 +19,8 @@
 (global-subword-mode 1)
 
 (use-package elec-pair
+  :commands elec-pair-mode
+  :hook (prog-mode . electric-pair-mode)
   :demand t
   :config
   (electric-pair-mode +1))

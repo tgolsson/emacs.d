@@ -3,10 +3,12 @@
 ;; GUI
 ;;
 
-(blink-cursor-mode 0)
-(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(add-hook 'prog-mode-hook (lambda () "foo" (interactive) (when (window-system)
+                                                      (cascadia-code-mode))))
+
+(mapc 'frame-set-background-mode (frame-list))
 
 (setq cursor-type t
       font-lock-multiline t
@@ -27,21 +29,35 @@
               custom-safe-themes t
               custom-theme-directory (expand-file-name "themes" user-emacs-directory))
 
+(when window-system
+  (set-frame-font "Cascadia Code 10")
+  (define-fringe-bitmap 'right-curly-arrow
+    [#b00000000
+     #b00000000
+     #b00000000
+     #b00000000
+     #b00000000
+     #b00000000
+     #b00000000
+     #b00000000])
+  (define-fringe-bitmap 'left-curly-arrow
+    [#b00000000
+     #b00000000
+     #b00110000
+     #b00110000
+     #b00110000
+     #b00110000
+     #b00000000
+     #b00000000]))
 
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+(blink-cursor-mode -1)
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
-;;
-;; Theme and LNF
-;;
 (use-package paren
-  :config
-  (show-paren-mode +1))
-
-(add-hook 'prog-mode-hook (lambda () "foo" (interactive) (when (window-system)
-                                                      (cascadia-code-mode))))
-
-(mapc 'frame-set-background-mode (frame-list))
-
+  :commands show-paren-mode
+  :init   (show-paren-mode +1))
 
 (use-package solarized-theme
   :demand t
@@ -49,50 +65,25 @@
   (load-theme 'solarized-light t)
   (enable-theme 'solarized-light))
 
-(defun --set-emoji-font (frame)
-  "Adjust the font settings of FRAME so Emacs can display emoji properly."
-  (if (eq system-type 'darwin)
-      ;; For NS/Cocoa
-      (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)
-    ;; For Linux
-    (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend)))
-
 (use-package emojify
-  :hook (after-init . global-emojify-mode))
-
-;; For when Emacs is started in GUI mode:
-(--set-emoji-font nil)
-(add-hook 'after-make-frame-functions '--set-emoji-font)
-
-(when window-system
-  (set-frame-font "Cascadia Code 10")
-  ;; (define-fringe-bitmap 'right-curly-arrow
-  ;;   [#b00000000
-  ;;    #b00000000
-  ;;    #b00000000
-  ;;    #b00000000
-  ;;    #b00000000
-  ;;    #b00000000
-  ;;    #b00000000
-  ;;    #b00000000])
-  ;; (define-fringe-bitmap 'left-curly-arrow
-  ;;   [#b00000000
-  ;;    #b00000000
-  ;;    #b00110000
-  ;;    #b00110000
-  ;;    #b00110000
-  ;;    #b00110000
-  ;;    #b00000000
-  ;;    #b00000000])
-  )
+  :hook (after-init . global-emojify-mode)
+  :config
+  (defun to/set-emoji-font (frame)
+    "Adjust the font settings of FRAME so Emacs can display emoji properly."
+    (if (eq system-type 'darwin)
+        ;; For NS/Cocoa
+        (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)
+      ;; For Linux
+      (set-fontset-font t 'symbol (font-spec :family "Symbola") frame
+                        'prepend)))
+  (to/set-emoji-font nil)
+  (add-hook 'after-make-frame-functions 'to/set-emoji-font))
 
 
-
-;;
-;; Line numbers and line higlighting
-;;
-(global-hl-line-mode 1)
-(hl-line-mode 1)
+(use-package hl-line
+  :demand t
+  :init
+  (global-hl-line-mode +1))
 
 (use-package hlinum
   :defer 10
@@ -103,21 +94,13 @@
   (linum-mode 1)
   (hlinum-activate))
 
+(use-package rainbow-delimiters
+  :ensure t)
 
 (use-package rainbow-mode
-  :defer 10)
-;; (use-package beacon-mode
-;;   :config
-;;   (beacon-mode 1)
-;;   (setq beacon-blink-when-point-moves-horizontally 1
-;;         beacon-blink-when-point-moves-vertically 1
-;;         beacon-blink-duration 0.1))
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-mode))
 
-;; (use-package dashboard
-;;             :init (dashboard-setup-startup-hook)
-;;             :config
-;;             (setq dashboard-items '((recents . 10)
-;;                                     (projects . 10)
-;;                                     (bookmarks . 5))))
 
 (provide 'appearance-setup)

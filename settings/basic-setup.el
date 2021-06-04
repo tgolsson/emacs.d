@@ -34,21 +34,6 @@
     (to/windows-setup)
   (to/other-setup))
 
-(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
-      backup-directory-alist `((".*" . ,temporary-file-directory))
-      bookmark-default-file  (concat user-emacs-directory "bookmarks.em")
-      bookmark-save-flag 1
-      ediff-diff-options "-w"
-      ediff-split-window-function 'split-window-horizontally
-      ediff-window-setup-function 'ediff-setup-windows-plain
-      gc-cons-threshold 50000000
-      history-length 1000
-      large-file-warning-threshold 100000000
-      user-full-name "Tom Solberg"
-      user-mail-address "me@sbg.dev"
-      vc-make-backup-files t
-      compilation-scroll-output 'first-error
-      locale-coding-system 'utf-8)
 
 (defun bury-compile-buffer-if-successful (buffer string)
   "Bury a compilation buffer if succeeded without warnings "
@@ -65,6 +50,23 @@
                       buffer)))
 
 (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
+
+(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
+      backup-directory-alist `((".*" . ,temporary-file-directory))
+      bookmark-default-file  (concat user-emacs-directory "bookmarks.em")
+      bookmark-save-flag 1
+      ediff-diff-options "-w"
+      ediff-split-window-function 'split-window-horizontally
+      ediff-window-setup-function 'ediff-setup-windows-plain
+      gc-cons-threshold 50000000
+      history-length 1000
+      large-file-warning-threshold 100000000
+      user-full-name "Tom Solberg"
+      user-mail-address "me@sbg.dev"
+      vc-make-backup-files t
+      compilation-scroll-output 'first-error
+      locale-coding-system 'utf-8)
+
 
 (fset 'yes-or-no-p 'y-or-n-p)
 

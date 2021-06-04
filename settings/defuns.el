@@ -1,4 +1,5 @@
-(require 'cl)
+(eval-when-compile
+  (require 'cl))
 
 (defun untabify-buffer ()
   (interactive)

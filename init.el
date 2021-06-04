@@ -185,7 +185,7 @@
 (prefer-coding-system 'utf-8) ;; fixes some packages containing non-iso-latin characets
 
 (use-package exec-path-from-shell
-  :when (memq window-system '(mac ns x))
+  ;; :when (memq window-system '(mac ns x))
   :init
   (setq exec-path-from-shell-arguments nil)
   :config
@@ -262,7 +262,7 @@ The return value is the new value of LIST-VAR."
 (measure-time "Loading all settings:"
               (to/my-require 'modeline-setup)
               (to/my-require 'appearance-setup)
-
+              (to/my-require 'lsp-setup)
               (to/my-require 'basic-setup)
               (to/my-require 'input-setup)
               (to/my-require 'project-setup)
@@ -298,3 +298,4 @@ The return value is the new value of LIST-VAR."
 
 (to/easy-hook 'emacs-startup-hook (progn ) t)
 (setenv "SSH_ASKPASS" "git-gui --askpass")
+(set-face-attribute 'mode-line nil :underline nil)

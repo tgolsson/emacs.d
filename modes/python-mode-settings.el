@@ -6,17 +6,29 @@
       )
 
 
-(use-package jedi-core
+(use-package python-mode
   :mode "\\.py\\'"
   :init
-  (use-package company-jedi
-    :commands company-jedi)
+  (use-package conda
+    :hook python-mode
+    :init
+    (setq conda-env-home-directory "/home/tgolsson/anaconda3"
+          conda-anaconda-home "/home/tgolsson/anaconda3")
+    :config
+    (conda-env-activate 'getenv "CONDA_DEFAULT_ENV")
+    (conda-env-autoactivate-mode t))
 
-  (setq jedi:server-command
-      '("~/.emacs.d/.python-environments/default/bin/jediepcserver")
-      jedi:use-shortcuts t)
-  :config
-  (jedi:setup)
+  (use-package jedi-core
+    :hook (python-mode . jedi-mode)
+    :init
+    (use-package company-jedi
+      :commands company-jedi)
+
+    (setq jedi:server-command
+          '("~/.emacs.d/.python-environments/default/bin/jediepcserver")
+          jedi:use-shortcuts t)
+    :config
+    (jedi:setup))
 
   (defun my-python-mode ()
     ;; make these variables local
@@ -29,6 +41,8 @@
     (local-set-key (kbd "M-.") 'jedi:goto-definition)
     (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker))
 
-  (add-hook 'python-mode-hook 'my-python-mode))
+  (add-hook 'python-mode-hook 'my-python-mode)
+  )
+
 ;; ;; CTAGS
 ;; (global-set-key (kbd "M-.")                  'ctags-search)

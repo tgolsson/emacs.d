@@ -14,19 +14,19 @@
  (magit-dispatch nil)
  (magit-ediff nil)
  (magit-fetch nil
-	      ("--tags"))
+              ("--tags"))
  (magit-gitignore nil)
  (magit-log
   ("-n256" "--graph" "--decorate"))
  (magit-merge nil
-	      ("--ff-only"))
+              ("--ff-only"))
  (magit-patch nil)
  (magit-patch-create nil)
  (magit-pull nil
-	     ("--rebase"))
+             ("--rebase"))
  (magit-push nil
-	     ("--force-with-lease")
-	     ("--force"))
+             ("--force-with-lease")
+             ("--force"))
  (magit-rebase nil)
  (magit-remote
   ("-f"))
@@ -37,7 +37,7 @@
   nil)
  (magit-run nil)
  (magit-stash nil
-	      ("--include-untracked"))
+              ("--include-untracked"))
  (magit-submodule nil)
  (magithub-dispatch-popup nil)
  (transient-dwim-dispatch nil))
