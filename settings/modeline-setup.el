@@ -1,48 +1,48 @@
-(require 'color)
+;; (require 'color)
 
-(require 'spaceline)
-(require 'spaceline-config)
+;; (require 'spaceline)
+;; (require 'spaceline-config)
 
-(setq powerline-height 20
-      spaceline-byte-compile t
-      powerline-default-separator nil
-      spaceline-minor-modes-separator " ")
+;; (setq powerline-height 20
+;;       spaceline-byte-compile t
+;;       powerline-default-separator nil
+;;       spaceline-minor-modes-separator " ")
 
-(when (not (display-graphic-p))
-  (setq powerline-default-separator 'utf-8))
+;; (when (not (display-graphic-p))
+;;   (setq powerline-default-separator 'utf-8))
 
 
-;; (spaceline-define-segment my-projectile
-;;   "Show the current projectile root."
-;;   (when (and (fboundp 'projectile-project-p)
-;;              (stringp (projectile-project-p))
-;;              (not (string= (projectile-project-name) (buffer-name))))
-;;     (concat "P: " (projectile-project-name)))
-;;   :when active
-;;   )
+;; ;; (spaceline-define-segment my-projectile
+;; ;;   "Show the current projectile root."
+;; ;;   (when (and (fboundp 'projectile-project-p)
+;; ;;              (stringp (projectile-project-p))
+;; ;;              (not (string= (projectile-project-name) (buffer-name))))
+;; ;;     (concat "P: " (projectile-project-name)))
+;; ;;   :when active
+;; ;;   )
 
-(setq spaceline-highlight-face-func 'spaceline-highlight-face-modified)
+;; (setq spaceline-highlight-face-func 'spaceline-highlight-face-modified)
 
-(spaceline-emacs-theme)
-(spaceline-toggle-anzu-on)
-(spaceline-toggle-helm-number-on)
-(spaceline-toggle-line-on)
-(spaceline-toggle-buffer-encoding-abbrev-off)
-(spaceline-toggle-org-pomodoro-off)
-(spaceline-toggle-column-off)
-(spaceline-toggle-erc-track-off)
-(spaceline-toggle-workspace-number-off)
-(spaceline-toggle-window-number-off)
-(spaceline-toggle-line-column-on)
-(spaceline-toggle-mu4e-alert-segment-off)
-(spaceline-toggle-buffer-size-off)
-(spaceline-toggle-buffer-position-off)
-(spaceline-toggle-hud-off)
-(spaceline-toggle-selection-info-on)
+;; (spaceline-emacs-theme)
+;; (spaceline-toggle-anzu-on)
+;; (spaceline-toggle-helm-number-on)
+;; (spaceline-toggle-line-on)
+;; (spaceline-toggle-buffer-encoding-abbrev-off)
+;; (spaceline-toggle-org-pomodoro-off)
+;; (spaceline-toggle-column-off)
+;; (spaceline-toggle-erc-track-off)
+;; (spaceline-toggle-workspace-number-off)
+;; (spaceline-toggle-window-number-off)
+;; (spaceline-toggle-line-column-on)
+;; (spaceline-toggle-mu4e-alert-segment-off)
+;; (spaceline-toggle-buffer-size-off)
+;; (spaceline-toggle-buffer-position-off)
+;; (spaceline-toggle-hud-off)
+;; (spaceline-toggle-selection-info-on)
 
-(spaceline-helm-mode t)
-(spaceline-info-mode t)
-(spaceline-compile)
+;; (spaceline-helm-mode t)
+;; (spaceline-info-mode t)
+;; (spaceline-compile)
 
 ;; (add-hook 'window-setup-hook
 ;;           (lambda ()
@@ -89,5 +89,12 @@
 ;;   (set-face-attribute 'powerline-inactive0 nil :background (color-darken-name bg 5))
 ;;   )
 
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
+
+;; (use-package doom-modeline
+;;   :ensure t
+;;   :hook (after-init . doom-modeline-mode))
 
 (provide 'modeline-setup)

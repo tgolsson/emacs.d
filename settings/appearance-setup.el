@@ -4,28 +4,24 @@
 ;;
 
 (blink-cursor-mode 0)
-(when (fboundp 'tool-bar-mode)
-  (tool-bar-mode -1))
-(when (fboundp 'scroll-bar-mode)
-  (scroll-bar-mode -1))
-(when (fboundp 'menu-bar-mode)
-  (menu-bar-mode -1))
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
-(setq
- cursor-type t
- font-lock-multiline t
- frame-background-mode 'dark
- inhibit-splash-screen t
- inhibit-startup-message t
- linum-delay t
- linum-eager t
- linum-format "%4d  " ; \u2502
- scroll-conservatively 100000
- scroll-margin 0
- scroll-preserve-screen-position 0
- frame-title-format '((:eval (if (buffer-file-name)
-                                 (abbreviate-file-name (buffer-file-name))
-                               "%b"))))
+(setq cursor-type t
+      font-lock-multiline t
+      frame-background-mode 'dark
+      inhibit-splash-screen t
+      inhibit-startup-message t
+      linum-delay t
+      linum-eager t
+      linum-format "%4d  " ; \u2502
+      scroll-conservatively 100000
+      scroll-margin 0
+      scroll-preserve-screen-position 0
+      frame-title-format '((:eval (if (buffer-file-name)
+                                      (abbreviate-file-name (buffer-file-name))
+                                    "%b"))))
 
 (setq-default font-lock-multiline t
               custom-safe-themes t
@@ -34,22 +30,24 @@
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-
 ;;
 ;; Theme and LNF
 ;;
-(show-paren-mode 1)
+(use-package paren
+  :config
+  (show-paren-mode +1))
 
 (add-hook 'prog-mode-hook (lambda () "foo" (interactive) (when (window-system)
                                                       (cascadia-code-mode))))
 
 (mapc 'frame-set-background-mode (frame-list))
-;; (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
 
-(add-hook 'emacs-startup-hook (lambda () (interactive)
-                                (require 'solarized-theme)
-                                (load-theme 'solarized-light t)
-                                (enable-theme 'solarized-light)))
+
+(use-package solarized-theme
+  :demand t
+  :config
+  (load-theme 'solarized-light t)
+  (enable-theme 'solarized-light))
 
 (defun --set-emoji-font (frame)
   "Adjust the font settings of FRAME so Emacs can display emoji properly."

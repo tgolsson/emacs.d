@@ -1,7 +1,4 @@
-;;
-;; Let's get modern...
-;;
-(setq locale-coding-system 'utf-8)
+
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
@@ -20,7 +17,11 @@
 ;; General input modes
 ;;
 (global-subword-mode 1)
-(electric-pair-mode 1)
+
+(use-package elec-pair
+  :demand t
+  :config
+  (electric-pair-mode +1))
 
 ;;
 ;; General input setqs
@@ -41,8 +42,8 @@
 ;;
 ;; General input setqs
 ;;
-(setq-default indent-tabs-mode nil)
-(setq-default fill-column 80)
+(setq-default indent-tabs-mode nil
+              fill-column 80)
 
 
 ;;
@@ -78,41 +79,41 @@
   (define-auto-insert "\\.rs$" ["default-rust.rs" to/autoinsert-yas-expand])
   (define-auto-insert "/sprints/" ["sprint.org" to/autoinsert-yas-expand])
   (define-auto-insert "test_.*.py" ["test.py" to/autoinsert-yas-expand])
-   ;; autoinsert C/C++ header
-    (define-auto-insert
-      (cons "\\.\\([Hh]\\|hh\\|hpp\\)\\'" "My C / C++ header")
-      '(nil
-    	"// " (file-name-nondirectory buffer-file-name) "\n"
-    	"//\n"
-        "// Copyright © Tom Solberg\n"
-    	"//\n"
-    	"// Description:\n"
-    	"//\n"
-    	(make-string 70 ?/) "\n\n"
-        "// last-edit-by: <" (user-full-name) "> \n"
-    	"// $Log:$\n"
-    	"//\n"
-    	(make-string 70 ?/) "\n\n"
-        "#pragma once\n\n"
-    	))
+  ;; autoinsert C/C++ header
+  (define-auto-insert
+    (cons "\\.\\([Hh]\\|hh\\|hpp\\)\\'" "My C / C++ header")
+    '(nil
+      "// " (file-name-nondirectory buffer-file-name) "\n"
+      "//\n"
+      "// Copyright © Tom Solberg\n"
+      "//\n"
+      "// Description:\n"
+      "//\n"
+      (make-string 70 ?/) "\n\n"
+      "// last-edit-by: <" (user-full-name) "> \n"
+      "// $Log:$\n"
+      "//\n"
+      (make-string 70 ?/) "\n\n"
+      "#pragma once\n\n"
+      ))
 
-    ;; auto insert C/C++
-    (define-auto-insert
-      (cons "\\.\\([Cc]\\|cc\\|cpp\\)\\'" "My C++ implementation")
-      '(nil
-    	"// " (file-name-nondirectory buffer-file-name) "\n"
-    	"//\n"
-        "// Copyright © Tom Solberg\n"
-    	"// \n"
-    	"// Description:\n"
-    	"//\n"
-    	(make-string 70 ?/) "\n\n"
-    	"// last-edit-by: <" (user-full-name) "> \n"
-    	"// $Log:$\n"
-    	"//\n"
-        (make-string 70 ?/) "\n\n"
-        "#include \"" (concat (file-name-sans-extension (file-name-nondirectory buffer-file-name)) ".h") "\""
-    	)))
+  ;; auto insert C/C++
+  (define-auto-insert
+    (cons "\\.\\([Cc]\\|cc\\|cpp\\)\\'" "My C++ implementation")
+    '(nil
+      "// " (file-name-nondirectory buffer-file-name) "\n"
+      "//\n"
+      "// Copyright © Tom Solberg\n"
+      "// \n"
+      "// Description:\n"
+      "//\n"
+      (make-string 70 ?/) "\n\n"
+      "// last-edit-by: <" (user-full-name) "> \n"
+      "// $Log:$\n"
+      "//\n"
+      (make-string 70 ?/) "\n\n"
+      "#include \"" (concat (file-name-sans-extension (file-name-nondirectory buffer-file-name)) ".h") "\""
+      )))
 
 (setq comint-prompt-read-only t)
 ;; (use-package hideshow
@@ -130,5 +131,7 @@
 ;; (use-package expand-region
 ;;   :ensure t
 ;;   :bind ("C-@" . er/expand-region))
+
+(require 'cascadia-code)
 
 (provide 'input-setup)

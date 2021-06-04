@@ -7,12 +7,12 @@
                      gcs-done)))
 
 ;; PRE-INIT
- (setq gc-cons-threshold 100000000
-       package-enable-at-startup nil
-       load-prefer-newer t
-       use-package-always-ensure t
-       use-package-always-defer t
-       package-list '(
+(setq gc-cons-threshold 500000000
+      package-enable-at-startup nil
+      load-prefer-newer t
+      use-package-always-ensure t
+      use-package-always-defer t
+      package-list '(
                      ag
                      alert
                      anzu
@@ -34,10 +34,8 @@
                      company-irony
                      company-irony-c-headers
                      company-jedi
-                     company-lua
                      company-math
                      company-quickhelp
-                     company-statistics
                      company-web
                      conda
                      copy-as-format
@@ -48,7 +46,6 @@
                      docker-tramp
                      dockerfile-mode
                      dumb-jump
-                     editorconfig
                      ein
                      exec-path-from-shell
                      expand-region
@@ -161,36 +158,25 @@
                      yasnippet))
 
 (add-to-list 'load-path (expand-file-name "packages" user-emacs-directory))
+(add-to-list 'custom-theme-load-path (expand-file-name "themes"
+                                 user-emacs-directory))
 
-(require 'auto-compile)
-(auto-compile-on-load-mode)
-(auto-compile-on-save-mode)
+;; (require 'auto-compile)
+;; (auto-compile-on-load-mode)
+;; (auto-compile-on-save-mode)
 
 
-;; GENERAL SETTINGS
-(eval-and-compile
-  (customize-set-variable
-   'package-archives '(("melpa" . "https://melpa.org/packages/")
-                       ("gnu" . "https://elpa.gnu.org/packages/")))
-  (package-initialize))
 
-;;   (unless (package-installed-p 'leaf)
-;;     (package-refresh-contents)
-;;     (package-install 'leaf))
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
 
-;;   (leaf leaf-keywords
-;;     :ensure t
-;;     :config
-;;     (leaf-keywords-init)))
-;; ;; </leaf-install-code>
 
-;; (leaf leaf-tree :ensure t)
-;; (leaf leaf-convert :ensure t)
-;; (leaf transient-dwim
-;;   :ensure t
-;;   :bind (("M-=" . transient-dwim-dispatch)))
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
 
 (use-package benchmark-init
+  :demand t
   :ensure t
   :config
   ;; To disable collection of benchmark data after init is done.
@@ -231,6 +217,17 @@
      ,@body
      (message "%s %.06f" ,msg (float-time (time-since time)))))
 
+(defun to/append-to-list (list-var elements)
+  "Append ELEMENTS to the end of LIST-VAR.
+
+The return value is the new value of LIST-VAR."
+  (unless (consp elements)
+    (error "ELEMENTS must be a list"))
+  (let ((list (symbol-value list-var)))
+    (if list
+        (setcdr (last list) elements)
+      (set list-var elements)))
+  (symbol-value list-var))
 
 (defun to/do-list-dir (thedir)
   "Iterates over all files in THEDIR and loads them"
@@ -263,12 +260,13 @@
 (add-to-list 'load-path (expand-file-name "emacs-bazel-mode" packages-dir))
 
 (measure-time "Loading all settings:"
+              (to/my-require 'modeline-setup)
+              (to/my-require 'appearance-setup)
+
               (to/my-require 'basic-setup)
               (to/my-require 'input-setup)
-              (to/my-require 'cascadia-code)
-              (to/my-require 'communication-setup)
-              (to/my-require 'defuns)
               (to/my-require 'project-setup)
+              (to/my-require 'defuns)
               (to/my-require 'modes-setup)
               (to/my-require 'magit-setup)
               (to/my-require 'company-setup)
@@ -276,7 +274,7 @@
               (to/my-require 'helm-setup)
               (to/my-require 'keybindings)
               (to/my-require 'single-line-hooks)
-              (to/my-require 'appearance-setup)
+
               (to/my-require 'diminish-setup))
 
 ;; Load modes
@@ -295,8 +293,8 @@
                 (server-start)))
 
 (measure-time "Loading custom:"
-;; Keep emacs Custom-settings in separate file
+              ;; Keep emacs Custom-settings in separate file
               (load custom-file))
 
-(to/easy-hook 'emacs-startup-hook (progn (to/my-require 'modeline-setup)) t)
+(to/easy-hook 'emacs-startup-hook (progn ) t)
 (setenv "SSH_ASKPASS" "git-gui --askpass")
