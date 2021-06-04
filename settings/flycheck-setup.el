@@ -8,6 +8,7 @@
 
   (make-variable-buffer-local 'flycheck-idle-change-delay)
   :config
+  (setq-default flycheck-disabled-checkers '(python-pylint))
   (custom-set-variables
    '(flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
   (add-hook 'flycheck-after-syntax-check-hook

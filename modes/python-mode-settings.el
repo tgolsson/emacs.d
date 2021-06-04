@@ -10,7 +10,7 @@
   :mode "\\.py\\'"
   :init
   (use-package conda
-    :hook python-mode
+    :commands conda-env-activate
     :init
     (setq conda-env-home-directory "/home/tgolsson/anaconda3"
           conda-anaconda-home "/home/tgolsson/anaconda3")
