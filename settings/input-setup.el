@@ -16,7 +16,7 @@
 ;;
 ;; General input modes
 ;;
-(global-subword-mode 1)
+(global-subword-mode +1)
 
 (use-package elec-pair
   :commands elec-pair-mode

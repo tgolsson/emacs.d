@@ -6,6 +6,8 @@
                               (time-subtract after-init-time before-init-time)))
                      gcs-done)))
 
+(package-initialize)
+
 ;; PRE-INIT
 (setq gc-cons-threshold 500000000
       package-enable-at-startup nil
@@ -166,7 +168,6 @@
 ;; (auto-compile-on-save-mode)
 
 
-
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 
@@ -261,6 +262,7 @@ The return value is the new value of LIST-VAR."
 
 (measure-time "Loading all settings:"
               (to/my-require 'modeline-setup)
+              (to/my-require 'debugging)
               (to/my-require 'appearance-setup)
               (to/my-require 'lsp-setup)
               (to/my-require 'basic-setup)
