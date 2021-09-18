@@ -1,3 +1,20 @@
+                     ;; helm
+                     ;; helm-ag
+                     ;; helm-core
+                     ;; helm-descbinds
+                     ;; helm-describe-modes
+                     ;; helm-etags-plus
+                     ;; helm-flx
+                     ;; helm-flycheck
+                     ;; helm-flymake
+                     ;; helm-flyspell
+                     ;; helm-fuzzier
+                     ;; helm-ls-git
+                     ;; helm-projectile
+                     ;; helm-smex
+                     ;; helm-swoop
+                     ;; helm-w32-launcher
+
 
 (use-package helm
   :ensure t

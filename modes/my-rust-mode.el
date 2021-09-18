@@ -11,6 +11,7 @@
 ;; (use-package flycheck-rust
 ;;   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
+      ;;                cargo
 (defun my-rust-mode-hook()
   (set (make-local-variable 'compile-command) "cargo run")
 

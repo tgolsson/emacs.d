@@ -3,6 +3,9 @@
   :ensure t
   :defer 10
   :bind-keymap ("C-c p" . projectile-command-map)
+  :init
+  (use-package ibuffer-projectile
+    :hook (ibuffer . (lambda () (ibuffer-projectile-set-filter-groups) (unless (eq ibuffer-sorting-mode 'alphabetic) (ibuffer-do-sort-by-alphabetic)))))
   :config
   (setq projectile-switch-project-action 'magit-status
         projectile-globally-ignored-directories (append
@@ -16,7 +19,6 @@
         projectile-git-command "fd . -0"
         projectile-git-submodule-command "git submodule --quiet foreach 'echo $path'")
   (projectile-mode +1)
-  (use-package ibuffer-projectile)
   (projectile-global-mode 1)
   (helm-projectile-on))
 

@@ -1,3 +1,9 @@
+                     ;; go-eldoc
+                     ;; go-gopath
+                     ;; go-mode
+                     ;; go-projectile
+                     ;; golint
+
 (use-package go-mode
   :mode "\\.go\\'"
   :init

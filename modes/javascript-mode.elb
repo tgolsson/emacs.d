@@ -1,3 +1,6 @@
+      ;;                js2-highlight-vars
+      ;;                js2-refactor
+      
 (use-package js2-mode
   :ensure nil
   :mode "\\.js\\'"

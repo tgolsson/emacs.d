@@ -1,3 +1,14 @@
+      ;;                flycheck
+      ;;                flycheck-clang-tidy
+      ;;                flycheck-golangci-lint
+      ;;                flycheck-inline
+      ;;                flycheck-irony
+      ;;                flycheck-pos-tip
+      ;;                flycheck-rust
+      ;;                flymake-gjshint
+      ;;                flymake-rust
+      ;;                flymake-sass
+
 (defun to/adjust-flycheck-automatic-syntax-eagerness ()
     "Adjust how often we check for errors based on if there are any.
 This lets us fix any errors as quickly as possible, but in a

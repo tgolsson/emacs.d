@@ -1,3 +1,5 @@
+(use-package company-web)
+
 (use-package web-mode  
   :mode ("\\.phtml\\'" "\\.html\\'" "\\.svelte\\'")
   :config

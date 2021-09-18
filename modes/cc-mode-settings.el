@@ -24,6 +24,11 @@
 ;;              '(("[^a-zA-Z_]\\(__[a-zA-Z0-9_]+__\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-macro-face keep))  'append)))
 
 
+;;                rtags
+;;                clang-format
+;;                company-c-headers
+;;                irony
+      ;;                modern-cpp-font-lock
 ;;
 ;; C-mode settings
 ;;

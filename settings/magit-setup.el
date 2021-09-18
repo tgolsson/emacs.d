@@ -1,3 +1,8 @@
+      ;;                magit
+      ;;                magit-filenotify
+      ;;                magit-popup
+      ;;                magit-todos
+
 ;;
 ;; magit
 ;;

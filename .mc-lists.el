@@ -51,6 +51,7 @@
         org-beginning-of-line
         org-end-of-line
         org-self-insert-command
+        py-electric-colon
         python-indent-shift-right
         query-replace
         reindent-then-newline-and-indent
