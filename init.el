@@ -154,7 +154,13 @@ The return value is the new value of LIST-VAR."
   (require 'dap-hydra)
   (require 'dap-gdb-lldb)
   (dap-gdb-lldb-setup)
-
+  (dap-register-debug-template "Rust::GDB Run Configuration"
+                               (list :type "gdb"
+                                     :request "launch"
+                                     :name "GDB::Run"
+				     :gdbpath "rust-gdb"
+                                     :target nil
+                                     :cwd nil))
   ;; Bind `C-c l d` to `dap-hydra` for easy access
   :bind (:map lsp-mode-map
               ("<f5>" . dap-debug)
@@ -1388,21 +1394,18 @@ up before you execute another command."
   (flycheck-inline-mode 0)
   (add-hook 'before-save-hook #'lsp-format-buffer t t))
 
-(defconst my-protobuf-style
-  '((c-basic-offset . 4)
-    (indent-tabs-mode . nil)))
 
 (use-package protobuf-mode
   :mode "\\.proto\\'"
   :init
-  (add-hook 'protobuf-mode-hook (lambda () (interactive "")
-                                  (company-mode 0)
-                                  (irony-mode 0)
-                                  (c-add-style "my-style" my-protobuf-style t))))
+  (defconst my-protobuf-style
+    '((c-basic-offset . 4)
+      (indent-tabs-mode . nil)))
+  :config
+  (company-mode 0)
+  (irony-mode 0)
+  (c-add-style "my-style" my-protobuf-style t))
 
-(setq python-indent-offset 4
-      python-environment-virtualenv '("virtualenv" "-p" "python3" "--system-site-packages" "--quiet")
-      flycheck-python-flake8-executable "/home/tgolsson/anaconda3/envs/py38/bin/python3.8")
 
 (use-package python-mode
   :mode "\\.py\\'"
@@ -1410,6 +1413,10 @@ up before you execute another command."
   :custom
   (dap-python-debugger 'debugpy)
   :config
+  (setq python-indent-offset 4
+	python-environment-virtualenv '("virtualenv" "-p" "python3" "--system-site-packages" "--quiet")
+	flycheck-python-flake8-executable
+	"/home/tgolsson/anaconda3/envs/py38/bin/python3.8")
   (require 'dap-python)
   :init
   (use-package conda
@@ -1420,6 +1427,7 @@ up before you execute another command."
     :config
     (conda-env-activate "base")
     (conda-env-autoactivate-mode t))
+
 
   ;; (use-package jedi-core
   ;;   :hook (python-mode . jedi-mode)
@@ -1443,7 +1451,13 @@ up before you execute another command."
 
   (local-set-key (kbd "M-.") 'jedi:goto-definition)
   (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker))
+(use-package pyvenv
+  :after python-mode
+  :init
+  (setenv "WORKON_HOME" (expand-file-name "~/anaconda3/envs" ))
 
+  :config
+  (pyvenv-mode 1))
 ;; ;; CTAGS
 ;; (global-set-key (kbd "M-.")                  'ctags-search)
 
