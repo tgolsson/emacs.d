@@ -89,12 +89,4 @@
 ;;   (set-face-attribute 'powerline-inactive0 nil :background (color-darken-name bg 5))
 ;;   )
 
-(use-package doom-modeline
-  :ensure t
-  :init
-  (doom-modeline-mode 1)
-  (set-face-attribute 'mode-line nil :underline nil)
-  :config
-  (set-face-attribute 'mode-line nil :underline nil))
-
 (provide 'modeline-setup)

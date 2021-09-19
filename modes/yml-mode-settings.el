@@ -36,10 +36,5 @@
 ;;
 ;;; Code:
 
-(defun yaml-mode-settings ()
-  "Yaml-mode settings"
-  (setq yaml-indent-offset 2))
-(add-hook 'yaml-mode-hook 'yaml-mode-settings)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; yml-mode-setting.el ends here
