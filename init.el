@@ -156,9 +156,7 @@ them"
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (mapc 'frame-set-background-mode (frame-list))
 
-(add-hook 'prog-mode-hook
-    (lambda () "" (interactive)
-        (when (window-system) (cascadia-code-mode))))
+(add-hook 'prog-mode-hook (lambda () "" (interactive) (when (window-system) (cascadia-code-mode))))
 
 (setq cursor-type t
     font-lock-multiline t
@@ -173,25 +171,28 @@ them"
     scroll-preserve-screen-position 0
     frame-title-format '((:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b"))))
 
-(setq-default font-lock-multiline t custom-safe-themes t custom-theme-directory
-    (expand-file-name
-        "themes" user-emacs-directory))
+(setq-default font-lock-multiline t
+              custom-safe-themes t
+              custom-theme-directory (expand-file-name "themes" user-emacs-directory))
 
-(when window-system (set-frame-font "Cascadia Code 10")
-    (define-fringe-bitmap 'right-curly-arrow [#b00000000 #b00000000 #b00000000
-                                                 #b00000000 #b00000000
-                                                 #b00000000 #b00000000
-                                                 #b00000000])
-    (define-fringe-bitmap 'left-curly-arrow [#b00000000 #b00000000 #b00110000
-                                                #b00110000
-                                                #b00110000 #b00110000
-                                                #b00000000
-                                                #b00000000]))
+(when window-system (set-frame-font "Cascadia Code 10"))
 
 (blink-cursor-mode -1)
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(set-fringe-mode 20)
+
+(global-display-line-numbers-mode 1)
+(setq display-line-numbers-major-tick 50
+    display-line-numbers-minor-tick 10)
+
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                treemacs-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (use-package
     paren
@@ -223,9 +224,6 @@ them"
     :demand t
     :init (global-hl-line-mode +1))
 
-(display-line-numbers-mode 1)
-(setq display-line-numbers-major-tick 50
-    display-line-numbers-minor-tick 10)
 
 
 (use-package
@@ -248,23 +246,30 @@ them"
 (use-package
     gif-screencast)
 
-(use-package
-    lsp-mode
-    :commands lsp
-    :config (setq lsp-headerline-breadcrumb-enable nil
-                lsp-headerline-breadcrumb-icons-enable nil lsp-prefer-flymake nil
-                lsp-prefer-capf t))
+(use-package lsp-mode
+  :commands (lsp ls-deferred)
+  :config
+  (setq lsp-headerline-breadcrumb-enable nil
+        lsp-headerline-breadcrumb-icons-enable nil lsp-prefer-flymake nil
+        lsp-prefer-capf t)    
+  (lsp-enable-which-key-integration t))
 
-
 (use-package
-    lsp-ui
-    :commands lsp-ui-mode
-    :bind-keymap ("C-c C-l"
-                     . lsp-command-map)
-    :config (setq lsp-ui-sideline-enable t lsp-ui-flycheck-enable t
-                lsp-ui-flycheck-list-position 'right
-                lsp-ui-flycheck-live-reporting t)
-    (puthash "GOPROXY" "https://proxy.golang.org,direct" lsp-go-env))
+  lsp-ui
+  :commands lsp-ui-mode
+  :bind-keymap ("C-c C-l" . lsp-command-map)
+  :config
+  (setq lsp-ui-sideline-enable t
+        lsp-ui-flycheck-enable t
+        lsp-ui-flycheck-list-position 'right
+        lsp-ui-flycheck-live-reporting t)
+  (puthash "GOPROXY" "https://proxy.golang.org,direct" lsp-go-env))
+
+(use-package lsp-treemacs
+  :after lsp)
+
+(use-package lsp-ivy
+  :after lsp)
 
 (defun to/browse-url-win (url &optional new-window)
     (shell-command (concat "start chrome " url)))
@@ -313,19 +318,18 @@ buffer if succeeded without warnings "
 (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
 
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
-    backup-directory-alist `((".*" . ,temporary-file-directory))
-    bookmark-default-file  (concat user-emacs-directory "bookmarks.em")
-    bookmark-save-flag 1
-    ediff-diff-options "-w"
-    ediff-split-window-function 'split-window-horizontally
-    ediff-window-setup-function 'ediff-setup-windows-plain
-    history-length 1000
-    large-file-warning-threshold 100000000
-    user-full-name "Tom Solberg"
-    user-mail-address "me@sbg.dev"
-    vc-make-backup-files t
-    compilation-scroll-output 'first-error locale-coding-system 'utf-8)
-
+      backup-directory-alist `((".*" . ,temporary-file-directory))
+      bookmark-default-file  (concat user-emacs-directory "bookmarks.em")
+      bookmark-save-flag 1
+      ediff-diff-options "-w"
+      ediff-split-window-function 'split-window-horizontally
+      ediff-window-setup-function 'ediff-setup-windows-plain
+      history-length 1000
+      large-file-warning-threshold 100000000
+      user-full-name "Tom Solberg"
+      user-mail-address "me@sbg.dev"
+      vc-make-backup-files t
+      compilation-scroll-output 'first-error locale-coding-system 'utf-8)
 
 (use-package
     savehist
@@ -334,7 +338,8 @@ buffer if succeeded without warnings "
                 savehist-autosave-interval 60))
 
 (use-package
-    recentf
+  recentf
+  :bind (("<f6>" . counsel-recentf))
     :init (setq recentf-max-saved-items 2000)
     (recentf-mode +1)
     :config
@@ -467,41 +472,30 @@ once\n\n"))
 (require 'cascadia-code)
 
 (use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
   :ensure t
-    :defer 10
-    :custom ((projectile-completion-system 'ivy))
-
-    :bind-keymap ("C-c p"
-                     . projectile-command-map)
-    :init (use-package
-              ibuffer-projectile
-              :hook (ibuffer . (lambda ()
-                                   (ibuffer-projectile-set-filter-groups)
-                                   (unless (eq ibuffer-sorting-mode 'alphabetic)
-                                       (ibuffer-do-sort-by-alphabetic)))))
-    :config (setq projectile-switch-project-action
-                'magit-status
-                projectile-globally-ignored-directories
-                (append
-                    '("*__pycache__*"
-                         "*.egg-info")
-                    projectile-globally-ignored-directories)
-                projectile-globally-ignored-file-suffixes
-                (append '(".pyc")
-                    projectile-globally-ignored-file-suffixes)
-                projectile-indexing-method
-                'alien
-                projectile-enable-caching
-                't
-                projectile-git-command
-                "fd . -0"
-                projectile-git-submodule-command
-                "git submodule --quiet
-                                                          foreach 'echo $path'")
-    (projectile-mode +1)
-    (projectile-global-mode 1)
-    ;;(helm-projectile-on)
-    )
+  :defer 10
+  :custom ((projectile-completion-system 'ivy))  
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :init
+  (use-package ibuffer-projectile
+    :hook (ibuffer . (lambda ()
+                       (ibuffer-projectile-set-filter-groups)
+                       (unless (eq ibuffer-sorting-mode 'alphabetic)
+                         (ibuffer-do-sort-by-alphabetic)))))
+  :config
+  (setq projectile-switch-project-action 'magit-status
+        projectile-globally-ignored-directories (append '("*__pycache__*" "*.egg-info") projectile-globally-ignored-directories)
+        projectile-globally-ignored-file-suffixes (append '(".pyc") projectile-globally-ignored-file-suffixes)
+        projectile-indexing-method 'alien
+        projectile-enable-caching 't
+        projectile-git-command "fd . -0"
+        projectile-git-submodule-command "git submodule --quiet foreach 'echo $path'")
+  (projectile-mode +1)
+  (projectile-global-mode 1)
+  ;;(helm-projectile-on)
+)
 
 (use-package counsel-projectile
   :after projectile
@@ -551,7 +545,6 @@ visiting."
                     (set-buffer-modified-p nil)
                     (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory
                                                                                new-name)))))))
-
 
 (defun goto-line-with-feedback ()
     "Show line numbers temporarily, while prompting for the line number input if
@@ -920,29 +913,23 @@ kills the magit buffer"
     (kill-buffer)
     (jump-to-register :magit-fullscreen))
 
-
-(use-package
-    company
-    :commands company-mode
-    :init (use-package
-              company-statistics
-              :hook
-              (company-mode
-                  . company-statistics-mode))
-    (use-package
-        company-quickhelp
-        :hook (company-mode . company-quickhelp-mode))
-    (setq company-tooltip-limit 20 company-tooltip-align-annotations 't
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)  
+  :commands company-mode
+  :init
+  (use-package company-statistics
+    :hook (company-mode . company-statistics-mode))
+  (use-package company-quickhelp
+    :hook (company-mode . company-quickhelp-mode))
+  (setq company-tooltip-limit 20
+        company-tooltip-align-annotations 't
         company-idle-delay .1
-        company-begin-commasends
-        '(lf-insert-command)
-        company-minimum-prefix-length
-        1)
-    :config (define-key
-                company-active-map (kbd
-                                       "TAB")
-                'tab-indent-or-complete)
-    (define-key company-active-map (kbd "<tab>") 'tab-indent-or-complete))
+        company-begin-commasends '(lf-insert-command)
+        company-minimum-prefix-length 1)
+  :config (define-key company-active-map (kbd "TAB") 'tab-indent-or-complete)
+  (define-key company-active-map (kbd "<tab>") 'tab-indent-or-complete))
+
 ;;                flycheck
 ;;                flycheck-clang-tidy
 ;;                flycheck-golangci-lint
@@ -1085,14 +1072,10 @@ up before you execute another command."
          :map ivy-minibuffer-map
          ("TAB" . ivy-alt-done)
          ("C-l" . ivy-alt-done)
-         ("C-j" . ivy-next-line)
-         ("C-k" . ivy-previous-line)
          :map ivy-switch-buffer-map
-         ("C-k" . ivy-previous-line)
          ("C-l" . ivy-done)
          ("C-d" . ivy-switch-buffer-kill)
          :map ivy-reverse-i-search-map
-         ("C-k" . ivy-previous-line)
          ("C-d" . ivy-reverse-i-search-kill))
   :config
   (ivy-mode 1)
@@ -1213,36 +1196,8 @@ up before you execute another command."
 (measure-time "Loading all auxillaries:" (to/do-list-dir experiments-dir))
 (load-file (expand-file-name "local-config.el" user-emacs-directory))
 
-;; ;;
-;; ;; face for constant like mHello
-;; ;;
-;; (defface c++-variable-proper-face
-;;   '((t (:inherit font-lock-variable-name-face :inherit 'font-lock-variable-name-face)))
-;;   "Face for single-letter prepended variable names, to highlight them slightly. Example: g_MyGlobal, l_MyLocal and so on."
-;;   :group 'font-lock-faces )
-;; (defvar c++-variable-proper-face 'c++-variable-proper-face)
-;; (add-hook 'c-mode-common-hook
-;; 	  (lambda ()
-;; 	    (font-lock-add-keywords
-;;              nil
-;;              '(("[^a-zA-Z_]\\([msgMSG]?_[a-zA-Z0-9]+[a-zA-Z0-9_]+\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-variable-proper-face keep))  'append)))
-
-;; (defface c++-macro-face
-;;   '((t (:inherit font-lock-keyword-face :inherit 'font-lock-keyword-face)))
-;;   "Face for dunder macro, to highlight them slightly. Example: __FUNCTION__ and so on."
-;;   :group 'font-lock-faces )
-;; (defvar c++-macro-face 'c++-macro-face)
-;; (add-hook 'c-mode-common-hook
-;; 	  (lambda ()
-;; 	    (font-lock-add-keywords
-;;              nil
-;;              '(("[^a-zA-Z_]\\(__[a-zA-Z0-9_]+__\\)\\([\Z]\\|[^a-zA-Z\(]\\)" 1 c++-macro-face keep))  'append)))
-
-
-;;                rtags
 ;;                clang-format
 ;;                company-c-headers
-;;                irony
 ;;                modern-cpp-font-lock
 ;;
 ;; C-mode settings
@@ -1257,7 +1212,7 @@ up before you execute another command."
     :bind (:map c-mode-base-map ("RET" . newline-and-indent))
     :init
     (setq-default c-default-style "linux"
-        c-basic-offset 4)
+                  c-basic-offset 4)
     :config
     (c-set-offset 'inline-open 0)
     (c-set-offset 'innamespace 0)
@@ -1325,20 +1280,22 @@ up before you execute another command."
 		                        'jdb)
 	                    (message (concat expr " = "))))))
         expr))
+
 (use-package cmake-mode
     :mode (("/CMakeLists\\.txt\\'" . cmake-mode)
-	          ("\\.cmake\\'" . cmake-mode))
+	   ("\\.cmake\\'" . cmake-mode))
     :config
     (use-package company-cmake
-        :hook cmake-mode)
+      :hook cmake-mode)
     (use-package cmake-font-lock
-        :hook cmake-mode)
+      :hook cmake-mode)
     :init
     (add-hook 'cmake-mode-hook '(lambda () (interactive "")
-                                    (make-local-variable 'company-backends)
-                                    (setq company-backends '(company-cmake company-yasnippet))
-                                    (company-mode 1)
-                                    (cmake-font-lock-activate))))
+                                  (make-local-variable 'company-backends)
+                                  (setq company-backends '(company-cmake company-yasnippet))
+                                  (company-mode 1)
+                                  (cmake-font-lock-activate))))
+
 (defun byte-compile-current-buffer ()
     "`byte-compile' current buffer if it's emacs-lisp-mode and compiled file exists."
     (interactive)
@@ -1363,66 +1320,66 @@ up before you execute another command."
              (make-local-variable 'company-backends)
              (add-to-list 'company-backends '(company-elisp company-yasnippet))
              (add-hook 'after-save-hook 'byte-compile-current-buffer nil t))))
+
 (use-package lua-mode
-    :mode "\\.lua\\'"
-    :init
-    (use-package company-lua
-        :commands company-lua)                          ; load company lua
-    :config
-    (add-hook 'lua-mode-hook
-        (lambda ()
-            (company-mode 1)
-            (make-local-variable 'company-backends)
-            (add-to-list 'company-backends '(company-lua company-yasnippet)))))
+  :mode "\\.lua\\'"
+  :init
+  (use-package company-lua
+    :commands company-lua)                          ; load company lua
+  :config
+  (add-hook 'lua-mode-hook
+            (lambda ()
+              (company-mode 1)
+              (make-local-variable 'company-backends)
+              (add-to-list 'company-backends '(company-lua company-yasnippet)))))
 
 (use-package markdown-mode
-    :commands (markdown-mode gfm-mode)
-    :mode (("README\\.md\\'" . gfm-mode)
-              ("\\.md\\'" . markdown-mode)
-              ("\\.markdown\\'" . markdown-mode))
-    :init
-    (setq markdown-command "multimarkdown")
-    (use-package company-emoji
-        :commands company-emoji)
-    (add-hook 'markdown-mode-hook
-        (lambda ()
-            (abbrev-mode 1)
-            (auto-fill-mode 0)
-            (font-lock-mode 1)
-            (add-to-list 'company-backends 'company-emoji)
-            (add-to-list 'company-backends 'company-yasnippet))))
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init
+  (setq markdown-command "multimarkdown")
+  (use-package company-emoji
+    :commands company-emoji)
+  (add-hook 'markdown-mode-hook
+            (lambda ()
+              (abbrev-mode 1)
+              (auto-fill-mode 0)
+              (font-lock-mode 1)
+              (add-to-list 'company-backends 'company-emoji)
+              (add-to-list 'company-backends 'company-yasnippet))))
 
 (use-package go-mode
-    :mode "\\.go\\'"
-    :init
-    ;; go-projectile
-    ;; (use-package company-go :hook go-mode)
-    (use-package flycheck-golangci-lint :commands flycheck-golangci-lint-setup)
-    ;; (use-package go-eldoc :hook go-mode)
-    ;; (use-package go-gopath :hook go-mode)
-    ;; (use-package go-impl :hook go-mode)
-    (use-package go-projectile :commands go-projectile-tools-add-path :hook (go-mode . go-projectile-set-gopath))
-    :config
-    (defun to/my-go-mode ()
-        ;; (define-key go-mode-map (kbd "C-c C-e") #'go-gopath-set-gopath)
-        ;; (add-hook 'before-save-hook 'gofmt-before-save)
-        ;; (go-eldoc-setup)
-        (company-mode 1)
-        (go-projectile-tools-add-path)
-        (make-local-variable 'company-backends)
-        (set (make-local-variable 'company-backends) '(company-capf))
-        (lsp)
-        (lsp-mode 1)
-        (flycheck-golangci-lint-setup)
-        (flycheck-mode 1)
-        (flycheck-pos-tip-mode 1)
-        (flycheck-add-next-checker 'lsp 'golangci-lint)
-        (add-hook 'before-save-hook 'gofmt-before-save nil t))
-    (add-hook 'go-mode-hook 'to/my-go-mode))
+  :mode "\\.go\\'"
+  :init
+  ;; go-projectile
+  ;; (use-package company-go :hook go-mode)
+  (use-package flycheck-golangci-lint :commands flycheck-golangci-lint-setup)
+  ;; (use-package go-eldoc :hook go-mode)
+  ;; (use-package go-gopath :hook go-mode)
+  ;; (use-package go-impl :hook go-mode)
+  (use-package go-projectile :commands go-projectile-tools-add-path :hook (go-mode . go-projectile-set-gopath))
+  :config
+  (defun to/my-go-mode ()
+    ;; (define-key go-mode-map (kbd "C-c C-e") #'go-gopath-set-gopath)
+    ;; (add-hook 'before-save-hook 'gofmt-before-save)
+    ;; (go-eldoc-setup)
+    (company-mode 1)
+    (go-projectile-tools-add-path)
+    (make-local-variable 'company-backends)
+    (set (make-local-variable 'company-backends) '(company-capf))
+    (lsp)
+    (lsp-mode 1)
+    (flycheck-golangci-lint-setup)
+    (flycheck-mode 1)
+    (flycheck-pos-tip-mode 1)
+    (flycheck-add-next-checker 'lsp 'golangci-lint)
+    (add-hook 'before-save-hook 'gofmt-before-save nil t))
+  (add-hook 'go-mode-hook 'to/my-go-mode))
 
 
 ;; (use-package cargo
-;;   :
 ;;   :ensure t
 ;;   :defer t)
 
