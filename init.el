@@ -114,15 +114,17 @@ The return value is the new value of LIST-VAR."
   (symbol-value list-var))
 
 (defun to/do-list-dir (thedir)
-  "Iterates over all files in THEDIR and loads
-them"
+  "Iterates over all files in THEDIR and loads them"
   (if (file-accessible-directory-p thedir)
       (progn (dolist (file (directory-files thedir t "\.el$" nil))
                (load (file-name-sans-extension file) t t)))))
 
 (use-package ag)
 (use-package anzu)
-(use-package yasnippet)
+(use-package yasnippet
+  :commands (yas-global-mode)
+  :config
+  (yas-global-mode))
 (use-package speed-type)
 (use-package dumb-jump)
 
@@ -238,6 +240,7 @@ them"
         lsp-ui-flycheck-enable t
         lsp-ui-flycheck-list-position 'right
         lsp-ui-flycheck-live-reporting t)
+  (setq lsp-go-env (make-hash-table :test 'equal))
   (puthash "GOPROXY" "https://proxy.golang.org,direct" lsp-go-env))
 
 (use-package lsp-treemacs
@@ -833,7 +836,7 @@ notation for the symbol at point."
 ;; OTHER MODES
 (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.el\\'" . emacs-lisp-mode))
+;; (add-to-list 'auto-mode-alist '("\\.el\\'" . emacs-lisp-mode))
 
 (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
@@ -843,34 +846,26 @@ notation for the symbol at point."
 (add-to-list 'auto-mode-alist '("\\.build\\'" . nxml-mode))
 (add-to-list 'auto-mode-alist '("meson.build\\'" . meson-mode))
 
-;;                magit
-;;                magit-filenotify
-;;                magit-popup
+
 ;;                magit-todos
 
 ;;
 ;; magit
 ;;
-(use-package
-  magit
+(use-package magit
   :defer t
   :bind (("C-x g" . magit-status))
-  :bind (:map magit-status-mode-map
-              ( "q" . magit-quit-session))
+  :bind (:map magit-status-mode-map ( "q" . magit-quit-session))
   :init
-  (use-package
-    magit-filenotify
+  (use-package magit-filenotify
     :hook (magit-status-mode . magit-filenotify-mode))
+  (use-package magit-todos
+    :hook (magit-status-mode . magit-todos-mode))
   :config
-  ;; (add-hook 'after-save-hook 'magit-after-save-refresh-status)
-  (custom-set-faces '(magit-diff-added ((t
-                                         (:background "black"
-                                                      :foreground
-                                                      "green3"))))
-                    '(magit-diff-removed ((t
-                                           (:background "black"
-                                                        :foreground "red3"))))))
+  (custom-set-faces '(magit-diff-added ((t (:background "black" :foreground "green3"))))
+                    '(magit-diff-removed ((t (:background "black" :foreground "red3"))))))
 
+(use-package gitignore-mode)
 
 (defadvice magit-status (around magit-fullscreen activate)
   (window-configuration-to-register :magit-fullscreen)
@@ -878,15 +873,14 @@ notation for the symbol at point."
   (delete-other-windows))
 
 (defun magit-quit-session ()
-  "Restores the previous window configuration and
-kills the magit buffer"
+  "Restores the previous window configuration and kills the magit buffer"
   (interactive)
   (kill-buffer)
   (jump-to-register :magit-fullscreen))
 
 (use-package company
   :after lsp-mode
-  :hook (lsp-mode . company-mode)
+  :hook ((lsp-mode . company-mode))
   :commands company-mode
   :init
   (use-package company-statistics
@@ -897,7 +891,8 @@ kills the magit buffer"
         company-tooltip-align-annotations 't
         company-idle-delay .1
         company-begin-commasends '(lf-insert-command)
-        company-minimum-prefix-length 1)
+        company-minimum-prefix-length 1
+	company-backends '(company-capf))
   :config (define-key company-active-map (kbd "TAB") 'tab-indent-or-complete)
   (define-key company-active-map (kbd "<tab>") 'tab-indent-or-complete))
 
@@ -1049,8 +1044,10 @@ up before you execute another command."
          :map ivy-reverse-i-search-map
          ("C-d" . ivy-reverse-i-search-kill))
   :config
+  (setq ivy-use-virtual-buffers t)
   (ivy-mode 1)
   :init
+  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
   (global-set-key (kbd "C-s") 'swiper-isearch)
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -1286,6 +1283,7 @@ up before you execute another command."
                (auto-fill-mode 1)
                (font-lock-mode 1)
                (company-mode 1)
+	       (message "WTF")
                (eldoc-mode 1)
                (flyspell-prog-mode)
                (make-local-variable 'company-backends)
@@ -1298,12 +1296,12 @@ up before you execute another command."
   (use-package company-lua
     :commands company-lua)                          ; load company lua
   :config
-  (add-hook 'lua-mode-hook
-            (lambda ()
-              (company-mode 1)
-              (make-local-variable 'company-backends)
-              (add-to-list 'company-backends '(company-lua company-yasnippet)))))
+  (company-mode 1)
+  (make-local-variable 'company-backends)
+  (add-to-list 'company-backends '(company-lua company-yasnippet)))
 
+;; markdown-preview-eww
+;; markdown-toc
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -1313,13 +1311,14 @@ up before you execute another command."
   (setq markdown-command "multimarkdown")
   (use-package company-emoji
     :commands company-emoji)
-  (add-hook 'markdown-mode-hook
-            (lambda ()
-              (abbrev-mode 1)
-              (auto-fill-mode 0)
-              (font-lock-mode 1)
-              (add-to-list 'company-backends 'company-emoji)
-              (add-to-list 'company-backends 'company-yasnippet))))
+  (use-package markdown-toc
+    :commands (markdown-toc-generate-toc markdown-toc-refresh-toc))
+  :config
+  (abbrev-mode 1)
+  (auto-fill-mode 0)
+  (font-lock-mode 1)
+  (add-to-list 'company-backends 'company-emoji)
+  (add-to-list 'company-backends 'company-yasnippet))
 
 (use-package go-mode
   :mode "\\.go\\'"
@@ -1359,9 +1358,6 @@ up before you execute another command."
 
 ;; (use-package flycheck-rust
 ;;   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-
-(defun my-rust-mode-hook()
-  )
 
 (use-package rust-mode
   :hook (rust-mode . lsp)
@@ -1408,9 +1404,13 @@ up before you execute another command."
       python-environment-virtualenv '("virtualenv" "-p" "python3" "--system-site-packages" "--quiet")
       flycheck-python-flake8-executable "/home/tgolsson/anaconda3/envs/py38/bin/python3.8")
 
-
 (use-package python-mode
   :mode "\\.py\\'"
+  :hook (python-mode . lsp-deferred)
+  :custom
+  (dap-python-debugger 'debugpy)
+  :config
+  (require 'dap-python)
   :init
   (use-package conda
     :commands conda-env-activate
@@ -1421,34 +1421,28 @@ up before you execute another command."
     (conda-env-activate "base")
     (conda-env-autoactivate-mode t))
 
-  (use-package jedi-core
-    :hook (python-mode . jedi-mode)
-    :init
-    (use-package company-jedi
-      :commands company-jedi)
+  ;; (use-package jedi-core
+  ;;   :hook (python-mode . jedi-mode)
+  ;;   :init
+  ;;   (use-package company-jedi
+  ;;     :commands company-jedi)
 
-    (setq jedi:server-command
-          '("~/.emacs.d/.python-environments/default/bin/jediepcserver")
-          jedi:use-shortcuts t)
-    :config
-    (jedi:setup))
-  (defun my-python-mode ()
-    ;; make these variables local
-    (flycheck-mode 1)
-    (company-mode 1)
-    (make-local-variable 'company-backends)
-    (add-to-list 'company-backends '(company-jedi company-yasnippet))
-    (flycheck-inline-mode 1)
-    (modify-syntax-entry ?_  "_")
-
-
-    (local-set-key (kbd "M-.") 'jedi:goto-definition)
-    (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker))
-
-  (add-hook 'python-mode-hook 'my-python-mode)
+  ;;   (setq jedi:server-command
+  ;;         '("~/.emacs.d/.python-environments/default/bin/jediepcserver")
+  ;;         jedi:use-shortcuts t)
+  ;;   :config
+  ;;   (jedi:setup))
   :config
-  (require 'dap-python)
-  (setq dap-python-debugger 'debugpy))
+  (flycheck-mode 1)
+  (company-mode 1)
+  ;; (make-local-variable 'company-backends)
+  ;; (add-to-list 'company-backends '(company-jedi company-yasnippet)
+  (flycheck-inline-mode 1)
+  (modify-syntax-entry ?_  "_")
+
+
+  (local-set-key (kbd "M-.") 'jedi:goto-definition)
+  (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker))
 
 ;; ;; CTAGS
 ;; (global-set-key (kbd "M-.")                  'ctags-search)
@@ -1503,8 +1497,6 @@ up before you execute another command."
 (use-package dockerfile-mode
   :mode ("Dockerfile" "\\.yml\\'"))
 
-(use-package gitignore-mode)
-
 (use-package glsl-mode
   :mode ("\\.glsl\\'"))
 (use-package bazel-mode)
@@ -1512,15 +1504,10 @@ up before you execute another command."
 (use-package jsonnet-mode)
 (use-package graphviz-dot-mode)
 
-
 ;; typescript-mode
 ;; sass-mode
 ;; scss-mode
 ;; lua-mode
-;; markdown-mode
-;; markdown-mode+
-;; markdown-preview-eww
-;; markdown-toc
 
 (measure-time
  "Starting server:"
