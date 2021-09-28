@@ -27,7 +27,9 @@
  (magit-push nil
 	     ("--force-with-lease")
 	     ("--force"))
- (magit-rebase nil)
+ (magit-rebase
+  ("--autostash")
+  nil)
  (magit-remote
   ("-f"))
  (magit-remote\.<remote>\.*url "git@github.com:tgolsson/egui_wgpu_backend.git" "git@github.com:hasenbanck/egui_wgpu_backend.git" "git@github.com:tgolsson/rust-tfrecord.git" "git@github.com:jerry73204/rust-tfrecord.git")

@@ -526,19 +526,6 @@ visiting."
           (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory
                                                                   new-name)))))))
 
-(defun goto-line-with-feedback ()
-  "Show line numbers temporarily, while prompting for the line number input if
-linum-mode is disabled"
-  (interactive)
-  (let ((has-linum linum-mode))
-    (unwind-protect (progn (when (not has-linum)
-                             (linum-mode 1))
-                           (goto-line (read-number "Goto line: ")))
-      (if (not has-linum)
-          (linum-mode -1)
-        (linum-update (current-buffer))))))
-
-
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
 Including indent-buffer, which should not be called automatically on save."
@@ -1050,10 +1037,22 @@ up before you execute another command."
          :map ivy-reverse-i-search-map
          ("C-d" . ivy-reverse-i-search-kill))
   :config
-  (setq ivy-use-virtual-buffers t)
+  (setq ivy-use-virtual-buffers t
+	ivy-initial-inputs-alist '((counsel-minor . "^+")
+				   (counsel-package . "^+")
+				   (counsel-org-capture . "^")
+				   (counsel-M-x . "")
+				   (counsel-describe-symbol . "^")
+				   (org-refile . "^")
+				   (org-agenda-refile . "^")
+				   (org-capture-refile . "^")
+				   (Man-completion-table . "^")
+				   (woman . "^")))
   (ivy-mode 1)
   :init
-  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+  ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+
+
   (global-set-key (kbd "C-s") 'swiper-isearch)
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -1108,7 +1107,7 @@ up before you execute another command."
                   (join-line -1)))
 
 (global-set-key (kbd "C-x C-r")              'rename-current-buffer-file)
-(global-set-key [remap goto-line]            'goto-line-with-feedback)
+;; (global-set-key [remap goto-line]            'goto-line-with-feedback)
 
 ;; Perform general cleanup.
 (global-set-key (kbd "C-c n")                'cleanup-buffer)
@@ -1509,7 +1508,7 @@ up before you execute another command."
   (setq yaml-indent-offset 2))
 
 (use-package dockerfile-mode
-  :mode ("Dockerfile" "\\.yml\\'"))
+  :mode ("Dockerfile"))
 
 (use-package glsl-mode
   :mode ("\\.glsl\\'"))
