@@ -7,9 +7,12 @@
           (lambda ()
             (message "Emacs ready in %s with %d garbage collections." (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done)))
 
+
 (package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+; (unless package-archive-contents
+  (package-refresh-contents)
+;)
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
@@ -19,7 +22,7 @@
 
 (add-to-list 'load-path (expand-file-name "packages" user-emacs-directory))
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+
 
 (define-coding-system-alias 'cp65001 'utf-8)
 (prefer-coding-system 'utf-8) ;; fixes some packages containing non-iso-latin characets
@@ -134,7 +137,8 @@ The return value is the new value of LIST-VAR."
   (doom-modeline-mode 1)
   (set-face-attribute 'mode-line nil :underline nil)
   :config
-  (set-face-attribute 'mode-line nil :underline nil))
+  (set-face-attribute 'mode-line nil :underline nil)
+  (all-the-icons-install-fonts t))
 
 (use-package dap-mode
   :commands dap-mode
@@ -169,7 +173,7 @@ The return value is the new value of LIST-VAR."
 
 (add-hook 'prog-mode-hook (lambda () "" (interactive) (when (window-system) (cascadia-code-mode))))
 
-(when window-system (set-frame-font "Cascadia Code 10"))
+(when window-system (set-frame-font "Cascadia Code 12"))
 
 (blink-cursor-mode -1)
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
