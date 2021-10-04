@@ -870,10 +870,10 @@ notation for the symbol at point."
   :bind (("C-x g" . magit-status))
   :bind (:map magit-status-mode-map ( "q" . magit-quit-session))
   :init
-  (use-package magit-filenotify
-    :hook (magit-status-mode . magit-filenotify-mode))
-  (use-package magit-todos
-    :hook (magit-status-mode . magit-todos-mode))
+  ;; (use-package magit-filenotify
+  ;;   :hook (magit-status-mode . magit-filenotify-mode))
+  ;; (use-package magit-todos
+  ;;   :hook (magit-status-mode . magit-todos-mode))
   :config
   (custom-set-faces '(magit-diff-added ((t (:background "black" :foreground "green3"))))
                     '(magit-diff-removed ((t (:background "black" :foreground "red3"))))))
