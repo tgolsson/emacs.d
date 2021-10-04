@@ -1,14 +1,12 @@
-
-;; PRE-INIT
-(setq gc-cons-threshold 500000000 package-enable-at-startup nil
+;;; PRE-INIT
+;;; To ensure setup is quick
+(setq gc-cons-threshold 500000000
       load-prefer-newer t
-      use-package-always-ensure t use-package-always-defer t)
-
-(defun to/report-startup-time ()
-  (message "Emacs ready in %s with %d garbage collections." (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done))
+      package-enable-at-startup nil)
 
 (add-hook 'emacs-startup-hook 'to/report-startup-time)
 
+;;; Init bootstrap
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -25,97 +23,50 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
-; (package-initialize)
+;;; In order to still use `package-list-packages' to find new toys.
+(require 'use-package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-; (unless package-archive-contents
-;   (package-refresh-contents)
-;)
 
-;; Initialize use-package on non-Linux platforms
-;; (unless (package-installed-p 'use-package)
-;;   (package-install 'use-package))
-
-; (require 'use-package)
-
-(add-to-list 'load-path (expand-file-name "packages" user-emacs-directory))
-(add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-
-
+;;; Use utf-8 everywhere it makes sense.
 (define-coding-system-alias 'cp65001 'utf-8)
 (prefer-coding-system 'utf-8) ;; fixes some packages containing non-iso-latin characets
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 
-(setq settings-dir (expand-file-name "settings" user-emacs-directory)
-      experiments-dir (expand-file-name "experiments" user-emacs-directory)
+(setq experiments-dir (expand-file-name "experiments" user-emacs-directory)
       packages-dir (expand-file-name "packages" user-emacs-directory)
-      experiments-dir (expand-file-name "experiments" user-emacs-directory)
       custom-file (expand-file-name "custom.el" user-emacs-directory)
+
       cursor-type t
+      fill-column 80
       font-lock-multiline t
       frame-background-mode 'dark
+      frame-title-format '((:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))
+      indent-tabs-mode nil
       inhibit-splash-screen t
       inhibit-startup-message t
       linum-delay t
       linum-eager t
       linum-format "%4d  "
+      ring-bell-function 'ignore
       scroll-conservatively 100000
       scroll-margin 0
       scroll-preserve-screen-position 0
-      indent-tabs-mode nil
-      fill-column 80
-      frame-title-format '((:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b"))))
+      comint-prompt-read-only t)
 
 (setq-default font-lock-multiline t
-              custom-safe-themes t
-              custom-theme-directory (expand-file-name "themes" user-emacs-directory))
+              custom-safe-themes t)
 
 (add-to-list 'load-path experiments-dir)
 (add-to-list 'load-path packages-dir)
-(add-to-list 'load-path (expand-file-name "emacs-bazel-mode" packages-dir))
-
 (fset 'yes-or-no-p 'y-or-n-p)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (mapc 'frame-set-background-mode (frame-list))
 
-(use-package benchmark-init
-  :demand t
-  :ensure t
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-;; (use-package auto-package-update
-;;   :custom
-;;   (auto-package-update-interval 7)
-;;   (auto-package-update-prompt-before-update t)
-;;   (auto-package-update-hide-results t)
-;;   :config
-;;   (auto-package-update-maybe)
-;;   (auto-package-update-at-time "09:00"))
-
-(use-package no-littering)
-
-(use-package
-  exec-path-from-shell
-  ;; :when (memq window-system '(mac ns x))
-  :init
-  (setq exec-path-from-shell-arguments nil)
-  :config
-  (exec-path-from-shell-initialize))
-
-;; (defun set-exec-path-from-shell-PATH ()
-;;   (let ((path-from-shell (replace-regexp-in-string
-;;                           "[ \t\n]*$"
-;;                           ""
-;;                           (shell-command-to-string "$SHELL --login -c 'echo $PATH'"))))
-;;     (setenv "PATH" path-from-shell)
-;;     (setq eshell-path-env path-from-shell) ; for eshell users
-;;     (setq exec-path (split-string path-from-shell path-separator))))
-;; (when window-system (set-exec-path-from-shell-PATH))
-
-(defun risky-local-variable-p (sym &optional _ignored) nil)
+(defun risky-local-variable-p (sym &optional _ignored) "Noop" nil)
+(defun server-ensure-safe-dir (dir) "Noop" t)
 
 (defmacro measure-time (msg &rest body)
   "Measure the time it takes to evaluate BODY."
@@ -139,17 +90,80 @@ The return value is the new value of LIST-VAR."
       (progn (dolist (file (directory-files thedir t "\.el$" nil))
                (load (file-name-sans-extension file) t t)))))
 
+
+(defmacro to/disable (name) `(when (fboundp ',name) (,name -1)))
+
+(defun to/browse-url-win (url &optional new-window)
+  (shell-command (concat "start chrome " url)))
+
+(defun to/windows-setup ()
+  (interactive)
+  (setq git-shell-path (concat "C:\\Program Files\\Git\\bin")
+        git-shell-executable (concat
+                              git-shell-path "\\bash.exe"))
+
+  ;; Disable lockfiles to make flask spaz less
+  (setq create-lockfiles nil)
+  (add-to-list 'exec-path git-shell-path)
+  (add-to-list 'exec-path "C:/Users/Tom/.cargo/bin")
+                                        ;       (setenv "PATH" (concat git-shell-path ";" (getenv "PATH") ";C:/Users/Tom/.cargo/bin" ))
+  (setq browse-url-browser-function 'to/browse-url-win)
+  (when (boundp 'w32-pipe-read-delay)
+    (setq w32-pipe-read-delay 0))
+  ;; Set the buffer size to 64K on Windows (from the original 4K)
+  (when (boundp 'w32-pipe-buffer-size)
+    (setq w32-pipe-buffer-size (* 64 1024) irony-server-w32-pipe-buffer-size (* 64 1024)))
+  (message "Windows preferences set."))
+
+(defun to/other-setup ()
+  (interactive)
+  (setq browse-url-browser-function 'browse-url-generic browse-url-generic-program
+        "firefox"))
+
+(if (eq system-type 'windows-nt)
+    (to/windows-setup)
+  (to/other-setup))
+
+(desktop-save-mode 1)
+(setq desktop-restore-eager 8)
+(setq desktop-auto-save-timeout 120)
+(setenv "SSH_ASKPASS" "git-gui --askpass")
+
+(use-package benchmark-init
+  :demand t
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
+(use-package no-littering)
+
+(use-package
+  exec-path-from-shell
+  :when (memq window-system '(mac ns x))
+  :init
+  (setq exec-path-from-shell-arguments nil)
+  :config
+  (exec-path-from-shell-initialize))
+
+;; (defun set-exec-path-from-shell-PATH ()
+;;   (let ((path-from-shell (replace-regexp-in-string
+;;                           "[ \t\n]*$"
+;;                           ""
+;;                           (shell-command-to-string "$SHELL --login -c 'echo $PATH'"))))
+;;     (setenv "PATH" path-from-shell)
+;;     (setq eshell-path-env path-from-shell) ; for eshell users
+;;     (setq exec-path (split-string path-from-shell path-separator))))
+;; (when window-system (set-exec-path-from-shell-PATH))
+
 (use-package ag)
 (use-package anzu)
 (use-package yasnippet
   :commands (yas-global-mode)
-  :config
+  :init
   (yas-global-mode))
 (use-package speed-type)
 (use-package dumb-jump)
-
 (use-package doom-modeline
-  :ensure t
   :init
   (doom-modeline-mode 1)
   (set-face-attribute 'mode-line nil :underline nil)
@@ -189,13 +203,14 @@ The return value is the new value of LIST-VAR."
 
 
 (add-hook 'prog-mode-hook (lambda () "" (interactive) (when (window-system) (cascadia-code-mode))))
+(when window-system (set-frame-font "Cascadia Code 10"))
 
-(when window-system (set-frame-font "Cascadia Code 12"))
+(to/disable tool-bar-mode)
+(to/disable scroll-bar-mode)
+(to/disable blink-cursor-mode)
+(to/disable menu-bar-mode)
+(to/disable horizontal-scroll-bar-mode)
 
-(blink-cursor-mode -1)
-(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (set-fringe-mode 20)
 
 (global-display-line-numbers-mode 1)
@@ -237,11 +252,9 @@ The return value is the new value of LIST-VAR."
   :demand t
   :init (global-hl-line-mode +1))
 
-(use-package rainbow-delimiters
-  :ensure t)
+(use-package rainbow-delimiters)
 
 (use-package rainbow-mode
-  :ensure t
   :config (add-hook 'prog-mode-hook #'rainbow-mode))
 
 (use-package smooth-scrolling)
@@ -252,7 +265,8 @@ The return value is the new value of LIST-VAR."
 (use-package lsp-mode
   :commands (lsp ls-deferred)
   :config
-  (setq lsp-headerline-breadcrumb-enable nil
+  (setq lsp-disabled-clients '(rls)
+	lsp-headerline-breadcrumb-enable nil
         lsp-headerline-breadcrumb-icons-enable nil
         lsp-prefer-flymake nil
         lsp-prefer-capf t
@@ -276,37 +290,6 @@ The return value is the new value of LIST-VAR."
 (use-package lsp-ivy
   :after lsp)
 
-(defun to/browse-url-win (url &optional new-window)
-  (shell-command (concat "start chrome " url)))
-
-(defun to/windows-setup ()
-  (interactive)
-  (setq git-shell-path (concat "C:\\Program Files\\Git\\bin")
-        git-shell-executable (concat
-                              git-shell-path "\\bash.exe"))
-
-  ;; Disable lockfiles to make flask spaz less
-  (setq create-lockfiles nil)
-  (add-to-list 'exec-path git-shell-path)
-  (add-to-list 'exec-path "C:/Users/Tom/.cargo/bin")
-                                        ;       (setenv "PATH" (concat git-shell-path ";" (getenv "PATH") ";C:/Users/Tom/.cargo/bin" ))
-  (setq browse-url-browser-function 'to/browse-url-win)
-  (when (boundp 'w32-pipe-read-delay)
-    (setq w32-pipe-read-delay 0))
-  ;; Set the buffer size to 64K on Windows (from the original 4K)
-  (when (boundp 'w32-pipe-buffer-size)
-    (setq w32-pipe-buffer-size (* 64 1024) irony-server-w32-pipe-buffer-size (* 64 1024)))
-  (message "Windows preferences set."))
-
-(defun to/other-setup ()
-  (interactive)
-  (setq browse-url-browser-function 'browse-url-generic browse-url-generic-program
-        "firefox"))
-
-(if (eq system-type 'windows-nt)
-    (to/windows-setup)
-  (to/other-setup))
-
 
 (defun bury-compile-buffer-if-successful (buffer string)
   "Bury a compilation
@@ -326,21 +309,24 @@ buffer if succeeded without warnings "
       backup-directory-alist `((".*" . ,temporary-file-directory))
       bookmark-default-file  (concat user-emacs-directory "bookmarks.em")
       bookmark-save-flag 1
+      compilation-scroll-output 'first-error
       ediff-diff-options "-w"
       ediff-split-window-function 'split-window-horizontally
       ediff-window-setup-function 'ediff-setup-windows-plain
       history-length 1000
       large-file-warning-threshold 100000000
+      locale-coding-system 'utf-8
       user-full-name "Tom Solberg"
       user-mail-address "me@sbg.dev"
-      vc-make-backup-files t
-      compilation-scroll-output 'first-error locale-coding-system 'utf-8)
+      vc-make-backup-files t)
 
 (use-package
   savehist
-  :init (savehist-mode +1)
-  :config (setq savehist-additional-variables '(search-ring regexp-search-ring)
-                savehist-autosave-interval 60))
+  :init
+  (savehist-mode +1)
+  :config
+  (setq savehist-additional-variables '(search-ring regexp-search-ring)
+        savehist-autosave-interval 60))
 
 (use-package
   recentf
@@ -356,8 +342,8 @@ buffer if succeeded without warnings "
                                         no-littering-var-directory)))
 
 (straight-use-package
-  '(uniquify :type built-in)
-  :config (setq uniquify-buffer-name-style 'forward))
+ '(uniquify :type built-in)
+   :config (setq uniquify-buffer-name-style 'forward))
 
 (use-package
   saveplace
@@ -365,8 +351,7 @@ buffer if succeeded without warnings "
   :config (save-place-mode))
 
 (use-package
-  editorconfig
-  :ensure t)
+  editorconfig)
 
 ;;
 ;; Transient mark mode
@@ -391,17 +376,22 @@ buffer if succeeded without warnings "
 ;;
 ;; General input setqs
 ;;
-(setq echo-keystrokes 0.1 x-select-enable-clipboard t x-select-enable-primary t
-      save-interprogram-paste-before-kill t apropos-do-all t mouse-yank-at-point
-      t
-      require-final-newline t fill-column 80 delete-selection-mode t confirm-kill-emacs 'y-or-n-p)
+(setq echo-keystrokes 0.1
+      x-select-enable-clipboard t
+      x-select-enable-primary t
+      save-interprogram-paste-before-kill t
+      apropos-do-all t
+      mouse-yank-at-point t
+      require-final-newline t
+      fill-column 80
+      delete-selection-mode t
+      confirm-kill-emacs 'y-or-n-p)
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 ;;
 ;; General input setqs
 ;;
-(setq-default )
 
 (use-package
   multiple-cursors
@@ -424,9 +414,9 @@ buffer if succeeded without warnings "
 
 (use-package
   autoinsert
-  :init (setq auto-insert-directory (expand-file-name "templates" user-emacs-directory))
-  ;; Don't want to be prompted before insertion:
-  (setq auto-insert-query nil)
+  :init
+  (setq auto-insert-directory (expand-file-name "templates" user-emacs-directory)
+	auto-insert-query nil)
   (add-hook 'find-file-hook 'auto-insert)
   (auto-insert-mode 1)
   (define-auto-insert "\\.el$" ["default-lisp.el" to/autoinsert-yas-expand])
@@ -455,7 +445,7 @@ once\n\n"))
   (concat (file-name-sans-extension
            (file-name-nondirectory buffer-file-name)) ".h") "\"")))
 
-(setq comint-prompt-read-only t)
+
 ;; (use-package hideshow
 ;;   :config
 ;;   (define-key hs-minor-mode-map (kbd "C-c h") (lookup-key hs-minor-mode-map (kbd "C-c @")))
@@ -466,7 +456,6 @@ once\n\n"))
 (add-hook 'comint-preoutput-filter-functions 'to/preoutput-turn-buffer-read-only)
 
 ;; (use-package expand-region
-;;   :ensure t
 ;;   :bind ("C-@" . er/expand-region))
 
 (require 'cascadia-code)
@@ -474,7 +463,6 @@ once\n\n"))
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode)
-  :ensure t
   :defer 10
   :custom ((projectile-completion-system 'ivy))
   :bind-keymap ("C-c p" . projectile-command-map)
@@ -502,7 +490,6 @@ once\n\n"))
   :config (counsel-projectile-mode))
 
 ;; (use-package helm-projectile
-;;   :ensure t
 ;;   :demand t
 ;;   :config
 ;;   (progn
@@ -860,7 +847,6 @@ notation for the symbol at point."
 (add-to-list 'auto-mode-alist '("meson.build\\'" . meson-mode))
 
 
-;;                magit-todos
 
 ;;
 ;; magit
@@ -870,11 +856,13 @@ notation for the symbol at point."
   :bind (("C-x g" . magit-status))
   :bind (:map magit-status-mode-map ( "q" . magit-quit-session))
   :init
-  ;; (use-package magit-filenotify
-  ;;   :hook (magit-status-mode . magit-filenotify-mode))
+  (use-package magit-filenotify
+    :if (not (memq window-system '(w32)))
+    :hook (magit-status-mode . magit-filenotify-mode))
   ;; (use-package magit-todos
   ;;   :hook (magit-status-mode . magit-todos-mode))
   :config
+  (setq magit-todos-nice nil)
   (custom-set-faces '(magit-diff-added ((t (:background "black" :foreground "green3"))))
                     '(magit-diff-removed ((t (:background "black" :foreground "red3"))))))
 
@@ -942,7 +930,6 @@ up before you execute another command."
   :commands flycheck-mode
   :init (use-package
           flycheck-clang-tidy
-          :ensure t
           :hook (cc-mode . flycheck-clang-tidy-setup)
           :after flycheck)
   (use-package
@@ -975,36 +962,28 @@ up before you execute another command."
 ;; helm-swoop
 ;; helm-w32-launcher
 
-
 ;; (use-package
 ;;     helm
-;;     :ensure t
 ;;     :init (use-package
 ;;               helm-swoop
-;;               :ensure t
 ;;               :bind
 ;;               (("M-s" . helm-swoop)
 ;;                   ("C-x M-s" . helm-swoop)))
 
 ;;     (use-package
 ;;         helm-descbinds
-;;         :ensure t
 ;;         :bind (("C-h b" . helm-descbinds)))
 ;;     (use-package
 ;;         helm-flycheck
-;;         :ensure t
 ;;         :bind (:map flycheck-mode-map
 ;;                   ("C-c ! h" . helm-flycheck)))
 ;;     (use-package
-;;         helm-describe-modes
-;;         :ensure t)
+;;         helm-describe-modes)
 ;;     (use-package
 ;;         helm-ls-git
-;;         :ensure t
 ;;         :bind ( ("C-x M-g" . helm-ls-git-ls)))
 ;;     (use-package
 ;;         helm-smex
-;;         :ensure t
 ;;         :bind (("<remap> <execute-extended-command>"
 ;;                    . helm-smex)
 ;;                   ("M-X". helm-smex-major-mode-commands)))
@@ -1121,10 +1100,7 @@ up before you execute another command."
 (global-set-key (kbd "C-r")                  'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s")                'isearch-forward)
 (global-set-key (kbd "C-M-r")                'isearch-backward)
-(global-set-key (kbd "M-j")
-                (lambda ()
-                  (interactive)
-                  (join-line -1)))
+(global-set-key (kbd "M-j")  (lambda () (interactive) (join-line -1)))
 
 (global-set-key (kbd "C-x C-r")              'rename-current-buffer-file)
 ;; (global-set-key [remap goto-line]            'goto-line-with-feedback)
@@ -1297,24 +1273,24 @@ up before you execute another command."
               (byte-compile-dest-file buffer-file-name)))
     (byte-compile-file buffer-file-name)))
 
-(straight-use-package
- '(lisp-mode
-   :type built-in
-   :mode ("\\.el\\'" . emacs-lisp-mode)
-   :bind (:map emacs-lisp-mode-map ("\r" . reindent-then-newline-and-indent))
-   :init
-   (add-hook 'emacs-lisp-mode-hook
-             '(lambda ()
-		(abbrev-mode 1)
-		(auto-fill-mode 1)
-		(font-lock-mode 1)
-		(company-mode 1)
-		(message "WTF")
-		(eldoc-mode 1)
-		(flyspell-prog-mode)
-		(make-local-variable 'company-backends)
-		(add-to-list 'company-backends '(company-elisp company-yasnippet))
-		(add-hook 'after-save-hook 'byte-compile-current-buffer nil t)))))
+(straight-use-package '(lisp-mode
+			:type built-in
+
+  :mode ("\\.el\\'" . emacs-lisp-mode)
+  :bind (:map emacs-lisp-mode-map ("\r" . reindent-then-newline-and-indent))
+  :config
+  (add-hook 'emacs-lisp-mode-hook
+            '(lambda ()
+               (abbrev-mode 1)
+               (auto-fill-mode 1)
+               (font-lock-mode 1)
+               (company-mode 1)
+	       (message "WTF")
+               (eldoc-mode 1)
+               (flyspell-prog-mode)
+               (make-local-variable 'company-backends)
+               (add-to-list 'company-backends '(company-elisp company-yasnippet))
+               (add-hook 'after-save-hook 'byte-compile-current-buffer nil t)))))
 
 (use-package lua-mode
   :mode "\\.lua\\'"
@@ -1376,7 +1352,6 @@ up before you execute another command."
 
 
 ;; (use-package cargo
-;;   :ensure t
 ;;   :defer t)
 
 ;; (use-package helm-lsp
@@ -1387,7 +1362,6 @@ up before you execute another command."
 
 (use-package rust-mode
   :hook (rust-mode . lsp)
-  :ensure t
   :mode "\\.rs\\'"
   :init
   :config
@@ -1465,58 +1439,47 @@ up before you execute another command."
   (company-mode 1)
   ;; (make-local-variable 'company-backends)
   ;; (add-to-list 'company-backends '(company-jedi company-yasnippet)
-  (flycheck-inline-mode 1)
+  ;; (flycheck-inline-mode 1)
   (modify-syntax-entry ?_  "_")
 
 
   (local-set-key (kbd "M-.") 'jedi:goto-definition)
   (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker))
+
 (use-package pyvenv
   :after python-mode
   :init
   (setenv "WORKON_HOME" (expand-file-name "~/anaconda3/envs" ))
-
   :config
   (pyvenv-mode 1))
-;; ;; CTAGS
-;; (global-set-key (kbd "M-.")                  'ctags-search)
-
-(use-package company-web)
 
 (use-package web-mode
   :mode ("\\.phtml\\'" "\\.html\\'" "\\.svelte\\'")
-  :config
+  :init
+  (use-package company-web)
   (use-package company-web-html :commands web-mode)
   (use-package company-web-jade :commands web-mode)
   (use-package company-web-slim :commands web-mode)
   (use-package prettier-js :hook web-mode)
   (use-package add-node-modules-path :hook web-mode)
-  :init
-  (defun my-web-mode ()
-    (make-local-variable 'yas-extra-modes)
-    (add-to-list 'yas-extra-modes 'html-mode)
-    (add-to-list 'yas-extra-modes 'php-mode)
-    ;; make these variables local
-    (make-local-variable 'web-mode-code-indent-offset)
-    (make-local-variable 'web-mode-markup-indent-offset)
-    (make-local-variable 'web-mode-css-indent-offset)
+  
+  ;; set indentation, can set different indentation level for different code type
+  (setq web-mode-code-indent-offset 4
+        web-mode-css-indent-offset 4
+        web-mode-markup-indent-offset 4
+        web-mode-script-padding 4
+        prettier-js-args '("--tab-width" "4"))
 
-    (make-local-variable 'company-backends)
-    (add-to-list 'company-backends '(company-web-html company-yasnippet))
-    (define-key web-mode-map (kbd "C-<Space>") 'company-web-html)
-    (company-mode 1)
-
-    ;; set indentation, can set different indentation level for different code type
-    (setq web-mode-code-indent-offset 4
-          web-mode-css-indent-offset 4
-          web-mode-markup-indent-offset 4
-          web-mode-script-padding 4
-          prettier-js-args '("--tab-width" "4"))
-
-    (prettier-js-mode 1)
-    (add-node-modules-path 1))
-
-  (add-hook 'web-mode-hook 'my-web-mode))
+  :config
+  (make-local-variable 'yas-extra-modes)
+  (add-to-list 'yas-extra-modes 'html-mode)
+  (add-to-list 'yas-extra-modes 'php-mode)
+  (make-local-variable 'company-backends)
+  (add-to-list 'company-backends '(company-web-html company-yasnippet))
+  (define-key web-mode-map (kbd "C-<Space>") 'company-web-html)
+  (company-mode 1)
+  (prettier-js-mode 1)
+  (add-node-modules-path 1))
 
 (straight-use-package '(nxml-mode
   :type built-in
@@ -1524,37 +1487,30 @@ up before you execute another command."
   (setq tab-width 4)))
 
 (use-package yaml-mode
-  :mode ("\\.yaml\\'" "\\.yml\\'")
+  :mode ("\\.yaml$" "\\.yml$")
   :config
   (setq yaml-indent-offset 2))
 
 (use-package dockerfile-mode
   :mode ("Dockerfile"))
 
-(use-package glsl-mode
-  :mode ("\\.glsl\\'"))
+(use-package glsl-mode :mode ("\\.glsl\\'"))
+(use-package bazel)
 (use-package toml-mode)
 (use-package jsonnet-mode)
 (use-package graphviz-dot-mode)
-
-(straight-use-package
- '( bazel-mode :type git :host github :repo "bazelbuild/emacs-bazel-mode"
-))
 
 ;; typescript-mode
 ;; sass-mode
 ;; scss-mode
 ;; lua-mode
 
-(measure-time
- "Starting server:"
- (when (and (fboundp 'server-running-p)
-            (not (server-running-p)))
-   (server-start)))
+(measure-time "Starting server:"
+	      (when (and (fboundp 'server-running-p)
+			 (not (server-running-p)))
+		(server-start)))
 
-(measure-time "Loading custom:"
-              ;; Keep emacs Custom-settings in separate file
-              (load custom-file))
+;; Keep emacs Custom-settings in separate file
+(measure-time "Loading custom:" (load custom-file))
 
-(setenv "SSH_ASKPASS" "git-gui --askpass")
-(set-face-attribute 'mode-line nil :underline nil)
+
