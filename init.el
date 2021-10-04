@@ -34,6 +34,7 @@
 (set-selection-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 
+;; generic setq
 (setq experiments-dir (expand-file-name "experiments" user-emacs-directory)
       packages-dir (expand-file-name "packages" user-emacs-directory)
       custom-file (expand-file-name "custom.el" user-emacs-directory)
@@ -64,8 +65,12 @@
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (mapc 'frame-set-background-mode (frame-list))
 
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
 
 (defun risky-local-variable-p (sym &optional _ignored) "Noop" nil)
+(require 'server)
 (defun server-ensure-safe-dir (dir) "Noop" t)
 
 (defmacro measure-time (msg &rest body)
@@ -387,8 +392,6 @@ buffer if succeeded without warnings "
       delete-selection-mode t
       confirm-kill-emacs 'y-or-n-p)
 
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
 ;;
 ;; General input setqs
 ;;
@@ -1273,24 +1276,67 @@ up before you execute another command."
               (byte-compile-dest-file buffer-file-name)))
     (byte-compile-file buffer-file-name)))
 
-(straight-use-package '(lisp-mode
-			:type built-in
+(use-package corfu
+  ;; Optional customizations
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-auto-delay 0.0)         ;; After 0.0 seconds
+  (corfu-auto-prefix 3)          ;; And a single character
+  (corfu-commit-predicate nil)   ;; Do not commit selected candidates on next input
+  (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
+  (corfu-quit-no-match t)        ;; Automatically quit if there is no match
+  (corfu-echo-documentation t) ;; Do not show documentation in the
+  ;; echo area
 
-  :mode ("\\.el\\'" . emacs-lisp-mode)
-  :bind (:map emacs-lisp-mode-map ("\r" . reindent-then-newline-and-indent))
-  :config
-  (add-hook 'emacs-lisp-mode-hook
-            '(lambda ()
-               (abbrev-mode 1)
-               (auto-fill-mode 1)
-               (font-lock-mode 1)
-               (company-mode 1)
-	       (message "WTF")
-               (eldoc-mode 1)
-               (flyspell-prog-mode)
-               (make-local-variable 'company-backends)
-               (add-to-list 'company-backends '(company-elisp company-yasnippet))
-               (add-hook 'after-save-hook 'byte-compile-current-buffer nil t)))))
+  ;; Optionally use TAB for cycling, default is `corfu-complete'.
+  ;; :bind (:map corfu-map
+  ;;        ("TAB" . corfu-next)
+  ;;        ([tab] . corfu-next)
+  ;;        ("S-TAB" . corfu-previous)
+  ;;        ([backtab] . corfu-previous))
+
+  ;; You may want to enable Corfu only for certain modes.
+  :hook ((emacs-lisp-mode . corfu-mode)
+         (shell-mode . corfu-mode)
+         (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.
+  ;; This is recommended since dabbrev can be used globally (M-/).
+  :init
+  ;; (corfu-global-mode)
+  )
+
+;; Optionally use the `orderless' completion style. See `+orderless-dispatch'
+;; in the Consult wiki for an advanced Orderless style dispatcher.
+;; Enable `partial-completion' for files to allow path expansion.
+;; You may prefer to use `initials' instead of `partial-completion'.
+(use-package orderless
+  :init
+  (setq completion-styles '(basic partial-completion emacs22 initials)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion))))
+	)
+  )
+
+(straight-use-package
+ '(lisp-mode
+   :type built-in
+   :mode ("\\.el\\'" . emacs-lisp-mode)
+   :bind (:map emacs-lisp-mode-map ("\r" . reindent-then-newline-and-indent))))
+
+(add-hook 'emacs-lisp-mode-hook
+          '(lambda ()
+	     (make-local-variable 'completion-at-point-functions)
+	     (setq completion-at-point-functions '(elisp-completion-at-point comint--complete-file-name-data)
+		   comint-completion-addsuffix nil)
+
+	     (abbrev-mode 1)
+	     (auto-fill-mode 1)
+	     (font-lock-mode 1)
+	     (eldoc-mode 1)
+	     (flyspell-prog-mode)
+	     (add-hook 'after-save-hook 'byte-compile-current-buffer nil t)))
 
 (use-package lua-mode
   :mode "\\.lua\\'"
@@ -1315,6 +1361,7 @@ up before you execute another command."
     :commands company-emoji)
   (use-package markdown-toc
     :commands (markdown-toc-generate-toc markdown-toc-refresh-toc))
+
   :config
   (abbrev-mode 1)
   (auto-fill-mode 0)
@@ -1351,11 +1398,9 @@ up before you execute another command."
   (add-hook 'go-mode-hook 'to/my-go-mode))
 
 
-;; (use-package cargo
-;;   :defer t)
+;; (use-package cargo :defer t)
 
-;; (use-package helm-lsp
-;;   :commands )
+;; (use-package helm-lsp :commands )
 
 ;; (use-package flycheck-rust
 ;;   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
@@ -1364,18 +1409,17 @@ up before you execute another command."
   :hook (rust-mode . lsp)
   :mode "\\.rs\\'"
   :init
-  :config
-  (set (make-local-variable 'compile-command) "cargo run")
-  (if (eq system-type 'windows-nt)
-      (progn
-        (add-to-list 'exec-path "C:/Users/Tom/.cargo/bin"))
-    (progn
-      (add-to-list 'exec-path "~/.cargo/bin")))
-
   (setq lsp-rust-server 'rust-analyzer
         lsp-rust-analyzer-server-display-inlay-hints t
         lsp-rust-analyzer-display-parameter-hints t
         lsp-rust-analyzer-display-chaining-hints t)
+  :config
+  (set (make-local-variable 'compile-command) "cargo run")
+  (if (eq system-type 'windows-nt)
+      (add-to-list 'exec-path "C:/Users/tom.solberg/.cargo/bin")
+    (progn
+      (add-to-list 'exec-path "~/.cargo/bin")))
+
   (lsp 1)
   (lsp-mode 1)
   (lsp-lens-mode 1)
@@ -1442,7 +1486,6 @@ up before you execute another command."
   ;; (flycheck-inline-mode 1)
   (modify-syntax-entry ?_  "_")
 
-
   (local-set-key (kbd "M-.") 'jedi:goto-definition)
   (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker))
 
@@ -1457,12 +1500,13 @@ up before you execute another command."
   :mode ("\\.phtml\\'" "\\.html\\'" "\\.svelte\\'")
   :init
   (use-package company-web)
-  (use-package company-web-html :commands web-mode)
-  (use-package company-web-jade :commands web-mode)
-  (use-package company-web-slim :commands web-mode)
+  ;; TODO: These are actually not use-package things.
+  ;; (use-package company-web-html :commands web-mode)
+  ;; (use-package company-web-jade :commands web-mode)
+  ;; (use-package company-web-slim :commands web-mode)
   (use-package prettier-js :hook web-mode)
   (use-package add-node-modules-path :hook web-mode)
-  
+
   ;; set indentation, can set different indentation level for different code type
   (setq web-mode-code-indent-offset 4
         web-mode-css-indent-offset 4
@@ -1512,5 +1556,3 @@ up before you execute another command."
 
 ;; Keep emacs Custom-settings in separate file
 (measure-time "Loading custom:" (load custom-file))
-
-
