@@ -1,24 +1,41 @@
+
 ;; PRE-INIT
 (setq gc-cons-threshold 500000000 package-enable-at-startup nil
       load-prefer-newer t
       use-package-always-ensure t use-package-always-defer t)
 
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "Emacs ready in %s with %d garbage collections." (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done)))
+(defun to/report-startup-time ()
+  (message "Emacs ready in %s with %d garbage collections." (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done))
 
+(add-hook 'emacs-startup-hook 'to/report-startup-time)
 
-(package-initialize)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+
+; (package-initialize)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ; (unless package-archive-contents
-  (package-refresh-contents)
+;   (package-refresh-contents)
 ;)
 
 ;; Initialize use-package on non-Linux platforms
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
+;; (unless (package-installed-p 'use-package)
+;;   (package-install 'use-package))
 
-(require 'use-package)
+; (require 'use-package)
 
 (add-to-list 'load-path (expand-file-name "packages" user-emacs-directory))
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
@@ -69,14 +86,14 @@
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-(use-package auto-package-update
-  :custom
-  (auto-package-update-interval 7)
-  (auto-package-update-prompt-before-update t)
-  (auto-package-update-hide-results t)
-  :config
-  (auto-package-update-maybe)
-  (auto-package-update-at-time "09:00"))
+;; (use-package auto-package-update
+;;   :custom
+;;   (auto-package-update-interval 7)
+;;   (auto-package-update-prompt-before-update t)
+;;   (auto-package-update-hide-results t)
+;;   :config
+;;   (auto-package-update-maybe)
+;;   (auto-package-update-at-time "09:00"))
 
 (use-package no-littering)
 
@@ -138,7 +155,7 @@ The return value is the new value of LIST-VAR."
   (set-face-attribute 'mode-line nil :underline nil)
   :config
   (set-face-attribute 'mode-line nil :underline nil)
-  (all-the-icons-install-fonts t))
+  (when (not (memq window-system '(w32))) (all-the-icons-install-fonts t)))
 
 (use-package dap-mode
   :commands dap-mode
@@ -338,9 +355,8 @@ buffer if succeeded without warnings "
                                         no-littering-etc-directory
                                         no-littering-var-directory)))
 
-(use-package
-  uniquify
-  :ensure nil
+(straight-use-package
+  '(uniquify :type built-in)
   :config (setq uniquify-buffer-name-style 'forward))
 
 (use-package
@@ -1281,23 +1297,24 @@ up before you execute another command."
               (byte-compile-dest-file buffer-file-name)))
     (byte-compile-file buffer-file-name)))
 
-(use-package lisp-mode
-  :ensure nil
-  :mode ("\\.el\\'" . emacs-lisp-mode)
-  :bind (:map emacs-lisp-mode-map ("\r" . reindent-then-newline-and-indent))
-  :config
-  (add-hook 'emacs-lisp-mode-hook
-            '(lambda ()
-               (abbrev-mode 1)
-               (auto-fill-mode 1)
-               (font-lock-mode 1)
-               (company-mode 1)
-	       (message "WTF")
-               (eldoc-mode 1)
-               (flyspell-prog-mode)
-               (make-local-variable 'company-backends)
-               (add-to-list 'company-backends '(company-elisp company-yasnippet))
-               (add-hook 'after-save-hook 'byte-compile-current-buffer nil t))))
+(straight-use-package
+ '(lisp-mode
+   :type built-in
+   :mode ("\\.el\\'" . emacs-lisp-mode)
+   :bind (:map emacs-lisp-mode-map ("\r" . reindent-then-newline-and-indent))
+   :init
+   (add-hook 'emacs-lisp-mode-hook
+             '(lambda ()
+		(abbrev-mode 1)
+		(auto-fill-mode 1)
+		(font-lock-mode 1)
+		(company-mode 1)
+		(message "WTF")
+		(eldoc-mode 1)
+		(flyspell-prog-mode)
+		(make-local-variable 'company-backends)
+		(add-to-list 'company-backends '(company-elisp company-yasnippet))
+		(add-hook 'after-save-hook 'byte-compile-current-buffer nil t)))))
 
 (use-package lua-mode
   :mode "\\.lua\\'"
@@ -1501,10 +1518,10 @@ up before you execute another command."
 
   (add-hook 'web-mode-hook 'my-web-mode))
 
-(use-package nxml-mode
-  :ensure nil
+(straight-use-package '(nxml-mode
+  :type built-in
   :config
-  (setq tab-width))
+  (setq tab-width 4)))
 
 (use-package yaml-mode
   :mode ("\\.yaml\\'" "\\.yml\\'")
@@ -1516,10 +1533,13 @@ up before you execute another command."
 
 (use-package glsl-mode
   :mode ("\\.glsl\\'"))
-(use-package bazel-mode)
 (use-package toml-mode)
 (use-package jsonnet-mode)
 (use-package graphviz-dot-mode)
+
+(straight-use-package
+ '( bazel-mode :type git :host github :repo "bazelbuild/emacs-bazel-mode"
+))
 
 ;; typescript-mode
 ;; sass-mode
