@@ -48,6 +48,7 @@
   "Disable Cascadia Code ligatures in current buffer."
   (auto-composition-mode nil))
 
+;;;###autoload
 (define-minor-mode cascadia-code-mode
   "Cascadia Code ligatures minor mode"
   :lighter " æ"

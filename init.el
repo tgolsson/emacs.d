@@ -4,7 +4,17 @@
       load-prefer-newer t
       package-enable-at-startup nil)
 
+(defun to/report-startup-time () ""
+       (message "*** Emacs loaded in %s with %d garbage collections."
+                (format "%.2f seconds"
+                        (float-time
+                         (time-subtract after-init-time before-init-time)))
+                gcs-done))
+
 (add-hook 'emacs-startup-hook 'to/report-startup-time)
+
+;; Silence compiler warnings as they can be pretty disruptive
+(setq comp-async-report-warnings-errors nil)
 
 ;;; Init bootstrap
 (defvar bootstrap-version)
@@ -25,7 +35,9 @@
 
 ;;; In order to still use `package-list-packages' to find new toys.
 (require 'use-package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 
 ;;; Use utf-8 everywhere it makes sense.
 (define-coding-system-alias 'cp65001 'utf-8)
@@ -34,48 +46,32 @@
 (set-selection-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 
-;; generic setq
-(setq experiments-dir (expand-file-name "experiments" user-emacs-directory)
-      packages-dir (expand-file-name "packages" user-emacs-directory)
-      custom-file (expand-file-name "custom.el" user-emacs-directory)
+(defmacro to/pushn (list &rest vals)
+  (let ((forms (mapcar (lambda (var) `(push ,var ,list)) vals)))
+    `(progn ,@forms)))
 
-      cursor-type t
-      fill-column 80
-      font-lock-multiline t
-      frame-background-mode 'dark
-      frame-title-format '((:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))
-      indent-tabs-mode nil
-      inhibit-splash-screen t
-      inhibit-startup-message t
-      linum-delay t
-      linum-eager t
-      linum-format "%4d  "
-      ring-bell-function 'ignore
-      scroll-conservatively 100000
-      scroll-margin 0
-      scroll-preserve-screen-position 0
-      comint-prompt-read-only t)
+(defmacro as-local-company-backends (&rest values)
+  `(progn
+     (make-local-variable 'company-backends)
+     (setq company-backends ',values)))
 
-(setq-default font-lock-multiline t
-              custom-safe-themes t)
+(defmacro with-local-company-backends(&rest values)
+  `(progn
+     (make-local-variable 'company-backends)
+     (add-to-list 'company-backends ',values)))
 
-(add-to-list 'load-path experiments-dir)
-(add-to-list 'load-path packages-dir)
-(fset 'yes-or-no-p 'y-or-n-p)
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-(mapc 'frame-set-background-mode (frame-list))
-
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-
-
-(defun risky-local-variable-p (sym &optional _ignored) "Noop" nil)
-(require 'server)
-(defun server-ensure-safe-dir (dir) "Noop" t)
+(defmacro to/set-safe (name value) `(when (boundp ',name) (setq ,name ,value)))
+(defmacro to/disable (name) `(when (fboundp ',name) (,name -1)))
 
 (defmacro measure-time (msg &rest body)
   "Measure the time it takes to evaluate BODY."
   `(let ((time (current-time))) ,@body (message "%s %.06f" ,msg (float-time (time-since time)))))
+
+;; generic setq
+(setq experiments-dir (expand-file-name "experiments" user-emacs-directory)
+      packages-dir (expand-file-name "packages" user-emacs-directory)
+      custom-file (expand-file-name "custom.el" user-emacs-directory))
+
 
 (defun to/append-to-list (list-var elements)
   "Append ELEMENTS to the end of LIST-VAR.
@@ -95,44 +91,61 @@ The return value is the new value of LIST-VAR."
       (progn (dolist (file (directory-files thedir t "\.el$" nil))
                (load (file-name-sans-extension file) t t)))))
 
+(defun risky-local-variable-p (sym &optional _ignored) "Noop" nil)
 
-(defmacro to/disable (name) `(when (fboundp ',name) (,name -1)))
+(use-package emacs
+  :demand t
+  :init
+  (require 'server)
+  (defun server-ensure-safe-dir (dir) "Noop" t)
 
-(defun to/browse-url-win (url &optional new-window)
-  (shell-command (concat "start chrome " url)))
+  (to/pushn load-path packages-dir experiments-dir)
+  (push '(fullscreen . maximized) default-frame-alist)
 
-(defun to/windows-setup ()
-  (interactive)
-  (setq git-shell-path (concat "C:\\Program Files\\Git\\bin")
-        git-shell-executable (concat
-                              git-shell-path "\\bash.exe"))
+  (set-fringe-mode 20)
+  (setq-default font-lock-multiline t
+		custom-safe-themes t)
 
-  ;; Disable lockfiles to make flask spaz less
-  (setq create-lockfiles nil)
-  (add-to-list 'exec-path git-shell-path)
-  (add-to-list 'exec-path "C:/Users/Tom/.cargo/bin")
-                                        ;       (setenv "PATH" (concat git-shell-path ";" (getenv "PATH") ";C:/Users/Tom/.cargo/bin" ))
-  (setq browse-url-browser-function 'to/browse-url-win)
-  (when (boundp 'w32-pipe-read-delay)
-    (setq w32-pipe-read-delay 0))
-  ;; Set the buffer size to 64K on Windows (from the original 4K)
-  (when (boundp 'w32-pipe-buffer-size)
-    (setq w32-pipe-buffer-size (* 64 1024) irony-server-w32-pipe-buffer-size (* 64 1024)))
-  (message "Windows preferences set."))
+  (setq cursor-type t
+	fill-column 80
+	font-lock-multiline t
+	frame-background-mode 'dark
+	frame-title-format '((:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))
+	indent-tabs-mode nil
+	inhibit-splash-screen t
+	inhibit-startup-message t
+	linum-delay t
+	linum-eager t
+	linum-format "%4d  "
+	ring-bell-function 'ignore
+	scroll-conservatively 100000
+	scroll-margin 0
+	scroll-preserve-screen-position 0
+	comint-prompt-read-only t)
+  (add-hook 'prog-mode-hook (lambda () "" (interactive) (when (window-system) (cascadia-code-mode))))
+  (when window-system (set-frame-font "Cascadia Code 10"))
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (mapc 'frame-set-background-mode (frame-list))
+  (put 'upcase-region 'disabled nil)
+  (put 'downcase-region 'disabled nil)
+  (setenv "SSH_ASKPASS" "git-gui --askpass")
 
-(defun to/other-setup ()
-  (interactive)
-  (setq browse-url-browser-function 'browse-url-generic browse-url-generic-program
-        "firefox"))
+  (to/disable tool-bar-mode)
+  (to/disable scroll-bar-mode)
+  (to/disable blink-cursor-mode)
+  (to/disable menu-bar-mode)
+  (to/disable horizontal-scroll-bar-mode)
 
-(if (eq system-type 'windows-nt)
-    (to/windows-setup)
-  (to/other-setup))
+  (load-file (expand-file-name (if (eq system-type 'windows-nt)
+				   "windows-setup.el"
+				 "unix-setup.el")
+			       user-emacs-directory)))
 
-(desktop-save-mode 1)
-(setq desktop-restore-eager 8)
-(setq desktop-auto-save-timeout 120)
-(setenv "SSH_ASKPASS" "git-gui --askpass")
+(use-package desktop
+  :hook (after-init-hook . desktop-read)
+  :init (setq desktop-restore-eager 8
+	      desktop-auto-save-timeout 120)
+  (desktop-save-mode t))
 
 (use-package benchmark-init
   :demand t
@@ -140,15 +153,12 @@ The return value is the new value of LIST-VAR."
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-(use-package no-littering)
-
-(use-package
-  exec-path-from-shell
-  :when (memq window-system '(mac ns x))
-  :init
-  (setq exec-path-from-shell-arguments nil)
+(use-package alert
+  :commands alert
   :config
-  (exec-path-from-shell-initialize))
+  (setq alert-default-style 'notifications))
+
+(use-package no-littering)
 
 ;; (defun set-exec-path-from-shell-PATH ()
 ;;   (let ((path-from-shell (replace-regexp-in-string
@@ -160,12 +170,18 @@ The return value is the new value of LIST-VAR."
 ;;     (setq exec-path (split-string path-from-shell path-separator))))
 ;; (when window-system (set-exec-path-from-shell-PATH))
 
+(use-package exec-path-from-shell
+  :when (memq window-system '(mac ns x))
+  :init (setq exec-path-from-shell-arguments nil)
+  :config (exec-path-from-shell-initialize))
+
 (use-package ag)
 (use-package anzu)
 (use-package yasnippet
+  :diminish  t
   :commands (yas-global-mode)
-  :init
-  (yas-global-mode))
+  :init (yas-global-mode))
+
 (use-package speed-type)
 (use-package dumb-jump)
 (use-package doom-modeline
@@ -206,28 +222,20 @@ The return value is the new value of LIST-VAR."
               ("<f5>" . dap-debug)
               ("M-<f5>" . dap-hydra)))
 
+(use-package global-display-line-numbers-mode
+  :straight (:type built-in)
+  :commands global-display-line-numbers-mode
+  :config
+  (global-display-line-numbers-mode 1)
+  (setq display-line-numbers-major-tick 50
+	display-line-numbers-minor-tick 10)
 
-(add-hook 'prog-mode-hook (lambda () "" (interactive) (when (window-system) (cascadia-code-mode))))
-(when window-system (set-frame-font "Cascadia Code 10"))
-
-(to/disable tool-bar-mode)
-(to/disable scroll-bar-mode)
-(to/disable blink-cursor-mode)
-(to/disable menu-bar-mode)
-(to/disable horizontal-scroll-bar-mode)
-
-(set-fringe-mode 20)
-
-(global-display-line-numbers-mode 1)
-(setq display-line-numbers-major-tick 50
-      display-line-numbers-minor-tick 10)
-
-(dolist (mode '(org-mode-hook
-                term-mode-hook
-                shell-mode-hook
-                treemacs-mode-hook
-                eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  shell-mode-hook
+                  treemacs-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0)))))
 
 (use-package paren
   :commands show-paren-mode
@@ -268,6 +276,9 @@ The return value is the new value of LIST-VAR."
 (use-package gif-screencast)
 
 (use-package lsp-mode
+  :hook (((rust-mode go-mode) . lsp-mode)
+	 ((rust-mode) . lsp-lens-mode))
+
   :commands (lsp ls-deferred)
   :config
   (setq lsp-disabled-clients '(rls)
@@ -346,17 +357,15 @@ buffer if succeeded without warnings "
                                         no-littering-etc-directory
                                         no-littering-var-directory)))
 
-(straight-use-package
- '(uniquify :type built-in)
-   :config (setq uniquify-buffer-name-style 'forward))
+(use-package uniquify
+  :straight (:type built-in)
+  :config (setq uniquify-buffer-name-style 'forward))
 
-(use-package
-  saveplace
+(use-package saveplace
   :init (setq save-place-file (concat user-emacs-directory "places"))
   :config (save-place-mode))
 
-(use-package
-  editorconfig)
+(use-package editorconfig)
 
 ;;
 ;; Transient mark mode
@@ -428,25 +437,8 @@ buffer if succeeded without warnings "
   (define-auto-insert "/sprints/" ["sprint.org" to/autoinsert-yas-expand])
   (define-auto-insert "test_.*.py" ["test.py" to/autoinsert-yas-expand])
   ;; autoinsert C/C++ header
-  (define-auto-insert (cons "\\.\\([Hh]\\|hh\\|hpp\\)\\'" "My C / C++ header")
-    '(nil "// " (file-name-nondirectory buffer-file-name) "\n" "//\n" "//
-  Copyright © Tom Solberg\n"
-          "//\n" "// Description:\n" "//\n" (make-string 70 ?/) "\n\n" "//
-  last-edit-by: <"
-          (user-full-name) "> \n" "// $Log:$\n" "//\n" (make-string 70 ?/)
-          "\n\n" "#pragma
-once\n\n"))
-
-  ;; auto insert C/C++
-  (define-auto-insert (cons "\\.\\([Cc]\\|cc\\|cpp\\)\\'" "My C++
-  implementation")
-    '(nil "// " (file-name-nondirectory buffer-file-name) "\n" "//\n" "// Copyright
-  © Tom Solberg\n" "// \n" "// Description:\n" "//\n" (make-string 70 ?/) "\n\n"
-  "// last-edit-by: <" (user-full-name) "> \n" "// $Log:$\n" "//\n" (make-string
-                                                                     70 ?/)
-  "\n\n" "#include \""
-  (concat (file-name-sans-extension
-           (file-name-nondirectory buffer-file-name)) ".h") "\"")))
+  (define-auto-insert (cons "\\.\\([Hh]\\|hh\\|hpp\\)\\'" "") ["header.h" to/autoinsert-yas-expand])
+  (define-auto-insert (cons "\\.\\([Cc]\\|cc\\|cpp\\)\\'" "") ["header.cpp" to/autoinsert-yas-expand]))
 
 
 ;; (use-package hideshow
@@ -454,14 +446,28 @@ once\n\n"))
 ;;   (define-key hs-minor-mode-map (kbd "C-c h") (lookup-key hs-minor-mode-map (kbd "C-c @")))
 ;;   (define-key hs-minor-mode-map (kbd "C-c @") nil))
 
-(defun to/preoutput-turn-buffer-read-only (text)
-  (propertize text 'read-only t))
-(add-hook 'comint-preoutput-filter-functions 'to/preoutput-turn-buffer-read-only)
+(use-package comint
+  :straight (:type built-in)
+  :init
+  (defun to/preoutput-turn-buffer-read-only (text)
+    (propertize text 'read-only t))
+  :custom
+  (comint-prompt-readonly t)
+  (comint-buffer-maximum-size 20000 "Increase comint buffer size.")
+  (comint-prompt-read-only t "Make the prompt read only.")
+  :config
+  (add-hook 'comint-preoutput-filter-functions
+	    'to/preoutput-turn-buffer-read-only))
+
+
+
 
 ;; (use-package expand-region
 ;;   :bind ("C-@" . er/expand-region))
 
-(require 'cascadia-code)
+(use-package cascadia-code
+  :straight (:type built-in)
+  :hook (prog-mode . cascadia-code-mode))
 
 (use-package projectile
   :diminish projectile-mode
@@ -569,14 +575,6 @@ Including indent-buffer, which should not be called automatically on save."
                                       (point))))
     (transpose-regions start-of-first end-of-first start-of-last end-of-last)))
 
-
-;; shorthand for interactive lambdas
-(defmacro λ
-    (&rest
-     body)
-  `(lambda ()
-     (interactive)
-     ,@body))
 
 
 (defun isearch-forward-use-region ()
@@ -882,24 +880,6 @@ notation for the symbol at point."
   (kill-buffer)
   (jump-to-register :magit-fullscreen))
 
-(use-package company
-  :after lsp-mode
-  :hook ((lsp-mode . company-mode))
-  :commands company-mode
-  :init
-  (use-package company-statistics
-    :hook (company-mode . company-statistics-mode))
-  (use-package company-quickhelp
-    :hook (company-mode . company-quickhelp-mode))
-  (setq company-tooltip-limit 20
-        company-tooltip-align-annotations 't
-        company-idle-delay .1
-        company-begin-commasends '(lf-insert-command)
-        company-minimum-prefix-length 1
-	company-backends '(company-capf))
-  :config (define-key company-active-map (kbd "TAB") 'tab-indent-or-complete)
-  (define-key company-active-map (kbd "<tab>") 'tab-indent-or-complete))
-
 ;;                flycheck
 ;;                flycheck-clang-tidy
 ;;                flycheck-golangci-lint
@@ -930,6 +910,8 @@ up before you execute another command."
 
 (use-package
   flycheck
+  :hook ((cc-mode python-mode rust-mode go-mode))
+  :diminish t
   :commands flycheck-mode
   :init (use-package
           flycheck-clang-tidy
@@ -937,13 +919,12 @@ up before you execute another command."
           :after flycheck)
   (use-package
     flycheck-pos-tip
-    :hook (flycheck-mode-hook . flycheck-pos-tip-mode)
+    :hook (flycheck-mode . flycheck-pos-tip-mode)
     :config (custom-set-variables '(flycheck-display-errors-function
                                     #'flycheck-pos-tip-error-messages))
     (make-variable-buffer-local 'flycheck-idle-change-delay)
-    :config (setq-default
-             flycheck-disabled-checkers
-             '(python-pylint))
+    :config
+    (setq-default flycheck-disabled-checkers '(python-pylint))
     (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)))
   (add-hook 'flycheck-after-syntax-check-hook
             'to/adjust-flycheck-automatic-syntax-eagerness))
@@ -1150,13 +1131,10 @@ up before you execute another command."
   :demand t
   :defer 10
   :config (diminish 'auto-fill-function)
-  (eval-after-load "minimap" '(diminish 'minimap-mode))
-  (eval-after-load "guide-key" '(diminish 'guide-key-mode))
   (eval-after-load "abbrev" '(diminish 'abbrev-mode))
   (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
   (eval-after-load "auto-revert" '(diminish 'auto-revert-mode))
   (eval-after-load "flyspell" '(diminish 'flyspell-mode))
-  (eval-after-load "flycheck" '(diminish 'flycheck-mode))
   (eval-after-load "eldoc" '(diminish 'eldoc-mode))
   (eval-after-load "subword" '(diminish 'subword-mode))
   (eval-after-load "projectile" '(diminish 'projectile-mode))
@@ -1191,18 +1169,12 @@ up before you execute another command."
   (c-set-offset 'topmost-intro 0)
   (c-set-offset 'comment-intro 0)
   (c-set-offset 'member-init-intro 0)
-  (add-hook 'c-mode-common-hook
-            (lambda () (interactive "")
-              (progn (company-mode 1)
-                     (irony-mode 1)
-                     (company-irony 1)
-                     (electric-pair-mode 1)
-                     (flycheck-mode)
-                     (make-local-variable 'company-backends)
-                     (add-hook 'before-save-hook 'clang-format-buffer t t)
-                     (add-to-list 'company-backends '
-                                  (company-irony company-irony-c-headers
-                                                 company-yasnippet)) )) ) )
+
+  (irony-mode 1)
+  (company-irony 1)
+  (electric-pair-mode 1)
+  (add-hook 'before-save-hook 'clang-format-buffer t t)
+  (with-local-company-backends company-irony company-irony-c-headers company-yasnippet))
 
 
 ;;
@@ -1223,6 +1195,7 @@ up before you execute another command."
 ;; irony-mode
 ;;
 (use-package irony
+  :commands irony-mode
   :hook cc-mode
   :defer t
   :init
@@ -1231,7 +1204,7 @@ up before you execute another command."
   (use-package company-irony
     :commands company-irony)
   :config
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+  (irony-cdb-autosetup-compile-options))
 
 ;; Redefinition of function from gud.el
 (defun gud-find-expr (&rest args)
@@ -1256,17 +1229,16 @@ up before you execute another command."
 (use-package cmake-mode
   :mode (("/CMakeLists\\.txt\\'" . cmake-mode)
 	 ("\\.cmake\\'" . cmake-mode))
-  :config
+  :init
   (use-package company-cmake
+    :straight (:type git :host github :repo "purcell/company-cmake")
     :hook cmake-mode)
   (use-package cmake-font-lock
     :hook cmake-mode)
-  :init
-  (add-hook 'cmake-mode-hook '(lambda () (interactive "")
-                                (make-local-variable 'company-backends)
-                                (setq company-backends '(company-cmake company-yasnippet))
-                                (company-mode 1)
-                                (cmake-font-lock-activate))))
+  :config
+  (make-local-variable 'company-backends)
+  (setq company-backends '(company-cmake company-yasnippet))
+  (cmake-font-lock-activate))
 
 (defun byte-compile-current-buffer ()
   "`byte-compile' current buffer if it's emacs-lisp-mode and compiled file exists."
@@ -1276,37 +1248,6 @@ up before you execute another command."
               (byte-compile-dest-file buffer-file-name)))
     (byte-compile-file buffer-file-name)))
 
-(use-package corfu
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
-  (corfu-auto-delay 0.0)         ;; After 0.0 seconds
-  (corfu-auto-prefix 3)          ;; And a single character
-  (corfu-commit-predicate nil)   ;; Do not commit selected candidates on next input
-  (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
-  (corfu-quit-no-match t)        ;; Automatically quit if there is no match
-  (corfu-echo-documentation t) ;; Do not show documentation in the
-  ;; echo area
-
-  ;; Optionally use TAB for cycling, default is `corfu-complete'.
-  ;; :bind (:map corfu-map
-  ;;        ("TAB" . corfu-next)
-  ;;        ([tab] . corfu-next)
-  ;;        ("S-TAB" . corfu-previous)
-  ;;        ([backtab] . corfu-previous))
-
-  ;; You may want to enable Corfu only for certain modes.
-  :hook ((emacs-lisp-mode . corfu-mode)
-         (shell-mode . corfu-mode)
-         (eshell-mode . corfu-mode))
-
-  ;; Recommended: Enable Corfu globally.
-  ;; This is recommended since dabbrev can be used globally (M-/).
-  :init
-  ;; (corfu-global-mode)
-  )
-
 ;; Optionally use the `orderless' completion style. See `+orderless-dispatch'
 ;; in the Consult wiki for an advanced Orderless style dispatcher.
 ;; Enable `partial-completion' for files to allow path expansion.
@@ -1315,28 +1256,26 @@ up before you execute another command."
   :init
   (setq completion-styles '(basic partial-completion emacs22 initials)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion))))
-	)
-  )
+        completion-category-overrides '((file (styles . (partial-completion))))))
 
-(straight-use-package
- '(lisp-mode
-   :type built-in
-   :mode ("\\.el\\'" . emacs-lisp-mode)
-   :bind (:map emacs-lisp-mode-map ("\r" . reindent-then-newline-and-indent))))
+(use-package lisp-mode
+  :straight (:type built-in)
+  :mode ("\\.el\\'" . emacs-lisp-mode)
+  :bind (:map emacs-lisp-mode-map ("\r"
+				   . reindent-then-newline-and-indent))
+  :config (add-hook 'emacs-lisp-mode-hook
+		    '(lambda ()
+		       (make-local-variable 'completion-at-point-functions)
+		       (setq completion-at-point-functions '(elisp-completion-at-point comint--complete-file-name-data)
+			     comint-completion-addsuffix nil)
 
-(add-hook 'emacs-lisp-mode-hook
-          '(lambda ()
-	     (make-local-variable 'completion-at-point-functions)
-	     (setq completion-at-point-functions '(elisp-completion-at-point comint--complete-file-name-data)
-		   comint-completion-addsuffix nil)
+		       (abbrev-mode 1)
+		       (auto-fill-mode 1)
+		       (font-lock-mode 1)
+		       (eldoc-mode 1)
+		       (flyspell-prog-mode)
+		       (add-hook 'after-save-hook 'byte-compile-current-buffer nil t))))
 
-	     (abbrev-mode 1)
-	     (auto-fill-mode 1)
-	     (font-lock-mode 1)
-	     (eldoc-mode 1)
-	     (flyspell-prog-mode)
-	     (add-hook 'after-save-hook 'byte-compile-current-buffer nil t)))
 
 (use-package lua-mode
   :mode "\\.lua\\'"
@@ -1344,7 +1283,6 @@ up before you execute another command."
   (use-package company-lua
     :commands company-lua)                          ; load company lua
   :config
-  (company-mode 1)
   (make-local-variable 'company-backends)
   (add-to-list 'company-backends '(company-lua company-yasnippet)))
 
@@ -1384,14 +1322,10 @@ up before you execute another command."
     ;; (define-key go-mode-map (kbd "C-c C-e") #'go-gopath-set-gopath)
     ;; (add-hook 'before-save-hook 'gofmt-before-save)
     ;; (go-eldoc-setup)
-    (company-mode 1)
     (go-projectile-tools-add-path)
-    (make-local-variable 'company-backends)
-    (set (make-local-variable 'company-backends) '(company-capf))
+    (as-local-company-backends company-capf)
     (lsp)
-    (lsp-mode 1)
     (flycheck-golangci-lint-setup)
-    (flycheck-mode 1)
     (flycheck-pos-tip-mode 1)
     (flycheck-add-next-checker 'lsp 'golangci-lint)
     (add-hook 'before-save-hook 'gofmt-before-save nil t))
@@ -1406,44 +1340,41 @@ up before you execute another command."
 ;;   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (use-package rust-mode
-  :hook (rust-mode . lsp)
   :mode "\\.rs\\'"
+  :hook ((rust-mode . lsp-rust-analyzer-inlay-hints-mode)
+	 (rust-mode . hs-minor-mode)
+	 (rust-mode . (lambda ()
+			(lsp 1)
+			(flycheck-pos-tip-mode 0)
+			(flycheck-inline-mode 0)
+			(set (make-local-variable 'compile-command) "cargo run")
+			(add-hook 'before-save-hook #'lsp-format-buffer t t))))
   :init
+  (use-package cargo
+    :hook (rust-mode . cargo-minor-mode))
+
   (setq lsp-rust-server 'rust-analyzer
         lsp-rust-analyzer-server-display-inlay-hints t
         lsp-rust-analyzer-display-parameter-hints t
         lsp-rust-analyzer-display-chaining-hints t)
-  :config
-  (set (make-local-variable 'compile-command) "cargo run")
+
   (if (eq system-type 'windows-nt)
       (add-to-list 'exec-path "C:/Users/tom.solberg/.cargo/bin")
     (progn
-      (add-to-list 'exec-path "~/.cargo/bin")))
-
-  (lsp 1)
-  (lsp-mode 1)
-  (lsp-lens-mode 1)
-  (lsp-rust-analyzer-inlay-hints-mode 1)
-  ;; (company-mode 1)
-  ;; (cargo-minor-mode 1)
-  (flycheck-mode 1)
-  (hs-minor-mode 1)
-  (flycheck-pos-tip-mode 0)
-  (flycheck-inline-mode 0)
-  (add-hook 'before-save-hook #'lsp-format-buffer t t))
-
+      (add-to-list 'exec-path "~/.cargo/bin"))))
 
 (use-package protobuf-mode
   :mode "\\.proto\\'"
+  :hook (protobuf-mode . (lambda ()
+	                       (company-mode 0)
+	                       (irony-mode 0)
+                           (c-add-style "my-style" my-protobuf-style t)))
   :init
   (defconst my-protobuf-style
     '((c-basic-offset . 4)
       (indent-tabs-mode . nil)))
   :config
-  (company-mode 0)
-  (irony-mode 0)
-  (c-add-style "my-style" my-protobuf-style t))
-
+  )
 
 (use-package python-mode
   :mode "\\.py\\'"
@@ -1453,9 +1384,8 @@ up before you execute another command."
   :config
   (setq python-indent-offset 4
 	python-environment-virtualenv '("virtualenv" "-p" "python3" "--system-site-packages" "--quiet")
-	flycheck-python-flake8-executable
-	"/home/tgolsson/anaconda3/envs/py38/bin/python3.8")
-  (require 'dap-python)
+	flycheck-python-flake8-executable "/home/tgolsson/anaconda3/envs/py38/bin/python3.8")
+
   :init
   (use-package conda
     :commands conda-env-activate
@@ -1479,13 +1409,11 @@ up before you execute another command."
   ;;   :config
   ;;   (jedi:setup))
   :config
-  (flycheck-mode 1)
-  (company-mode 1)
+  (require 'dap-python)
   ;; (make-local-variable 'company-backends)
   ;; (add-to-list 'company-backends '(company-jedi company-yasnippet)
   ;; (flycheck-inline-mode 1)
   (modify-syntax-entry ?_  "_")
-
   (local-set-key (kbd "M-.") 'jedi:goto-definition)
   (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker))
 
@@ -1521,14 +1449,13 @@ up before you execute another command."
   (make-local-variable 'company-backends)
   (add-to-list 'company-backends '(company-web-html company-yasnippet))
   (define-key web-mode-map (kbd "C-<Space>") 'company-web-html)
-  (company-mode 1)
   (prettier-js-mode 1)
-  (add-node-modules-path 1))
+  (add-node-modules-path))
 
-(straight-use-package '(nxml-mode
-  :type built-in
+(use-package nxml-mode
+  :straight (:type built-in)
   :config
-  (setq tab-width 4)))
+  (setq tab-width 4))
 
 (use-package yaml-mode
   :mode ("\\.yaml$" "\\.yml$")
@@ -1544,15 +1471,69 @@ up before you execute another command."
 (use-package jsonnet-mode)
 (use-package graphviz-dot-mode)
 
+(use-package company
+  :after lsp-mode
+  :hook ((web-mode python-mode lua-mode cmake-mode go-mode cc-mode) . company-mode)
+  :commands company-mode
+  :init
+  (use-package company-statistics
+    :hook (company-mode . company-statistics-mode))
+  (use-package company-quickhelp
+    :hook (company-mode . company-quickhelp-mode))
+  (setq company-tooltip-limit 20
+        company-tooltip-align-annotations 't
+        company-idle-delay .1
+        company-begin-commasends '(lf-insert-command)
+        company-minimum-prefix-length 1
+	company-backends '(company-capf))
+  :config
+  (define-key company-active-map (kbd "TAB") 'tab-indent-or-complete)
+  (define-key company-active-map (kbd "<tab>") 'tab-indent-or-complete))
+
+
+(use-package corfu
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-auto-delay 0.0)         ;; After 0.0 seconds
+  (corfu-auto-prefix 1)          ;; And a single character
+  (corfu-commit-predicate nil)   ;; Do not commit selected candidates on next input
+  (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
+  (corfu-quit-no-match t)        ;; Automatically quit if there is no match
+  (corfu-echo-documentation t)   ;; Show documentation in the echo area
+
+  ;; Optionally use TAB for cycling, default is `corfu-complete'.
+  ;; :bind (:map corfu-map
+  ;;        ("TAB" . corfu-next)
+  ;;        ([tab] . corfu-next)
+  ;;        ("S-TAB" . corfu-previous)
+  ;;        ([backtab] . corfu-previous))
+
+  :hook ((emacs-lisp-mode . corfu-mode)
+         (shell-mode . corfu-mode)
+         (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.
+  ;; This is recommended since dabbrev can be used globally (M-/).
+  :init
+  ;; (corfu-global-mode)
+  )
+
 ;; typescript-mode
 ;; sass-mode
 ;; scss-mode
-;; lua-mode
 
-(measure-time "Starting server:"
-	      (when (and (fboundp 'server-running-p)
-			 (not (server-running-p)))
-		(server-start)))
+(use-package server
+  :ensure t
+  :init
+  (server-mode 1)
+  :config
+  (unless (server-running-p)
+    (server-start)))
+
+(when (and (fboundp 'server-running-p)
+	   (not (server-running-p)))
+  (server-start))
 
 ;; Keep emacs Custom-settings in separate file
 (measure-time "Loading custom:" (load custom-file))

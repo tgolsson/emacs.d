@@ -120,3 +120,4 @@ CMake is a cross-platform, open-source make system."
     (meta (company-cmake--meta arg))))
 
 (provide 'company-cmake)
+;;; company-cmake.el ends here
