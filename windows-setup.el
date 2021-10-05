@@ -5,7 +5,6 @@
       git-shell-executable (concat git-shell-path "\\bash.exe"))
 
 (to/pushn exec-path git-shell-path "C:/Users/tom.solberg/.cargo/bin")
-
 ;; Disable lockfiles to make flask spaz less
 (setq create-lockfiles nil
       browse-url-browser-function 'to/browse-url-win)
