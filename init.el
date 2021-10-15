@@ -46,6 +46,9 @@
 (set-selection-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 
+(eval-when-compile
+  (require 'cl))
+
 (defmacro to/pushn (list &rest vals)
   (let ((forms (mapcar (lambda (var) `(push ,var ,list)) vals)))
     `(progn ,@forms)))
@@ -61,7 +64,7 @@
      (add-to-list 'company-backends ',values)))
 
 (defmacro to/set-safe (name value) `(when (boundp ',name) (setq ,name
-								,value)))
+                                                                ,value)))
 
 (defmacro to/disable (name) `(when (fboundp ',name) (,name -1)))
 
@@ -105,7 +108,7 @@ The return value is the new value of LIST-VAR."
   (set-fringe-mode 20)
   (setq-default custom-safe-themes t
                 transient-mark-mode t)
- 
+
   (setq
    apropos-do-all t
    auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
@@ -121,7 +124,6 @@ The return value is the new value of LIST-VAR."
    ediff-split-window-function 'split-window-horizontally
    ediff-window-setup-function 'ediff-setup-windows-plain
    fill-column 80
-   frame-background-mode 'dark
    frame-title-format '((:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name)) "%b")))
    history-length 1000
    indent-tabs-mode nil
@@ -148,12 +150,12 @@ The return value is the new value of LIST-VAR."
   (put 'upcase-region 'disabled nil)
   (put 'downcase-region 'disabled nil)
   (setenv "SSH_ASKPASS" "git-gui --askpass")
-  
+
   (transient-mark-mode 1)
   (make-variable-buffer-local 'transient-mark-mode)
   (put 'transient-mark-mode 'permanent-local t)
 
-  
+
   (to/disable tool-bar-mode)
   (to/disable scroll-bar-mode)
   (to/disable blink-cursor-mode)
@@ -161,9 +163,9 @@ The return value is the new value of LIST-VAR."
   (to/disable horizontal-scroll-bar-mode)
 
   (load-file (expand-file-name (if (eq system-type 'windows-nt)
-				   "windows-setup.el"
-				 "unix-setup.el")
-			       user-emacs-directory)))
+                                   "windows-setup.el"
+                                 "unix-setup.el")
+                               user-emacs-directory)))
 ;; Requires early setup
 (use-package no-littering)
 
@@ -173,17 +175,29 @@ The return value is the new value of LIST-VAR."
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-(use-package exec-path-from-shell
-  :when (memq window-system '(mac ns x))
-  :init (setq exec-path-from-shell-arguments nil)
-  :config (exec-path-from-shell-initialize))
+(use-package comint
+  :straight (:type built-in)
+  :init
+  (defun to/preoutput-turn-buffer-read-only (text)
+    (propertize text 'read-only t))
+  :custom
+  (comint-prompt-readonly t)
+  (comint-buffer-maximum-size 20000 "Increase comint buffer size.")
+  (comint-prompt-read-only t "Make the prompt read only.")
+  :config
+  (add-hook 'comint-preoutput-filter-functions
+            'to/preoutput-turn-buffer-read-only))
 
 (use-package desktop
   :hook (after-init-hook . desktop-read)
   :init (setq desktop-restore-eager 8
-	      desktop-auto-save-timeout 120)
+              desktop-auto-save-timeout 120)
   (desktop-save-mode t))
 
+(use-package exec-path-from-shell
+  :when (memq window-system '(mac ns x))
+  :init (setq exec-path-from-shell-arguments nil)
+  :config (exec-path-from-shell-initialize))
 
 (use-package savehist
   :init (savehist-mode +1)
@@ -195,7 +209,7 @@ The return value is the new value of LIST-VAR."
   :bind (("<f6>" . counsel-recentf))
   :custom
   (recentf-max-saved-items 2000)
-  :init 
+  :init
   (recentf-mode +1)
   :config
   (to/append-to-list 'recentf-exclude '("/elpa/"
@@ -248,7 +262,6 @@ The return value is the new value of LIST-VAR."
   (display-line-numbers-minor-tick 10)
   :init
   (global-display-line-numbers-mode 1)
-  :config
   (dolist (mode '(org-mode-hook
                   term-mode-hook
                   shell-mode-hook
@@ -258,7 +271,9 @@ The return value is the new value of LIST-VAR."
 
 (use-package hl-line
   :demand t
-  :init (global-hl-line-mode +1))
+  :init (global-hl-line-mode +1)
+  :config
+  (add-hook 'org-mode-hook (lambda ()  (setq-local global-hl-line-mode nil))))
 
 (use-package paren
   :commands show-paren-mode
@@ -272,11 +287,23 @@ The return value is the new value of LIST-VAR."
 
 (use-package solarized-theme
   :demand t
+  :custom (frame-background-mode 'dark)
   :config
-  (load-theme 'solarized-light t)
-  (enable-theme 'solarized-light))
+  (load-theme 'solarized-dark t)
+  (enable-theme 'solarized-dark))
 
+(defun dw/org-mode-visual-fill ()
+  (setq visual-fill-column-width 110
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :defer t
+  :hook (org-mode . dw/org-mode-visual-fill))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; General utility
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package alert
   :commands alert
@@ -288,6 +315,7 @@ The return value is the new value of LIST-VAR."
 (use-package anzu)
 
 ;;; General purpose code tools
+
 (use-package dap-mode
   :commands dap-mode
   ;; Uncomment the config below if you want all UI panes to be hidden by default!
@@ -310,7 +338,7 @@ The return value is the new value of LIST-VAR."
                                (list :type "gdb"
                                      :request "launch"
                                      :name "GDB::Run"
-				     :gdbpath "rust-gdb"
+                                     :gdbpath "rust-gdb"
                                      :target nil
                                      :cwd nil))
   :bind (:map lsp-mode-map
@@ -321,10 +349,10 @@ The return value is the new value of LIST-VAR."
 
 (use-package lsp-mode
   :hook (((rust-mode go-mode) . lsp-mode)
-	 ((rust-mode) . lsp-lens-mode))
+         ((rust-mode) . lsp-lens-mode))
   :commands (lsp ls-deferred)
-  :init  
-  (use-package lsp-treemacs :after lsp)  
+  :init
+  (use-package lsp-treemacs :after lsp)
   (use-package lsp-ivy :after lsp)
   (use-package lsp-ui
     :commands lsp-ui-mode
@@ -339,7 +367,7 @@ The return value is the new value of LIST-VAR."
 
   :config
   (setq lsp-disabled-clients '(rls)
-	lsp-headerline-breadcrumb-enable nil
+        lsp-headerline-breadcrumb-enable nil
         lsp-headerline-breadcrumb-icons-enable nil
         lsp-prefer-flymake nil
         lsp-prefer-capf t
@@ -396,9 +424,10 @@ buffer if succeeded without warnings "
   :config (setq which-key-idle-delay 0.3))
 
 (use-package autoinsert
+  :custom
+  (auto-insert-directory (expand-file-name "templates" user-emacs-directory))
+  (auto-insert-query nil)
   :init
-  (setq auto-insert-directory (expand-file-name "templates" user-emacs-directory)
-	auto-insert-query nil)
   (add-hook 'find-file-hook 'auto-insert)
   (auto-insert-mode 1)
   (define-auto-insert "\\.el$" ["default-lisp.el" to/autoinsert-yas-expand])
@@ -415,21 +444,18 @@ buffer if succeeded without warnings "
 ;;   (define-key hs-minor-mode-map (kbd "C-c h") (lookup-key hs-minor-mode-map (kbd "C-c @")))
 ;;   (define-key hs-minor-mode-map (kbd "C-c @") nil))
 
-(use-package comint
-  :straight (:type built-in)
-  :init
-  (defun to/preoutput-turn-buffer-read-only (text)
-    (propertize text 'read-only t))
-  :custom
-  (comint-prompt-readonly t)
-  (comint-buffer-maximum-size 20000 "Increase comint buffer size.")
-  (comint-prompt-read-only t "Make the prompt read only.")
-  :config
-  (add-hook 'comint-preoutput-filter-functions
-	    'to/preoutput-turn-buffer-read-only))
 
 ;; (use-package expand-region
 ;;   :bind ("C-@" . er/expand-region))
+
+(set-face-attribute 'variable-pitch nil
+                    :font "Iosevka Aile"
+                    :height 100
+                    :weight 'light)
+
+(set-face-attribute 'fixed-pitch nil
+                    :font "Cascadia Code"
+                    :height 100)
 
 (use-package cascadia-code
   :straight (:type built-in)
@@ -447,6 +473,11 @@ buffer if succeeded without warnings "
                        (ibuffer-projectile-set-filter-groups)
                        (unless (eq ibuffer-sorting-mode 'alphabetic)
                          (ibuffer-do-sort-by-alphabetic)))))
+
+  ;; (use-package counsel-projectile
+  ;;   :after projectile
+  ;;   :config (counsel-projectile-mode))
+
   :config
   (setq projectile-switch-project-action 'magit-status
         projectile-globally-ignored-directories (append '("*__pycache__*" "*.egg-info") projectile-globally-ignored-directories)
@@ -456,26 +487,8 @@ buffer if succeeded without warnings "
         projectile-git-command "fd . -0"
         projectile-git-submodule-command "git submodule --quiet foreach 'echo $path'")
   (projectile-mode +1)
-  (projectile-global-mode 1)
-  ;;(helm-projectile-on)
-  )
+  (projectile-global-mode 1))
 
-(use-package counsel-projectile
-  :after projectile
-  :config (counsel-projectile-mode))
-
-;; (use-package helm-projectile
-;;   :demand t
-;;   :config
-;;   (progn
-;;     (setq projectile-completion-system 'helm)
-;;     (helm-projectile-on)
-;;     )
-;;   )
-
-
-(eval-when-compile
-  (require 'cl))
 
 (defun untabify-buffer ()
   (interactive)
@@ -513,9 +526,7 @@ visiting."
 Including indent-buffer, which should not be called automatically on save."
   (interactive)
   (untabify-buffer)
-  (delete-trailing-whitespace)
-  (indent-buffer))
-
+  (delete-trailing-whitespace))
 
 (defun transpose-params ()
   "Presumes that params are in the form (p, p, p) or
@@ -892,196 +903,72 @@ up before you execute another command."
   :config
   (add-hook 'flycheck-after-syntax-check-hook 'to/adjust-flycheck-automatic-syntax-eagerness))
 
-;; helm
-;; helm-ag
-;; helm-core
-;; helm-descbinds
-;; helm-describe-modes
-;; helm-etags-plus
-;; helm-flx
-;; helm-flycheck
-;; helm-flymake
-;; helm-flyspell
-;; helm-fuzzier
-;; helm-ls-git
-;; helm-projectile
-;; helm-smex
-;; helm-swoop
-;; helm-w32-launcher
-
-;; (use-package
-;;     helm
-;;     :init (use-package
-;;               helm-swoop
-;;               :bind
-;;               (("M-s" . helm-swoop)
-;;                   ("C-x M-s" . helm-swoop)))
-
-;;     (use-package
-;;         helm-descbinds
-;;         :bind (("C-h b" . helm-descbinds)))
-;;     (use-package
-;;         helm-flycheck
-;;         :bind (:map flycheck-mode-map
-;;                   ("C-c ! h" . helm-flycheck)))
-;;     (use-package
-;;         helm-describe-modes)
-;;     (use-package
-;;         helm-ls-git
-;;         :bind ( ("C-x M-g" . helm-ls-git-ls)))
-;;     (use-package
-;;         helm-smex
-;;         :bind (("<remap> <execute-extended-command>"
-;;                    . helm-smex)
-;;                   ("M-X". helm-smex-major-mode-commands)))
-;;     :bind (("C-x C-f" . helm-find-files)
-;;               ("C-x b" . helm-mini)
-;;               ("M-y" . helm-show-kill-ring)
-;;               ("C-h a" . helm-apropos)
-;;               ("C-h i" . helm-info-emacs)
-;;               ("<f6>" . helm-recentf)
-;;               ("C-x r l" . helm-filtered-bookmarks)
-;;               ("C-x c!" . helm-calcul-expression))
-;;     :config (define-key helm-map (kbd "<left>")
-;;                 'helm-previous-source)
-;;     (define-key helm-map (kbd "<right>") 'helm-next-source)
-;;     (setq helm-mode-fuzzy-match t helm-buffers-fuzzy-matching t
-;;         helm-recentf-fuzzy-match    t helm-ff-transformer-show-only-basename t
-;;         helm-move-to-line-cycle-in-source t helm-ff-keep-cached-candidates nil
-;;         helm-ff-auto-update-initial-value t helm-ag-insert-at-point 'symbol)
-;;     (helm-mode t)
-;;     (helm-adaptive-mode t)
-;;     ;; for helm-find-files
-;;     (customize-set-variable 'helm-ff-lynx-style-map t)
-
-;;     ;; for helm-imenu
-;;     (customize-set-variable 'helm-imenu-lynx-style-map t)
-
-;;     ;; for semantic
-;;     (customize-set-variable 'helm-semantic-lynx-style-map t)
-
-;;     ;; for helm-occur
-;;     (customize-set-variable 'helm-occur-use-ioccur-style-keys t)
-
-;;     ;; for helm-grep
-;;     (customize-set-variable 'helm-grep-use-ioccur-style-keys t)
-;;     (use-package
-;;         helm-flx
-;;         :config (helm-flx-mode +1)
-;;         (setq helm-flx-for-helm-find-files t helm-flx-for-helm-locate t
-;;             helm-buffer-file-name nil)))
-
-(use-package ivy
-  :diminish
-  :bind (("M-s" . swiper)
-         :map ivy-minibuffer-map
-         ("TAB" . ivy-alt-done)
-         ("C-l" . ivy-alt-done)
-         :map ivy-switch-buffer-map
-         ("C-l" . ivy-done)
-         ("C-d" . ivy-switch-buffer-kill)
-         :map ivy-reverse-i-search-map
-         ("C-d" . ivy-reverse-i-search-kill))
-  :config
-  (setq ivy-use-virtual-buffers t
-	ivy-initial-inputs-alist '((counsel-minor . "^+")
-				   (counsel-package . "^+")
-				   (counsel-org-capture . "^")
-				   (counsel-M-x . "")
-				   (counsel-describe-symbol . "^")
-				   (org-refile . "^")
-				   (org-agenda-refile . "^")
-				   (org-capture-refile . "^")
-				   (Man-completion-table . "^")
-				   (woman . "^")))
-  (ivy-mode 1)
-  :init
-  ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+;; (use-package ivy
+;;   :diminish
+;;   :bind (("M-s" . swiper)
+;;          :map ivy-minibuffer-map
+;;          ("TAB" . ivy-alt-done)
+;;          ("C-l" . ivy-alt-done)
+;;          :map ivy-switch-buffer-map
+;;          ("C-l" . ivy-done)
+;;          ("C-d" . ivy-switch-buffer-kill)
+;;          :map ivy-reverse-i-search-map
+;;          ("C-d" . ivy-reverse-i-search-kill))
+;;   :config
+;;   (setq ivy-use-virtual-buffers t
+;;         ivy-initial-inputs-alist '((counsel-minor . "^+")
+;;                                    (counsel-package . "^+")
+;;                                    (counsel-org-capture . "^")
+;;                                    (counsel-M-x . "")
+;;                                    (counsel-describe-symbol . "^")
+;;                                    (org-refile . "^")
+;;                                    (org-agenda-refile . "^")
+;;                                    (org-capture-refile . "^")
+;;                                    (Man-completion-table . "^")
+;;                                    (woman . "^")))
+;;   (ivy-mode 1)
+;;   :init
+;;   ;; (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
 
 
-  (global-set-key (kbd "C-s") 'swiper-isearch)
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  (global-set-key (kbd "M-y") 'counsel-yank-pop)
-  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-  (global-set-key (kbd "<f1> l") 'counsel-find-library)
-  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-  (global-set-key (kbd "<f2> j") 'counsel-set-variable)
-  (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
-  (global-set-key (kbd "C-c v") 'ivy-push-view)
-  (global-set-key (kbd "C-c V") 'ivy-pop-view))
+;;   (global-set-key (kbd "C-s") 'swiper-isearch)
+;;   (global-set-key (kbd "M-x") 'counsel-M-x)
+;;   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+;;   (global-set-key (kbd "M-y") 'counsel-yank-pop)
+;;   (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+;;   (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+;;   (global-set-key (kbd "<f1> l") 'counsel-find-library)
+;;   (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+;;   (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+;;   (global-set-key (kbd "<f2> j") 'counsel-set-variable)
+;;   (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+;;   (global-set-key (kbd "C-c v") 'ivy-push-view)
+;;   (global-set-key (kbd "C-c V") 'ivy-pop-view))
 
-(use-package ivy-rich
-  :after ivy
-  :init
-  (ivy-rich-mode 1))
+;; (use-package ivy-rich
+;;   :after ivy
+;;   :init
+;;   (ivy-rich-mode 1))
 
-(use-package counsel
-  :bind (("C-M-j" . 'counsel-switch-buffer)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history))
-  :custom
-  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
-  :config
-  (counsel-mode 1))
+;; (use-package counsel
+;;   :bind (("C-M-j" . 'counsel-switch-buffer)
+;;          :map minibuffer-local-map
+;;          ("C-r" . 'counsel-minibuffer-history))
+;;   :custom
+;;   (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
+;;   :config
+;;   (counsel-mode 1))
 
-(use-package ivy-prescient
-  :after counsel
-  :custom
-  (ivy-prescient-enable-filtering nil)
-  :config
-  ;; Uncomment the following line to have sorting remembered across sessions!
-  (prescient-persist-mode 1)
-  (ivy-prescient-mode 1))
+;; (use-package ivy-prescient
+;;   :after counsel
+;;   :custom
+;;   (ivy-prescient-enable-filtering nil)
+;;   :config
+;;   ;; Uncomment the following line to have sorting remembered across sessions!
+;;   (prescient-persist-mode 1)
+;;   (ivy-prescient-mode 1))
 
-
-(global-set-key (kbd "<f7>")                 'ctags-create-or-update-tags-table)
-
-(global-set-key (kbd "M-/")                  'hippie-expand)
-(global-set-key (kbd "C-x C-b")              'ibuffer)
-(global-set-key (kbd "M-z")                  'zap-up-to-char)
-
-(global-set-key (kbd "C-s")                  'isearch-forward-regexp)
-(global-set-key (kbd "C-r")                  'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s")                'isearch-forward)
-(global-set-key (kbd "C-M-r")                'isearch-backward)
-(global-set-key (kbd "M-j")  (lambda () (interactive) (join-line -1)))
-
-(global-set-key (kbd "C-x C-r")              'rename-current-buffer-file)
-;; (global-set-key [remap goto-line]            'goto-line-with-feedback)
-
-;; Perform general cleanup.
-(global-set-key (kbd "C-c n")                'cleanup-buffer)
-(global-set-key (kbd "C-c C-n")              'cleanup-buffer)
-(global-set-key (kbd "C-c C-<return>")       'delete-blank-lines)
-
-;; DMM
-(global-set-key (kbd "C-h C-m")              'discover-my-major)
-(global-set-key (kbd "C-h M-m")              'discover-my-mode)
-
-;; Transpose
-(global-unset-key (kbd "M-t")) ;; which used to be transpose-words
-(global-set-key (kbd "M-t l")                'transpose-lines)
-(global-set-key (kbd "M-t w")                'transpose-words)
-(global-set-key (kbd "M-t s")                'transpose-sexps)
-(global-set-key (kbd "M-t p")                'transpose-params)
-
-(global-set-key (kbd "C-c u")                'uncomment-region)
-(global-set-key (kbd "C-c c")                'comment-or-uncomment-region)
-
-(global-set-key (kbd "M-p")                  'backward-paragraph)
-(global-set-key (kbd "M-n")                  'forward-paragraph)
-;;(global-set-key [tab]                      'tab-indent-or-complete)
-
-(global-set-key (kbd "M-i") 'helm-etags-select)
-;; programming mode
-(define-key prog-mode-map (kbd "M-W") 'yank-arg)
-
-(bind-key "M-Q" 'delete-trailing-whitespace)
 ;; Make commit-lines 72 lines max
-
 (add-hook 'git-commit-mode-hook (lambda () (interactive "") (set-fill-column 72)))
 
 ;;
@@ -1126,21 +1013,6 @@ up before you execute another command."
   (electric-pair-mode 1)
   (add-hook 'before-save-hook 'clang-format-buffer t t))
 
-
-;;
-;; Rtags
-;;
-;; (use-package rtags
-;;   :bind (( "M-." .  rtags-find-symbol-at-point)
-;;          ( "M-," .  rtags-find-references-at-point)
-;;          ( "C-." .  rtags-find-symbol)
-;;          ( "C-," .  rtags-find-references)
-;;          ( "C-<" .  rtags-find-virtuals-at-point)
-;;          ( "M-i" .  rtags-imenu))
-;;   :config
-;;   (setq rtags-completions-enabled t))
-
-
 ;;
 ;; irony-mode
 ;;
@@ -1159,26 +1031,26 @@ up before you execute another command."
 ;; Redefinition of function from gud.el
 (defun gud-find-expr (&rest args)
   (let ((expr (if (and transient-mark-mode mark-active)
-		  (buffer-substring (region-beginning) (region-end))
-		(apply gud-find-expr-function args))))
+                  (buffer-substring (region-beginning) (region-end))
+                (apply gud-find-expr-function args))))
     (save-match-data
       (if (string-match "\n" expr)
-	  (error "Expression must not include a newline"))
+          (error "Expression must not include a newline"))
       (with-current-buffer gud-comint-buffer
-	(save-excursion
-	  (goto-char (process-mark (get-buffer-process gud-comint-buffer)))
-	  (forward-line 0)
-	  (when (looking-at comint-prompt-regexp)
-	    (set-marker gud-delete-prompt-marker (point))
-	    (set-marker-insertion-type gud-delete-prompt-marker t))
-	  (unless (eq (buffer-local-value 'gud-minor-mode gud-comint-buffer)
-		      'jdb)
-	    (message (concat expr " = "))))))
+        (save-excursion
+          (goto-char (process-mark (get-buffer-process gud-comint-buffer)))
+          (forward-line 0)
+          (when (looking-at comint-prompt-regexp)
+            (set-marker gud-delete-prompt-marker (point))
+            (set-marker-insertion-type gud-delete-prompt-marker t))
+          (unless (eq (buffer-local-value 'gud-minor-mode gud-comint-buffer)
+                      'jdb)
+            (message (concat expr " = "))))))
     expr))
 
 (use-package cmake-mode
   :mode (("/CMakeLists\\.txt\\'" . cmake-mode)
-	 ("\\.cmake\\'" . cmake-mode))
+         ("\\.cmake\\'" . cmake-mode))
   :hook (cmake-mode . (lambda () (as-local-company-backends company-cmake company-yasnippet)))
   :init
   (use-package company-cmake
@@ -1202,7 +1074,8 @@ up before you execute another command."
 ;; You may prefer to use `initials' instead of `partial-completion'.
 (use-package orderless
   :init
-  (setq completion-styles '(basic partial-completion emacs22 initials)
+  (setq completion-styles '(orderless)
+	completion-ignore-case t
         completion-category-defaults nil
         completion-category-overrides '((file (styles . (partial-completion))))))
 
@@ -1210,16 +1083,16 @@ up before you execute another command."
   :straight (:type built-in)
   :mode ("\\.el\\'" . emacs-lisp-mode)
   :bind (:map emacs-lisp-mode-map ("\r"
-				   . reindent-then-newline-and-indent))
+                                   . reindent-then-newline-and-indent))
   :config (add-hook 'emacs-lisp-mode-hook
-		    '(lambda ()
-		       (make-local-variable 'completion-at-point-functions)
-		       (setq completion-at-point-functions '(elisp-completion-at-point comint--complete-file-name-data)
-			     comint-completion-addsuffix nil)
+                    '(lambda ()
+                       (make-local-variable 'completion-at-point-functions)
+                       (setq completion-at-point-functions '(elisp-completion-at-point comint--complete-file-name-data)
+                             comint-completion-addsuffix nil)
 
-		       (eldoc-mode 1)
-		       (flyspell-prog-mode)
-		       (add-hook 'after-save-hook 'byte-compile-current-buffer nil t))))
+                       (eldoc-mode 1)
+                       (flyspell-prog-mode)
+                       (add-hook 'after-save-hook 'byte-compile-current-buffer nil t))))
 
 (use-package abbrev-mode
   :straight (:type built-in)
@@ -1258,24 +1131,16 @@ up before you execute another command."
     (add-hook 'before-save-hook 'gofmt-before-save nil t))
   (add-hook 'go-mode-hook 'to/my-go-mode))
 
-
-;; (use-package cargo :defer t)
-
-;; (use-package helm-lsp :commands )
-
-;; (use-package flycheck-rust
-;;   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-
 (use-package rust-mode
   :mode "\\.rs\\'"
   :hook ((rust-mode . lsp-rust-analyzer-inlay-hints-mode)
-	 (rust-mode . hs-minor-mode)
-	 (rust-mode . (lambda ()
-			(lsp 1)
-			(flycheck-pos-tip-mode 0)
-			(flycheck-inline-mode 0)
-			(set (make-local-variable 'compile-command) "cargo run")
-			(add-hook 'before-save-hook #'lsp-format-buffer t t))))
+         (rust-mode . hs-minor-mode)
+         (rust-mode . (lambda ()
+                        (lsp 1)
+                        (flycheck-pos-tip-mode 0)
+                        (flycheck-inline-mode 0)
+                        (set (make-local-variable 'compile-command) "cargo run")
+                        (add-hook 'before-save-hook #'lsp-format-buffer t t))))
   :init
   (use-package cargo
     :hook (rust-mode . cargo-minor-mode))
@@ -1288,8 +1153,8 @@ up before you execute another command."
 (use-package protobuf-mode
   :mode "\\.proto\\'"
   :hook (protobuf-mode . (lambda ()
-	                       (company-mode 0)
-	                       (irony-mode 0)
+                           (company-mode 0)
+                           (irony-mode 0)
                            (c-add-style "my-style" my-protobuf-style t)))
   :init
   (defconst my-protobuf-style
@@ -1303,8 +1168,8 @@ up before you execute another command."
   (dap-python-debugger 'debugpy)
   :config
   (setq python-indent-offset 4
-	python-environment-virtualenv '("virtualenv" "-p" "python3" "--system-site-packages" "--quiet")
-	flycheck-python-flake8-executable "/home/tgolsson/anaconda3/envs/py38/bin/python3.8")
+        python-environment-virtualenv '("virtualenv" "-p" "python3" "--system-site-packages" "--quiet")
+        flycheck-python-flake8-executable "/home/tgolsson/anaconda3/envs/py38/bin/python3.8")
 
   :init
   (use-package pyvenv
@@ -1347,10 +1212,10 @@ up before you execute another command."
 (use-package web-mode
   :mode ("\\.phtml\\'" "\\.html\\'" "\\.svelte\\'")
   :hook (web-mode . (lambda ()
-		      (make-local-variable 'yas-extra-modes)
-		      (add-to-list 'yas-extra-modes 'html-mode)
-		      (add-to-list 'yas-extra-modes 'php-mode)
-		      (with-local-company-backends (company-web-html company-yasnippet))))
+                      (make-local-variable 'yas-extra-modes)
+                      (add-to-list 'yas-extra-modes 'html-mode)
+                      (add-to-list 'yas-extra-modes 'php-mode)
+                      (with-local-company-backends (company-web-html company-yasnippet))))
   :init
   (use-package company-web)
   ;; TODO: These are actually not use-package things.
@@ -1416,7 +1281,7 @@ up before you execute another command."
         company-idle-delay .1
         company-begin-commasends '(lf-insert-command)
         company-minimum-prefix-length 1
-	company-backends '(company-capf))
+        company-backends '(company-capf))
   :config
   (define-key company-active-map (kbd "TAB") 'tab-indent-or-complete)
   (define-key company-active-map (kbd "<tab>") 'tab-indent-or-complete))
@@ -1459,3 +1324,326 @@ up before you execute another command."
 (use-package copy-as-format)
 (use-package gif-screencast)
 (use-package speed-type)
+
+(global-set-key (kbd "C-x C-b")              'ibuffer)
+(global-set-key (kbd "M-z")                  'zap-up-to-char)
+
+(global-set-key (kbd "C-s")                  'isearch-forward-regexp)
+(global-set-key (kbd "C-r")                  'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s")                'isearch-forward)
+(global-set-key (kbd "C-M-r")                'isearch-backward)
+(global-set-key (kbd "M-j")  (lambda () (interactive) (join-line -1)))
+
+(global-set-key (kbd "C-x C-r")              'rename-current-buffer-file)
+
+;; Perform general cleanup.
+(global-set-key (kbd "C-c n")                'cleanup-buffer)
+(global-set-key (kbd "C-c C-n")              'cleanup-buffer)
+(global-set-key (kbd "C-c C-<return>")       'delete-blank-lines)
+
+;; DMM
+(global-set-key (kbd "C-h C-m")              'discover-my-major)
+(global-set-key (kbd "C-h M-m")              'discover-my-mode)
+
+;; Transpose
+(global-unset-key (kbd "M-t")) ;; which used to be transpose-words
+(global-set-key (kbd "M-t l")                'transpose-lines)
+(global-set-key (kbd "M-t w")                'transpose-words)
+(global-set-key (kbd "M-t s")                'transpose-sexps)
+(global-set-key (kbd "M-t p")                'transpose-params)
+
+(global-set-key (kbd "C-c u")                'uncomment-region)
+(global-set-key (kbd "C-c c")                'comment-or-uncomment-region)
+
+(global-set-key (kbd "M-p")                  'backward-paragraph)
+(global-set-key (kbd "M-n")                  'forward-paragraph)
+;;(global-set-key [tab]                      'tab-indent-or-complete)
+
+;; programming mode
+(define-key prog-mode-map (kbd "M-W") 'yank-arg)
+
+(bind-key "M-Q" 'delete-trailing-whitespace)
+
+
+
+;;; VERTICO TEST
+(defun dw/get-project-root ()
+  (when (fboundp 'projectile-project-root)
+    (projectile-project-root)))
+
+(defvar consult--fd-command nil)
+(defun consult--fd-builder (input)
+  (unless consult--fd-command
+    (setq consult--fd-command
+          (if (eq 0 (call-process-shell-command "fdfind"))
+              "fdfind"
+            "fd")))
+  (pcase-let* ((`(,arg . ,opts) (consult--command-split input))
+               (`(,re . ,hl) (funcall consult--regexp-compiler
+                                      arg 'extended)))
+    (when re
+      (list :command (append
+                      (list consult--fd-command
+                            "--color=never" "--full-path"
+                            (consult--join-regexps re 'extended))
+                      opts)
+            :highlight hl))))
+
+(defun consult-fd (&optional dir initial)
+  (interactive "P")
+  (let* ((prompt-dir (consult--directory-prompt "Fd" dir))
+         (default-directory (cdr prompt-dir)))
+    (find-file (consult--find (car prompt-dir) #'consult--fd-builder initial))))
+
+(defun consult-line-symbol-at-point ()
+  (interactive)
+  (consult-line (thing-at-point 'word)))
+
+(use-package consult
+  :straight t
+  :demand t
+  :bind (;; C-c bindings (mode-specific-map)
+         ("C-c h" . consult-history)
+         ("C-c m" . consult-mode-command)
+         ("C-c b" . consult-bookmark)
+         ("C-c k" . consult-kmacro)
+         ;; C-x bindings (ctl-x-map)
+         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ;; Custom M-# bindings for fast register access
+         ("M-#" . consult-register-load)
+         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+         ("C-M-#" . consult-register)
+         ;; Other custom bindings
+         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ("<help> a" . consult-apropos)            ;; orig. apropos-command
+         ;; M-g bindings (goto-map)
+         ("M-g e" . consult-compile-error)
+         ("M-g f" . consult-flycheck)               ;; Alternative: consult-flycheck
+         ("M-g g" . consult-goto-line)             ;; orig. goto-line
+         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g m" . consult-mark)
+         ("M-g k" . consult-global-mark)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ;; M-s bindings (search-map)
+         ("M-s f" . consult-fd)
+         ("M-s F" . consult-locate)
+         ("M-s g" . consult-grep)
+         ("M-s G" . consult-git-grep)
+         ("M-s r" . consult-ripgrep)
+         ("M-s l" . consult-line-symbol-at-point)
+         ("M-s L" . consult-line-multi)
+         ("M-s m" . consult-multi-occur)
+         ("M-s k" . consult-keep-lines)
+         ("M-s u" . consult-focus-lines)
+         ;; Isearch integration
+         ("M-s e" . consult-isearch)
+	 ("<f6>" . consult-recent-file)
+         :map isearch-mode-map
+         ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
+         ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
+         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+         ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
+
+  ;; Enable automatic preview at point in the *Completions* buffer.
+  ;; This is relevant when you use the default completion UI,
+  ;; and not necessary for Vertico, Selectrum, etc.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :custom
+  (consult-project-root-function #'dw/get-project-root)
+  (completion-in-region-function #'consult-completion-in-region)
+  :config
+
+  ;; Optionally configure preview. The default value
+  ;; is 'any, such that any key triggers the preview.
+  (setq consult-preview-key 'any)
+  (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
+
+  ;; For some commands and buffer sources it is useful to configure the
+  ;; :preview-key on a per-command basis using the `consult-customize' macro.
+  (consult-customize
+   consult-theme
+   :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-file consult--source-project-file consult--source-bookmark
+   :preview-key (kbd "M-.")))
+
+(use-package marginalia
+  :after vertico
+  :straight t
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
+
+(use-package embark
+  :straight t
+  :bind (("C-S-a" . embark-act)
+         :map minibuffer-local-map
+         ("C-d" . embark-act))
+  :config
+
+  ;; Show Embark actions via which-key
+  (setq embark-action-indicator
+        (lambda (map)
+          (which-key--show-keymap "Embark" map nil nil 'no-paging)
+          #'which-key--hide-popup-ignore-command)
+        embark-become-indicator embark-action-indicator))
+
+(use-package embark-consult
+  :straight '(embark-consult :host github
+                             :repo "oantolin/embark"
+                             :files ("embark-consult.el"))
+  :after (embark consult)
+  :demand t
+  :hook
+  (embark-collect-mode . embark-consult-preview-minor-mode))
+
+(defun dw/minibuffer-backward-kill (arg)
+  "When minibuffer is completing a file name delete up to parent
+folder, otherwise delete a word"
+  (interactive "p")
+  (if minibuffer-completing-file-name
+      ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+      (if (string-match-p "/." (minibuffer-contents))
+          (zap-up-to-char (- arg) ?/)
+        (delete-minibuffer-contents))
+    (backward-kill-word arg)))
+
+(use-package vertico
+  :straight '(vertico :host github
+                      :repo "minad/vertico"
+                      :branch "main")
+  :bind (:map vertico-map
+              :map minibuffer-local-map
+              ("M-h" . dw/minibuffer-backward-kill))
+  :custom
+  (vertico-cycle t)
+  :custom-face
+  (vertico-current ((t (:background "#3a3f5a"))))
+  :init
+  (vertico-mode))
+
+(use-package org-bullets
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+(custom-theme-set-faces
+ 'user
+ '(variable-pitch ((t (:family "Arial" :height 180 :weight thin))))
+ '(fixed-pitch ((t ( :family "Cascadia Code" :height 160)))))
+
+(defun dw/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (auto-fill-mode 0)
+  (visual-line-mode 1)
+  (setq evil-auto-indent nil)
+  (diminish org-indent-mode))
+
+;; Make sure Straight pulls Org from Guix
+(straight-use-package '(org :type built-in))
+
+(use-package org
+  :defer t
+  :hook (org-mode . dw/org-mode-setup)
+  :init
+  (use-package ox-hugo
+    :custom
+    (org-hugo-default-static-subdirectory-for-externals "org")
+    :config
+    (push "py" org-hugo-external-file-extensions-allowed-for-copying))
+  :config
+  (setq org-ellipsis " ▾"
+        org-hide-emphasis-markers t
+        org-src-fontify-natively t
+        org-fontify-quote-and-verse-blocks t
+        org-src-tab-acts-natively t
+        org-edit-src-content-indentation 2
+        org-hide-block-startup nil
+        org-src-preserve-indentation nil
+        org-startup-folded 'content
+        org-cycle-separator-lines 2
+	org-src-preserve-indentation t)
+
+  (setq org-modules
+	'(org-crypt
+          org-habit))
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (ledger . t)
+     (dot . t)
+     (python . t)))
+
+  
+  (defun cpb/convert-attachment-to-file ()
+  "Convert [[attachment:..]] to [[file:..][file:..]]"
+  (interactive)
+  (let ((elem (org-element-context)))
+    (if (eq (car elem) 'link)
+        (let ((type (org-element-property :type elem)))
+          ;; only translate attachment type links
+          (when (string= type "attachment")
+            ;; translate attachment path to relative filename using org-attach API
+            ;; 2020-11-15: org-attach-export-link was removed, so had to rewrite
+            (let* ((link-end (org-element-property :end elem))
+                   (link-begin (org-element-property :begin elem))
+                   ;; :path is everything after attachment:
+                   (file (org-element-property :path elem))
+                   ;; expand that to the full filename
+                   (fullpath (org-attach-expand file))
+                   ;; then make it relative to the directory of this org file
+                   (current-dir (file-name-directory (or default-directory
+                                                         buffer-file-name)))
+                   (relpath (file-relative-name fullpath current-dir)))
+              ;; delete the existing link
+              (delete-region link-begin link-end)
+              ;; replace with file: link and file: description
+              (insert (format "[[file:%s][file:%s]]" relpath relpath))))))))
+  (defun to/org-confirm-babel-evaluate (lang body)
+    (not (member lang '("python" "ditaa"))))  ;don't ask for ditaa
+  (setq org-confirm-babel-evaluate #'to/org-confirm-babel-evaluate)
+  (use-package org-superstar
+    :after org
+    :hook (org-mode . org-superstar-mode)
+    :custom
+    (org-superstar-remove-leading-stars t)
+    (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+  (set-face-attribute 'org-document-title nil :font "Iosevka Aile" :weight 'bold :height 100)
+  (dolist (face '((org-level-1 . 120)
+                  (org-level-2 . 110)
+                  (org-level-3 . 105)
+                  (org-level-4 . 100)
+                  (org-level-5 . 110)
+                  (org-level-6 . 110)
+                  (org-level-7 . 110)
+                  (org-level-8 . 110)))
+    (set-face-attribute (car face) nil :font "Iosevka Aile" :weight 'medium :height (cdr face)))
+
+  ;; Make sure org-indent face is available
+  (require 'org-indent)
+
+  (set-face-attribute 'variable-pitch nil :height 100)
+  (set-face-attribute 'fixed-pitch nil :height 100)
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
+  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+  ;; Get rid of the background on column views
+  (set-face-attribute 'org-column nil :background nil)
+  (set-face-attribute 'org-column-title nil :background nil))

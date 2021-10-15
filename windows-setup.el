@@ -11,3 +11,4 @@
 (to/set-safe w32-pipe-read-delay 0)
 (to/set-safe w32-pipe-buffer-size (* 64 1024))
 (setq irony-server-w32-pipe-buffer-size (* 64 1024))
+(set-clipboard-coding-system 'utf-16le)
