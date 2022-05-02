@@ -102,6 +102,8 @@ The return value is the new value of LIST-VAR."
 (use-package emacs
   :demand t
   :init
+  (global-so-long-mode 1)
+
   (to/pushn load-path packages-dir experiments-dir)
   (push '(fullscreen . maximized) default-frame-alist)
 
@@ -111,6 +113,8 @@ The return value is the new value of LIST-VAR."
 				tab-width 4)
 
   (setq
+   bidi-paragraph-direction 'left-to-right
+   bidi-inhibit-bpa t
    apropos-do-all t
    auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
    backup-directory-alist `((".*" . ,temporary-file-directory))
@@ -921,6 +925,29 @@ notation for the symbol at point."
 (add-to-list 'auto-mode-alist '("\\.build\\'" . nxml-mode))
 (add-to-list 'auto-mode-alist '("meson.build\\'" . meson-mode))
 
+(defvar auto-minor-mode-alist ()
+  "Alist of filename patterns vs correpsonding minor mode functions, see `auto-mode-alist'
+All elements of this alist are checked, meaning you can enable multiple minor modes for the same regexp.")
+
+(defun enable-minor-mode-based-on-extension ()
+  "Check file name against `auto-minor-mode-alist' to enable minor modes
+the checking happens for all pairs in auto-minor-mode-alist"
+  (when buffer-file-name
+    (let ((name (file-name-sans-versions buffer-file-name))
+          (remote-id (file-remote-p buffer-file-name))
+          (case-fold-search auto-mode-case-fold)
+          (alist auto-minor-mode-alist))
+      ;; Remove remote file name identification.
+      (when (and (stringp remote-id)
+                 (string-match-p (regexp-quote remote-id) name))
+        (setq name (substring name (match-end 0))))
+      (while (and alist (caar alist) (cdar alist))
+        (if (string-match-p (caar alist) name)
+            (funcall (cdar alist) 1))
+        (setq alist (cdr alist))))))
+
+(add-hook 'find-file-hook #'enable-minor-mode-based-on-extension)
+(add-to-list 'auto-minor-mode-alist '("\\.svelte\\'" . lsp-mode))
 
 
 ;;
@@ -1224,7 +1251,7 @@ up before you execute another command."
     (lsp)
     (flycheck-golangci-lint-setup)
     (flycheck-pos-tip-mode 1)
-    (flycheck-add-next-checker 'lsp 'golangci-lint)
+;;    (flycheck-add-next-checker 'lsp 'golangci-lint)
     (add-hook 'before-save-hook 'gofmt-before-save nil t))
   (add-hook 'go-mode-hook 'to/my-go-mode))
 
@@ -1296,6 +1323,16 @@ up before you execute another command."
     :config
     (conda-env-activate "base")
     (conda-env-autoactivate-mode t))
+  
+  (use-package python-black
+    :demand t
+    :after python
+    :hook (python-mode . python-black-on-save-mode))
+
+  (use-package python-isort
+    :demand t
+    :after python
+    :hook (python-mode . python-isort-on-save-mode))
 
 
   ;; (use-package jedi-core
@@ -1325,7 +1362,7 @@ up before you execute another command."
                       (make-local-variable 'yas-extra-modes)
                       (add-to-list 'yas-extra-modes 'html-mode)
                       (add-to-list 'yas-extra-modes 'php-mode)
-                      (with-local-company-backends (company-web-html company-yasnippet))))
+                      (with-local-company-backends company-capf company-web-html company-yasnippet)))
   :init
   (use-package company-web)
   ;; TODO: These are actually not use-package things.
