@@ -235,6 +235,8 @@ The return value is the new value of LIST-VAR."
 
 ;;; Visuals
 
+(use-package all-the-icons)
+
 (use-package doom-modeline
   :init
   (doom-modeline-mode 1)
@@ -293,10 +295,10 @@ The return value is the new value of LIST-VAR."
 
 (use-package solarized-theme
   :demand t
-  :custom (frame-background-mode 'dark)
+  :custom (frame-background-mode 'light)
   :config
-  (load-theme 'solarized-dark t)
-  (enable-theme 'solarized-dark))
+  (load-theme 'solarized-light t)
+  (enable-theme 'solarized-light))
 
 (defun dw/org-mode-visual-fill ()
   (setq visual-fill-column-width 110
@@ -308,7 +310,6 @@ The return value is the new value of LIST-VAR."
   :hook (org-mode . dw/org-mode-visual-fill))
 
 (use-package treemacs
-  :ensure t
   :defer t
   :config
   (progn
@@ -387,16 +388,17 @@ The return value is the new value of LIST-VAR."
         ("C-x t M-t" . treemacs-find-tag)))
 
 (use-package treemacs-projectile
-  :after (treemacs projectile)
-  :ensure t)
+  :after (treemacs projectile))
 
 (use-package treemacs-icons-dired
-  :hook (dired-mode . treemacs-icons-dired-enable-once)
-  :ensure t)
+  :hook (dired-mode . treemacs-icons-dired-enable-once))
 
 (use-package treemacs-magit
-  :after (treemacs magit)
-  :ensure t)
+  :after (treemacs magit))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; General utility
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -442,10 +444,19 @@ The return value is the new value of LIST-VAR."
 
 (use-package dumb-jump)
 
+(defun ts/lsp-mode-setup-completion ()
+  (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+        '(orderless))) ;; Configure orderless
+
 (use-package lsp-mode
   :hook (((rust-mode go-mode) . lsp-mode)
-         ((rust-mode) . lsp-lens-mode))
+         ((rust-mode) . lsp-lens-mode)
+		 (lsp-completion-mode . ts/lsp-mode-setup-completion)
+		 (lsp-mode . corfu-mode))
+
   :commands (lsp ls-deferred)
+  :custom
+  (lsp-completion-provider :none)
   :init
   (use-package lsp-treemacs :after lsp)
   (use-package lsp-ivy :after lsp)
@@ -459,24 +470,23 @@ The return value is the new value of LIST-VAR."
           lsp-ui-flycheck-live-reporting t)
     (setq lsp-go-env (make-hash-table :test 'equal))
     (puthash "GOPROXY" "https://proxy.golang.org,direct" lsp-go-env))
-
-  :config
+  
+  :config  
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\bazel-bin\\'")
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\bazel-out\\'")
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\bazel-src\\'")
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\bazel-testlogs\\'")
 
-
   (setq lsp-disabled-clients '(rls)
         lsp-headerline-breadcrumb-enable nil
         lsp-headerline-breadcrumb-icons-enable nil
         lsp-prefer-flymake nil
-        lsp-prefer-capf t
-        lsp-ui-doc-use-childframe nil)
+        lsp-ui-doc-use-childframe t)
   (lsp-enable-which-key-integration t))
 
+(use-package delight)
 (use-package yasnippet
-  :diminish  t
+  :delight
   :commands (yas-global-mode)
   :init (yas-global-mode))
 
@@ -549,21 +559,22 @@ buffer if succeeded without warnings "
 ;; (use-package expand-region
 ;;   :bind ("C-@" . er/expand-region))
 
-(set-face-attribute 'variable-pitch nil
-                    :font "Iosevka Aile"
-                    :height 100
-                    :weight 'light)
+;; (set-face-attribute 'variable-pitch nil
+;;                     :font "Iosevka Aile"
+;;                     :height 60
+;;                     :weight 'light)
 
-(set-face-attribute 'fixed-pitch nil
-                    :font "Cascadia Code"
-                    :height 100)
+;; (set-face-attribute 'fixed-pitch nil
+;;                     :font "Cascadia Code"
+;;                     :height 60)
+
 
 (use-package cascadia-code
   :straight (:type built-in)
   :hook (prog-mode . cascadia-code-mode))
 
 (use-package projectile
-  :diminish projectile-mode
+  :diminish t
   :config (projectile-mode)
   :defer 10
   :custom ((projectile-completion-system 'ivy))
@@ -968,7 +979,7 @@ the checking happens for all pairs in auto-minor-mode-alist"
   (custom-set-faces '(magit-diff-added ((t (:background "black" :foreground "green3"))))
                     '(magit-diff-removed ((t (:background "black" :foreground "red3"))))))
 
-(use-package gitignore-mode)
+;; (use-package gitignore-mode)
 
 (defadvice magit-status (around magit-fullscreen activate)
   (window-configuration-to-register :magit-fullscreen)
@@ -1209,13 +1220,12 @@ up before you execute another command."
   :bind (:map emacs-lisp-mode-map ("\r"
                                    . reindent-then-newline-and-indent))
   :config (add-hook 'emacs-lisp-mode-hook
-                    '(lambda ()
+                    (lambda ()
                        (make-local-variable 'completion-at-point-functions)
                        (setq completion-at-point-functions '(elisp-completion-at-point comint--complete-file-name-data)
                              comint-completion-addsuffix nil)
 
                        (eldoc-mode 1)
-                       (flyspell-prog-mode)
                        (add-hook 'after-save-hook 'byte-compile-current-buffer nil t))))
 
 (use-package abbrev-mode
@@ -1261,7 +1271,7 @@ up before you execute another command."
          (rust-mode . hs-minor-mode)
 		 (rust-mode . rust-enable-format-on-save)
          (rust-mode . (lambda ()
-                        (lsp 1)
+						(lsp)
                         (flycheck-pos-tip-mode 0)
                         ;; (flycheck-inline-mode 0)
                         (set (make-local-variable 'compile-command) "cargo run")
@@ -1323,7 +1333,7 @@ up before you execute another command."
     :config
     (conda-env-activate "base")
     (conda-env-autoactivate-mode t))
-  
+
   (use-package python-black
     :demand t
     :after python
@@ -1417,7 +1427,7 @@ up before you execute another command."
 
 (use-package company
   :after lsp-mode
-  :hook ((web-mode python-mode lua-mode cmake-mode go-mode cc-mode) . company-mode)
+  :hook ((web-mode lua-mode cmake-mode go-mode cc-mode) . company-mode)
   :commands company-mode
   :init
   (use-package company-statistics
@@ -1450,15 +1460,26 @@ up before you execute another command."
          (eshell-mode . corfu-mode))
 
   :init
-  ;; (corfu-global-mode)
-  )
+  (use-package kind-icon
+	:after corfu
+	:custom
+	(kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+    
+	:config
+	(add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+  
+  (use-package corfu-doc
+    :bind (:map corfu-map
+				("M-d" . corfu-doc-toggle))
+    :custom    
+    (corfu-doc-delay 1)
+    :hook (corfu-mode . corfu-doc-mode)))
 
 ;; typescript-mode
 ;; sass-mode
 ;; scss-mode
 
 (use-package server
-  :ensure t
   :demand t
   :config
   (defun server-ensure-safe-dir (dir) "Noop" t)
@@ -1618,7 +1639,7 @@ up before you execute another command."
    :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
-   consult--source-file consult--source-project-file consult--source-bookmark
+   consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
    :preview-key (kbd "M-.")))
 
 (use-package marginalia
