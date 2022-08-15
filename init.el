@@ -77,7 +77,6 @@
       packages-dir (expand-file-name "packages" user-emacs-directory)
       custom-file (expand-file-name "custom.el" user-emacs-directory))
 
-
 (defun to/append-to-list (list-var elements)
   "Append ELEMENTS to the end of LIST-VAR.
 
@@ -112,6 +111,16 @@ The return value is the new value of LIST-VAR."
                 transient-mark-mode t
 				tab-width 4)
 
+  (setq completion-cycle-threshold 3)
+
+  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+  (setq read-extended-command-predicate
+        #'command-completion-default-include-p)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (setq tab-always-indent 'complete)
   (setq
    bidi-paragraph-direction 'left-to-right
    bidi-inhibit-bpa t
@@ -170,7 +179,9 @@ The return value is the new value of LIST-VAR."
   (load-file (expand-file-name (if (eq system-type 'windows-nt)
                                    "windows-setup.el"
                                  "unix-setup.el")
-                               user-emacs-directory)))
+                               user-emacs-directory))
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  )
 ;; Requires early setup
 (use-package no-littering)
 
@@ -449,6 +460,8 @@ The return value is the new value of LIST-VAR."
         '(orderless))) ;; Configure orderless
 
 (use-package lsp-mode
+  :custom
+  (lsp-eslint-download-url "https://github.com/emacs-lsp/lsp-server-binaries/blob/master/dbaeumer.vscode-eslint-2.2.2.vsix?raw=true")
   :hook (((rust-mode go-mode) . lsp-mode)
          ((rust-mode) . lsp-lens-mode)
 		 (lsp-completion-mode . ts/lsp-mode-setup-completion)
@@ -470,12 +483,18 @@ The return value is the new value of LIST-VAR."
           lsp-ui-flycheck-live-reporting t)
     (setq lsp-go-env (make-hash-table :test 'equal))
     (puthash "GOPROXY" "https://proxy.golang.org,direct" lsp-go-env))
-  
-  :config  
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\bazel-bin\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\bazel-out\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\bazel-src\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\bazel-testlogs\\'")
+
+  :config
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]target\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]cargo\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]node_modules\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.venv\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]third-party\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-bin\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-out\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-src\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-testlogs\\'")
+
 
   (setq lsp-disabled-clients '(rls)
         lsp-headerline-breadcrumb-enable nil
@@ -979,8 +998,6 @@ the checking happens for all pairs in auto-minor-mode-alist"
   (custom-set-faces '(magit-diff-added ((t (:background "black" :foreground "green3"))))
                     '(magit-diff-removed ((t (:background "black" :foreground "red3"))))))
 
-;; (use-package gitignore-mode)
-
 (defadvice magit-status (around magit-fullscreen activate)
   (window-configuration-to-register :magit-fullscreen)
   ad-do-it
@@ -1183,6 +1200,9 @@ up before you execute another command."
             (message (concat expr " = "))))))
     expr))
 
+(use-package asm-mode
+    :mode (("\\.tmpli\\'" . asm-mode)))
+
 (use-package cmake-mode
   :mode (("/CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'" . cmake-mode))
@@ -1242,6 +1262,8 @@ up before you execute another command."
   (auto-fill-mode 0))
 
 (use-package go-mode
+  :custom
+  (lsp-go-directory-filters ["-bazel-src" "-bazel-bin" "-bazel-out" "-bazel-testlogs"])
   :mode "\\.go\\'"
   :init
   ;; go-projectile
@@ -1261,7 +1283,6 @@ up before you execute another command."
     (lsp)
     (flycheck-golangci-lint-setup)
     (flycheck-pos-tip-mode 1)
-;;    (flycheck-add-next-checker 'lsp 'golangci-lint)
     (add-hook 'before-save-hook 'gofmt-before-save nil t))
   (add-hook 'go-mode-hook 'to/my-go-mode))
 
@@ -1368,11 +1389,12 @@ up before you execute another command."
 (use-package web-mode
   :mode ("\\.phtml\\'" "\\.html\\'" "\\.svelte\\'")
   :hook (web-mode . (lambda ()
-		      (company-mode 1)
-                      (make-local-variable 'yas-extra-modes)
-                      (add-to-list 'yas-extra-modes 'html-mode)
-                      (add-to-list 'yas-extra-modes 'php-mode)
-                      (with-local-company-backends company-capf company-web-html company-yasnippet)))
+					  (company-mode 1)
+					  (lsp-mode 1)
+					  (make-local-variable 'yas-extra-modes)
+					  (add-to-list 'yas-extra-modes 'html-mode)
+					  (add-to-list 'yas-extra-modes 'php-mode)
+					  (with-local-company-backends company-capf company-web-html company-yasnippet)))
   :init
   (use-package company-web)
   ;; TODO: These are actually not use-package things.
@@ -1380,13 +1402,13 @@ up before you execute another command."
   ;; (use-package company-web-jade :commands web-mode)
   ;; (use-package company-web-slim :commands web-mode)
   (use-package prettier-js
-    :hook (web-mode . prettier-js-mode)
-    :init
-    (setq prettier-js-args '("--tab-width" "4" "--use-tabs" "true")))
+      :init
+      (setq prettier-js-args '("--tab-width" "4" "--use-tabs" "true")))
+
   (use-package add-node-modules-path
     :hook web-mode)
   (setq indent-tabs-mode t
-	web-mode-code-indent-offset 4
+		web-mode-code-indent-offset 4
         web-mode-css-indent-offset 4
         web-mode-markup-indent-offset 4
         web-mode-script-padding 4)
@@ -1427,7 +1449,7 @@ up before you execute another command."
 
 (use-package company
   :after lsp-mode
-  :hook ((web-mode lua-mode cmake-mode go-mode cc-mode) . company-mode)
+  :hook ((web-mode lua-mode cmake-mode cc-mode) . company-mode)
   :commands company-mode
   :init
   (use-package company-statistics
@@ -1448,8 +1470,8 @@ up before you execute another command."
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)                 ;; Enable auto completion
-  (corfu-auto-delay 0.0)         ;; After 0.0 seconds
-  (corfu-auto-prefix 1)          ;; And a single character
+  (corfu-auto-delay 0.3)         ;; After 0.0 seconds
+  (corfu-auto-prefix 3)          ;; And a single character
   (corfu-commit-predicate nil)   ;; Do not commit selected candidates on next input
   (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
   (corfu-quit-no-match t)        ;; Automatically quit if there is no match
@@ -1460,20 +1482,24 @@ up before you execute another command."
          (eshell-mode . corfu-mode))
 
   :init
+
   (use-package kind-icon
 	:after corfu
 	:custom
 	(kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-    
+
 	:config
 	(add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
-  
+
   (use-package corfu-doc
     :bind (:map corfu-map
 				("M-d" . corfu-doc-toggle))
-    :custom    
+    :custom
     (corfu-doc-delay 1)
     :hook (corfu-mode . corfu-doc-mode)))
+
+
+
 
 ;; typescript-mode
 ;; sass-mode
@@ -1623,14 +1649,14 @@ up before you execute another command."
   ;; and not necessary for Vertico, Selectrum, etc.
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :custom
-  (consult-project-root-function #'dw/get-project-root)
+;;  (consult-project-root-function #'dw/get-project-root)
   (completion-in-region-function #'consult-completion-in-region)
   :config
 
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
   (setq consult-preview-key 'any)
-  (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
+  ; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
 
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
@@ -1639,7 +1665,7 @@ up before you execute another command."
    :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
-   consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+   consult--source-bookmark consult--source-recent-file consult--source-project-recent-file
    :preview-key (kbd "M-.")))
 
 (use-package marginalia
@@ -1747,7 +1773,6 @@ folder, otherwise delete a word"
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
-     (ledger . t)
      (dot . t)
      (python . t)))
 
@@ -1819,3 +1844,4 @@ folder, otherwise delete a word"
 
 (use-package wgrep
   :demand t)
+(put 'scroll-left 'disabled nil)
