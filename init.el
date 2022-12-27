@@ -1426,7 +1426,13 @@ up before you execute another command."
 ;; MARKUP LANGUAGES
 (use-package nxml-mode :straight (:type built-in))
 (use-package toml-mode)
-(use-package jsonnet-mode)
+(use-package jsonnet-mode
+  :config
+  :hook (jsonnet-mode . (lambda ()
+		  (progn
+		  (indent-tabs-mode -1)
+		  (setq indent-tabs-mode nil
+				tab-width 2)))))
 (use-package yaml-mode :mode ("\\.yaml$" "\\.yml$") :custom  (yaml-indent-offset 2))
 (use-package graphviz-dot-mode)
 
