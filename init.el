@@ -465,7 +465,12 @@ The return value is the new value of LIST-VAR."
   :hook (((rust-mode go-mode) . lsp-mode)
          ((rust-mode) . lsp-lens-mode)
 		 (lsp-completion-mode . ts/lsp-mode-setup-completion)
-		 (lsp-mode . corfu-mode))
+		 (lsp-mode . corfu-mode)
+		 (lsp-mode . (lambda ()
+							  (setq flycheck-local-checkers
+									'((lsp .
+										   ((next-checkers
+											 . (typos)))))))))
 
   :commands (lsp ls-deferred)
   :custom
@@ -1044,6 +1049,11 @@ up before you execute another command."
   (flycheck-check-syntax-automatically '(save idle-change mode-enabled))
   (flycheck-disabled-checkers '(python-pylint))
   :init
+  (defvar-local flycheck-local-checkers nil)
+  (defun +flycheck-checker-get(fn checker property)
+    (or (alist-get property (alist-get checker flycheck-local-checkers))
+        (funcall fn checker property)))
+  (advice-add 'flycheck-checker-get :around '+flycheck-checker-get)
   (use-package flycheck-clang-tidy
     :hook (cc-mode . flycheck-clang-tidy-setup)
     :after flycheck)
@@ -1851,3 +1861,12 @@ folder, otherwise delete a word"
 (use-package wgrep
   :demand t)
 (put 'scroll-left 'disabled nil)
+
+(flycheck-define-checker typos
+  "A typo checker using typos-cli."
+  :command ("typos" "--format" "brief" source)
+  :error-patterns
+    ((error line-start (file-name) ":" line ":" column ":" (message) line-end))
+  :modes (text-mode prog-mode markdown-mode rust-mode toml-mode python-mode))
+
+(add-to-list 'flycheck-checkers 'typos)
