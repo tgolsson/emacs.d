@@ -1514,8 +1514,11 @@ up before you execute another command."
     (corfu-doc-delay 1)
     :hook (corfu-mode . corfu-doc-mode)))
 
-
-
+(use-package copilot
+  :hook ((prog-mode . copilot-mode))
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t
+  :bind (:map copilot-mode-map (("C-<tab>" . copilot-accept-completion))))
 
 ;; typescript-mode
 ;; sass-mode
