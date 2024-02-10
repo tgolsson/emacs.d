@@ -53,15 +53,6 @@
   (let ((forms (mapcar (lambda (var) `(push ,var ,list)) vals)))
     `(progn ,@forms)))
 
-(defmacro as-local-company-backends (&rest values)
-  `(progn
-     (make-local-variable 'company-backends)
-     (setq company-backends ',values)))
-
-(defmacro with-local-company-backends(&rest values)
-  `(progn
-     (make-local-variable 'company-backends)
-     (add-to-list 'company-backends ',values)))
 
 (defmacro to/set-safe (name value) `(when (boundp ',name) (setq ,name
                                                                 ,value)))
@@ -122,6 +113,7 @@ The return value is the new value of LIST-VAR."
   ;; `completion-at-point' is often bound to M-TAB.
   (setq tab-always-indent 'complete)
   (setq
+   read-process-output-max (* 1024 1024)
    bidi-paragraph-direction 'left-to-right
    bidi-inhibit-bpa t
    apropos-do-all t
@@ -158,7 +150,7 @@ The return value is the new value of LIST-VAR."
    x-select-enable-clipboard t
    x-select-enable-primary t)
 
-  (when window-system (set-frame-font "Cascadia Code 10"))
+  (when window-system (set-frame-font "Cascadia Code 14"))
   (fset 'yes-or-no-p 'y-or-n-p)
   (mapc 'frame-set-background-mode (frame-list))
   (put 'upcase-region 'disabled nil)
@@ -246,7 +238,7 @@ The return value is the new value of LIST-VAR."
 
 ;;; Visuals
 
-(use-package all-the-icons)
+;; (use-package all-the-icons)
 
 (use-package doom-modeline
   :init
@@ -254,24 +246,24 @@ The return value is the new value of LIST-VAR."
   (set-face-attribute 'mode-line nil :underline nil)
   :config
   (set-face-attribute 'mode-line nil :underline nil)
-  (when (not (memq window-system '(w32))) (all-the-icons-install-fonts t)))
+  (when (not (memq window-system '(w32))) (nerd-icons-install-fonts t)))
 
-(use-package emojify
-  :hook (after-init . global-emojify-mode)
-  :config
-  (defun to/set-emoji-font (frame)
-    "Adjust the font settings of FRAME so Emacs can display emoji properly."
-    (if (eq system-type 'darwin)
-        (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)
-      (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend)))
-  (to/set-emoji-font nil)
-  (add-hook 'after-make-frame-functions 'to/set-emoji-font))
+;; (use-package emojify
+;;   :hook (after-init . global-emojify-mode)
+;;   :config
+;;   (defun to/set-emoji-font (frame)
+;;     "Adjust the font settings of FRAME so Emacs can display emoji properly."
+;;     (if (eq system-type 'darwin)
+;;         (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)
+;;       (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend)))
+;;   (to/set-emoji-font nil)
+;;   (add-hook 'after-make-frame-functions 'to/set-emoji-font))
 
-(use-package font-lock
-  :straight (:type built-in)
-  :custom
-  (font-lock-multiline t)
-  :hook (((emacs-lisp-mode lua-mode) . font-lock-mode)))
+;; (use-package font-lock
+;;   :straight (:type built-in)
+;;   :custom
+;;   (font-lock-multiline t)
+;;   :hook (((emacs-lisp-mode lua-mode) . font-lock-mode)))
 
 (use-package global-display-line-numbers-mode
   :straight (:type built-in)
@@ -418,9 +410,6 @@ The return value is the new value of LIST-VAR."
   :config
   (setq alert-default-style 'notifications))
 
-;;; Searching and navigation
-
-(use-package anzu)
 
 ;;; General purpose code tools
 
@@ -505,14 +494,11 @@ The return value is the new value of LIST-VAR."
         lsp-headerline-breadcrumb-enable nil
         lsp-headerline-breadcrumb-icons-enable nil
         lsp-prefer-flymake nil
+		lsp-idle-delay 0.500
         lsp-ui-doc-use-childframe t)
   (lsp-enable-which-key-integration t))
 
 (use-package delight)
-(use-package yasnippet
-  :delight
-  :commands (yas-global-mode)
-  :init (yas-global-mode))
 
 (defun bury-compile-buffer-if-successful (buffer string)
   "Bury a compilation
@@ -557,40 +543,6 @@ buffer if succeeded without warnings "
 (use-package which-key
   :init (which-key-mode 1)
   :config (setq which-key-idle-delay 0.3))
-
-(use-package autoinsert
-  :custom
-  (auto-insert-directory (expand-file-name "templates" user-emacs-directory))
-  (auto-insert-query nil)
-  :init
-  (add-hook 'find-file-hook 'auto-insert)
-  (auto-insert-mode 1)
-  (define-auto-insert "\\.el$" ["default-lisp.el" to/autoinsert-yas-expand])
-  (define-auto-insert "\\.py$" ["default-python.py" to/autoinsert-yas-expand])
-  (define-auto-insert "\\.rs$" ["default-rust.rs" to/autoinsert-yas-expand])
-  (define-auto-insert "/sprints/" ["sprint.org" to/autoinsert-yas-expand])
-  (define-auto-insert "test_.*.py" ["test.py" to/autoinsert-yas-expand])
-  ;; autoinsert C/C++ header
-  (define-auto-insert (cons "\\.\\([Hh]\\|hh\\|hpp\\)\\'" "") ["header.h" to/autoinsert-yas-expand])
-  (define-auto-insert (cons "\\.\\([Cc]\\|cc\\|cpp\\)\\'" "") ["header.cpp" to/autoinsert-yas-expand]))
-
-;; (use-package hideshow
-;;   :config
-;;   (define-key hs-minor-mode-map (kbd "C-c h") (lookup-key hs-minor-mode-map (kbd "C-c @")))
-;;   (define-key hs-minor-mode-map (kbd "C-c @") nil))
-
-
-;; (use-package expand-region
-;;   :bind ("C-@" . er/expand-region))
-
-;; (set-face-attribute 'variable-pitch nil
-;;                     :font "Iosevka Aile"
-;;                     :height 60
-;;                     :weight 'light)
-
-;; (set-face-attribute 'fixed-pitch nil
-;;                     :font "Cascadia Code"
-;;                     :height 60)
 
 
 (use-package cascadia-code
@@ -710,28 +662,6 @@ Including indent-buffer, which should not be called automatically on save."
   (save-excursion (if (looking-at "\\_>") t (backward-char 1)
                       (if (looking-at "\\.") t (backward-char 1)
                           (if (looking-at "->") t nil)))))
-
-
-(defun to/autoinsert-yas-expand()
-  "Replace text in yasnippet template."
-  (yas/expand-snippet (buffer-string)
-                      (point-min)
-                      (point-max)))
-
-(defun do-yas-expand ()
-  (let ((yas/fallback-behavior 'return-nil))
-    (yas/expand)))
-
-
-(defun tab-indent-or-complete ()
-  (interactive)
-  (if (or (not (or yas-global-mode
-                   yas/minor-mode))
-          (null (do-yas-expand)))
-      (if (check-expansion)
-          (company-complete-common)
-        (indent-for-tab-command))))
-
 
 (defun to/kill-other-buffers
     (&optional
@@ -908,6 +838,14 @@ projects below the dominating .projectile file"
                                               ".projectile"))
                  ;; generate for emacs
                  "emacs"))
+
+
+(defun wsl-copy-region-to-clipboard (start end)
+  "Copy region to Windows clipboard."
+  (interactive "r")
+  (call-process-region start end "clip.exe" nil 0))
+
+(define-key global-map (kbd "M-o") 'wsl-copy-region-to-clipboard)
 
 (defun toggle-camelcase-underscores ()
   "Toggle between camelcase and underscore
@@ -1145,9 +1083,6 @@ up before you execute another command."
 (measure-time "Loading all auxillaries:" (to/do-list-dir experiments-dir))
 (load-file (expand-file-name "local-config.el" user-emacs-directory))
 
-;;                clang-format
-;;                company-c-headers
-;;                modern-cpp-font-lock
 ;;
 ;; C-mode settings
 ;;
@@ -1159,7 +1094,6 @@ up before you execute another command."
          ("\\.cxx\\'" . c++-mode)
          ("\\.c\\'" . c-mode))
   :bind (:map c-mode-base-map ("RET" . newline-and-indent))
-  :hook (cc-mode .  (lambda () (with-local-company-backends company-irony company-irony-c-headers company-yasnippet)))
   :init
   (setq-default c-default-style "linux"
                 c-basic-offset 4)
@@ -1171,7 +1105,6 @@ up before you execute another command."
   (c-set-offset 'member-init-intro 0)
 
   (irony-mode 1)
-  (company-irony 1)
   (electric-pair-mode 1)
   (add-hook 'before-save-hook 'clang-format-buffer t t))
 
@@ -1182,11 +1115,6 @@ up before you execute another command."
   :commands irony-mode
   :hook cc-mode
   :defer t
-  :init
-  (use-package company-irony-c-headers
-    :commands company-irony-c-headers)
-  (use-package company-irony
-    :commands company-irony)
   :config
   (irony-cdb-autosetup-compile-options))
 
@@ -1210,20 +1138,7 @@ up before you execute another command."
             (message (concat expr " = "))))))
     expr))
 
-(use-package asm-mode
-    :mode (("\\.tmpli\\'" . asm-mode)))
-
-(use-package cmake-mode
-  :mode (("/CMakeLists\\.txt\\'" . cmake-mode)
-         ("\\.cmake\\'" . cmake-mode))
-  :hook (cmake-mode . (lambda () (as-local-company-backends company-cmake company-yasnippet)))
-  :init
-  (use-package company-cmake
-    :straight (:type git :host github :repo "purcell/company-cmake")
-    :hook cmake-mode)
-  (use-package cmake-font-lock
-    :commands cmake-font-lock-activate
-    :hook (cmake-mode . cmake-font-lock-activate)))
+(use-package asm-mode :mode (("\\.tmpli\\'" . asm-mode)))
 
 (defun byte-compile-current-buffer ()
   "`byte-compile' current buffer if it's emacs-lisp-mode and compiled file exists."
@@ -1262,22 +1177,12 @@ up before you execute another command."
   :straight (:type built-in)
   :hook (lua-mode lisp-mode))
 
-(use-package lua-mode
-  :mode "\\.lua\\'"
-  :init
-  (use-package company-lua
-    :commands company-lua
-    :hook (lua-mode . (lambda () (with-local-company-backends (company-lua company-yasnippet)))))
-  :config
-  (auto-fill-mode 0))
-
 (use-package go-mode
   :custom
   (lsp-go-directory-filters ["-bazel-src" "-bazel-bin" "-bazel-out" "-bazel-testlogs"])
   :mode "\\.go\\'"
   :init
   ;; go-projectile
-  ;; (use-package company-go :hook go-mode)
   (use-package flycheck-golangci-lint :commands flycheck-golangci-lint-setup)
   ;; (use-package go-eldoc :hook go-mode)
   ;; (use-package go-gopath :hook go-mode)
@@ -1289,7 +1194,6 @@ up before you execute another command."
     ;; (add-hook 'before-save-hook 'gofmt-before-save)
     ;; (go-eldoc-setup)
     (go-projectile-tools-add-path)
-    (as-local-company-backends company-capf)
     (lsp)
     (flycheck-golangci-lint-setup)
     (flycheck-pos-tip-mode 1)
@@ -1298,8 +1202,7 @@ up before you execute another command."
 
 (use-package rust-mode
   :mode "\\.rs\\'"
-  :hook ((rust-mode . lsp-rust-analyzer-inlay-hints-mode)
-         (rust-mode . hs-minor-mode)
+  :hook ((rust-mode . hs-minor-mode)
 		 (rust-mode . rust-enable-format-on-save)
          (rust-mode . (lambda ()
 						(lsp)
@@ -1316,10 +1219,6 @@ up before you execute another command."
         lsp-rust-analyzer-display-parameter-hints t
         lsp-rust-analyzer-display-chaining-hints t))
 
-(use-package zig-mode
-  :mode "\\.zig\\'"
-  :hook ((zig-mode . hs-minor-mode)))
-
 (use-package typescript-mode
   :mode "\\.ts\\'"
   :hook ((typescript-mode . hs-minor-mode)
@@ -1329,10 +1228,7 @@ up before you execute another command."
 
 (use-package protobuf-mode
   :mode "\\.proto\\'"
-  :hook (protobuf-mode . (lambda ()
-                           (company-mode 0)
-                           (irony-mode 0)
-                           (c-add-style "my-style" my-protobuf-style t)))
+  :hook (protobuf-mode . (lambda () (c-add-style "my-style" my-protobuf-style t)))
   :init
   (defconst my-protobuf-style
     '((c-basic-offset . 4)
@@ -1356,15 +1252,6 @@ up before you execute another command."
     :config
     (pyvenv-mode 1))
 
-  (use-package conda
-    :commands conda-env-activate
-    :init
-    (setq conda-env-home-directory "/home/tgolsson/anaconda3"
-          conda-anaconda-home "/home/tgolsson/anaconda3")
-    :config
-    (conda-env-activate "base")
-    (conda-env-autoactivate-mode t))
-
   (use-package python-black
     :demand t
     :after python
@@ -1375,23 +1262,8 @@ up before you execute another command."
     :after python
     :hook (python-mode . python-isort-on-save-mode))
 
-
-  ;; (use-package jedi-core
-  ;;   :hook (python-mode . jedi-mode)
-  ;;   :init
-  ;;   (use-package company-jedi
-  ;;     :commands company-jedi)
-
-  ;;   (setq jedi:server-command
-  ;;         '("~/.emacs.d/.python-environments/default/bin/jediepcserver")
-  ;;         jedi:use-shortcuts t)
-  ;;   :config
-  ;;   (jedi:setup))
   :config
   (require 'dap-python)
-  ;; (make-local-variable 'company-backends)
-  ;; (add-to-list 'company-backends '(company-jedi company-yasnippet)
-  ;; (flycheck-inline-mode 1)
   (modify-syntax-entry ?_  "_")
   (local-set-key (kbd "M-.") 'jedi:goto-definition)
   (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker))
@@ -1399,18 +1271,8 @@ up before you execute another command."
 (use-package web-mode
   :mode ("\\.phtml\\'" "\\.html\\'" "\\.svelte\\'")
   :hook (web-mode . (lambda ()
-					  (company-mode 1)
-					  (lsp-mode 1)
-					  (make-local-variable 'yas-extra-modes)
-					  (add-to-list 'yas-extra-modes 'html-mode)
-					  (add-to-list 'yas-extra-modes 'php-mode)
-					  (with-local-company-backends company-capf company-web-html company-yasnippet)))
+					  (lsp-mode 1)))
   :init
-  (use-package company-web)
-  ;; TODO: These are actually not use-package things.
-  ;; (use-package company-web-html :commands web-mode)
-  ;; (use-package company-web-jade :commands web-mode)
-  ;; (use-package company-web-slim :commands web-mode)
   (use-package prettier-js
       :init
       (setq prettier-js-args '("--tab-width" "4" "--use-tabs" "true")))
@@ -1421,20 +1283,16 @@ up before you execute another command."
 		web-mode-code-indent-offset 4
         web-mode-css-indent-offset 4
         web-mode-markup-indent-offset 4
-        web-mode-script-padding 4)
-  :config
-  (define-key web-mode-map (kbd "C-<Space>") 'company-web-html))
+        web-mode-script-padding 4))
 
 ;; INFRA AND TOOLS
-(use-package dockerfile-mode
-  :mode ("Dockerfile"))
+(use-package dockerfile-mode :mode ("Dockerfile"))
 (use-package bazel)
 
 ;; RENDERING
 (use-package glsl-mode :mode ("\\.glsl\\'"))
 
 ;; MARKUP LANGUAGES
-(use-package nxml-mode :straight (:type built-in))
 (use-package toml-mode)
 (use-package jsonnet-mode
   :config
@@ -1455,34 +1313,13 @@ up before you execute another command."
          ("\\.markdown\\'" . markdown-mode))
   :init
   (setq markdown-command "multimarkdown")
-  (use-package company-emoji
-    :commands company-emoji
-    :hook (markdown-mode . (lambda () (with-local-company-backends company-emoji))))
   (use-package markdown-toc
     :commands (markdown-toc-generate-toc markdown-toc-refresh-toc)))
 
-;;; COMPLETION
-
-(use-package company
-  :after lsp-mode
-  :hook ((web-mode lua-mode cmake-mode cc-mode) . company-mode)
-  :commands company-mode
-  :init
-  (use-package company-statistics
-    :hook (company-mode . company-statistics-mode))
-  (use-package company-quickhelp
-    :hook (company-mode . company-quickhelp-mode))
-  (setq company-tooltip-limit 20
-        company-tooltip-align-annotations 't
-        company-idle-delay .1
-        company-begin-commasends '(lf-insert-command)
-        company-minimum-prefix-length 1
-        company-backends '(company-capf))
-  :config
-  (define-key company-active-map (kbd "TAB") 'tab-indent-or-complete)
-  (define-key company-active-map (kbd "<tab>") 'tab-indent-or-complete))
-
 (use-package corfu
+  :straight (corfu :files (:defaults "extensions/*")
+                   :includes (corfu-info corfu-history))
+
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)                 ;; Enable auto completion
@@ -1492,10 +1329,11 @@ up before you execute another command."
   (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
   (corfu-quit-no-match t)        ;; Automatically quit if there is no match
   (corfu-echo-documentation t)   ;; Show documentation in the echo area
-
+  (corfu-popupinfo-delay 0)
   :hook ((emacs-lisp-mode . corfu-mode)
          (shell-mode . corfu-mode)
-         (eshell-mode . corfu-mode))
+         (eshell-mode . corfu-mode)
+		 (corfu-mode . corfu-popupinfo-mode))
 
   :init
 
@@ -1507,12 +1345,10 @@ up before you execute another command."
 	:config
 	(add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-  (use-package corfu-doc
-    :bind (:map corfu-map
-				("M-d" . corfu-doc-toggle))
-    :custom
-    (corfu-doc-delay 1)
-    :hook (corfu-mode . corfu-doc-mode)))
+
+  :bind (:map corfu-map ("M-d" . corfu-popupinfo--toggle))
+
+  )
 
 (use-package copilot
   :hook ((prog-mode . copilot-mode))
@@ -1528,6 +1364,8 @@ up before you execute another command."
   :demand t
   :config
   (defun server-ensure-safe-dir (dir) "Noop" t)
+  (unless (file-exists-p server-socket-dir)
+	(make-directory server-socket-dir))
   (unless (server-running-p)
     (server-start)))
 
@@ -1685,7 +1523,7 @@ up before you execute another command."
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
    consult--source-bookmark consult--source-recent-file consult--source-project-recent-file
-   :preview-key (kbd "M-.")))
+   :preview-key "M-."))
 
 (use-package marginalia
   :after vertico
@@ -1743,123 +1581,10 @@ folder, otherwise delete a word"
   :init
   (vertico-mode))
 
-(use-package org-bullets
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
 (custom-theme-set-faces
  'user
  '(variable-pitch ((t (:family "Arial" :height 180 :weight thin))))
  '(fixed-pitch ((t ( :family "Cascadia Code" :height 160)))))
-
-(defun dw/org-mode-setup ()
-  (org-indent-mode)
-  (variable-pitch-mode 1)
-  (auto-fill-mode 0)
-  (visual-line-mode 1)
-  (setq evil-auto-indent nil)
-  (diminish org-indent-mode))
-
-;; Make sure Straight pulls Org from Guix
-(straight-use-package '(org :type built-in))
-
-(use-package org
-  :defer t
-  :hook (org-mode . dw/org-mode-setup)
-  :init
-  (use-package ox-hugo
-    :custom
-    (org-hugo-default-static-subdirectory-for-externals "org")
-    :config
-    (push "py" org-hugo-external-file-extensions-allowed-for-copying))
-  :config
-  (setq org-ellipsis " ▾"
-        org-hide-emphasis-markers t
-        org-src-fontify-natively t
-        org-fontify-quote-and-verse-blocks t
-        org-src-tab-acts-natively t
-        org-edit-src-content-indentation 2
-        org-hide-block-startup nil
-        org-src-preserve-indentation nil
-        org-startup-folded 'content
-        org-cycle-separator-lines 2
-	org-src-preserve-indentation t)
-
-  (setq org-modules
-	'(org-crypt
-          org-habit))
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (dot . t)
-     (python . t)))
-
-
-  (defun cpb/convert-attachment-to-file ()
-  "Convert [[attachment:..]] to [[file:..][file:..]]"
-  (interactive)
-  (let ((elem (org-element-context)))
-    (if (eq (car elem) 'link)
-        (let ((type (org-element-property :type elem)))
-          ;; only translate attachment type links
-          (when (string= type "attachment")
-            ;; translate attachment path to relative filename using org-attach API
-            ;; 2020-11-15: org-attach-export-link was removed, so had to rewrite
-            (let* ((link-end (org-element-property :end elem))
-                   (link-begin (org-element-property :begin elem))
-                   ;; :path is everything after attachment:
-                   (file (org-element-property :path elem))
-                   ;; expand that to the full filename
-                   (fullpath (org-attach-expand file))
-                   ;; then make it relative to the directory of this org file
-                   (current-dir (file-name-directory (or default-directory
-                                                         buffer-file-name)))
-                   (relpath (file-relative-name fullpath current-dir)))
-              ;; delete the existing link
-              (delete-region link-begin link-end)
-              ;; replace with file: link and file: description
-              (insert (format "[[file:%s][file:%s]]" relpath relpath))))))))
-  (defun to/org-confirm-babel-evaluate (lang body)
-    (not (member lang '("python" "ditaa"))))  ;don't ask for ditaa
-  (setq org-confirm-babel-evaluate #'to/org-confirm-babel-evaluate)
-  (use-package org-superstar
-    :after org
-    :hook (org-mode . org-superstar-mode)
-    :custom
-    (org-superstar-remove-leading-stars t)
-    (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
-
-  (set-face-attribute 'org-document-title nil :font "Iosevka Aile" :weight 'bold :height 100)
-  (dolist (face '((org-level-1 . 120)
-                  (org-level-2 . 110)
-                  (org-level-3 . 105)
-                  (org-level-4 . 100)
-                  (org-level-5 . 110)
-                  (org-level-6 . 110)
-                  (org-level-7 . 110)
-                  (org-level-8 . 110)))
-    (set-face-attribute (car face) nil :font "Iosevka Aile" :weight 'medium :height (cdr face)))
-
-  ;; Make sure org-indent face is available
-  (require 'org-indent)
-
-  (set-face-attribute 'variable-pitch nil :height 100)
-  (set-face-attribute 'fixed-pitch nil :height 100)
-  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
-  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-
-  ;; Get rid of the background on column views
-  (set-face-attribute 'org-column nil :background nil)
-  (set-face-attribute 'org-column-title nil :background nil))
 
 (use-package wgrep
   :demand t)

@@ -35,3 +35,4 @@ private/*
 /.python-environments/
 helm-adaptive-history
 .projectile
+/straight/
