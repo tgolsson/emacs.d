@@ -241,6 +241,9 @@ The return value is the new value of LIST-VAR."
 ;; (use-package all-the-icons)
 
 (use-package doom-modeline
+  :custom
+  (doom-modeline-lsp t)
+  (doom-modeline-lsp-icon t)
   :init
   (doom-modeline-mode 1)
   (set-face-attribute 'mode-line nil :underline nil)
@@ -417,7 +420,7 @@ The return value is the new value of LIST-VAR."
   :commands dap-mode
   ;; Uncomment the config below if you want all UI panes to be hidden by default!
   ;; :custom
-  ;; (lsp-enable-dap-auto-configure nil)
+  ;; (eglot-enable-dap-auto-configure nil)
   ;; :config
   ;; (dap-ui-mode 1)
   :commands dap-debug
@@ -438,65 +441,82 @@ The return value is the new value of LIST-VAR."
                                      :gdbpath "rust-gdb"
                                      :target nil
                                      :cwd nil))
-  :bind (:map lsp-mode-map
+  :bind (:map eglot-mode-map
               ("<f5>" . dap-debug)
               ("M-<f5>" . dap-hydra)))
 
 (use-package dumb-jump)
 
-(defun ts/lsp-mode-setup-completion ()
-  (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+(defun ts/eglot-mode-setup-completion ()
+  (setf (alist-get 'styles (alist-get 'eglot-capf completion-category-defaults))
         '(orderless))) ;; Configure orderless
 
-(use-package lsp-mode
+(use-package yasnippet)
+(yas-global-mode 1)
+
+;; (use-package eglot-mode
+;;   :custom
+;;   (eglot-eslint-download-url "https://github.com/emacs-eglot/eglot-server-binaries/blob/master/dbaeumer.vscode-eslint-2.2.2.vsix?raw=true")
+;;   :hook (((rust-mode go-mode) . eglot-mode)
+;;          ((rust-mode) . eglot-lens-mode)
+;; 		 (eglot-completion-mode . ts/eglot-mode-setup-completion)
+;; 		 (eglot-mode . corfu-mode)
+;; 		 (eglot-mode . (lambda ()
+;; 							  (setq flycheck-local-checkers
+;; 									'((eglot .
+;; 										   ((next-checkers
+;; 											 . (typos)))))))))
+
+;;   :commands (eglot ls-deferred)
+;;   :custom
+;;   (eglot-completion-provider :none)
+;;   :init
+;;   (use-package eglot-treemacs :after eglot)
+;;   (use-package eglot-ivy :after eglot)
+;;   (use-package eglot-ui
+;;     :commands eglot-ui-mode
+;;     :bind-keymap ("C-c C-l" . eglot-command-map)
+;;     :config
+;;     (setq eglot-ui-sideline-enable t
+;;           eglot-ui-flycheck-enable t
+;;           eglot-ui-flycheck-list-position 'right
+;;           eglot-ui-flycheck-live-reporting t)
+;;     (setq eglot-go-env (make-hash-table :test 'equal))
+;;     (puthash "GOPROXY" "https://proxy.golang.org,direct" eglot-go-env))
+
+;;   :config
+;;   (add-to-list 'eglot-file-watch-ignored-directories "[/\\\\]target\\'")
+;;   (add-to-list 'eglot-file-watch-ignored-directories "[/\\\\]cargo\\'")
+;;   (add-to-list 'eglot-file-watch-ignored-directories "[/\\\\]node_modules\\'")
+;;   (add-to-list 'eglot-file-watch-ignored-directories "[/\\\\]\\.venv\\'")
+;;   (add-to-list 'eglot-file-watch-ignored-directories "[/\\\\]third-party\\'")
+;;   (add-to-list 'eglot-file-watch-ignored-directories "[/\\\\]bazel-bin\\'")
+;;   (add-to-list 'eglot-file-watch-ignored-directories "[/\\\\]bazel-out\\'")
+;;   (add-to-list 'eglot-file-watch-ignored-directories "[/\\\\]bazel-src\\'")
+;;   (add-to-list 'eglot-file-watch-ignored-directories "[/\\\\]bazel-testlogs\\'")
+
+
+;;   (setq eglot-disabled-clients '(rls)
+;;         eglot-headerline-breadcrumb-enable nil
+;;         eglot-headerline-breadcrumb-icons-enable nil
+;;         eglot-prefer-flymake nil
+;; 		eglot-idle-delay 0.500
+;;         eglot-ui-doc-use-childframe t)
+;;   (eglot-enable-which-key-integration t))
+
+(use-package eglot
+  :ensure t
+  :hook ((( rust-mode go-mode python-mode web-mode) . eglot-ensure))
   :custom
-  (lsp-eslint-download-url "https://github.com/emacs-lsp/lsp-server-binaries/blob/master/dbaeumer.vscode-eslint-2.2.2.vsix?raw=true")
-  :hook (((rust-mode go-mode) . lsp-mode)
-         ((rust-mode) . lsp-lens-mode)
-		 (lsp-completion-mode . ts/lsp-mode-setup-completion)
-		 (lsp-mode . corfu-mode)
-		 (lsp-mode . (lambda ()
-							  (setq flycheck-local-checkers
-									'((lsp .
-										   ((next-checkers
-											 . (typos)))))))))
+  (eglot-report-progress t)
+  (eglot-autoshutdown t)
+  (eglot-events-buffer-size 0)
+  (eglot-extend-to-xref t))
 
-  :commands (lsp ls-deferred)
-  :custom
-  (lsp-completion-provider :none)
-  :init
-  (use-package lsp-treemacs :after lsp)
-  (use-package lsp-ivy :after lsp)
-  (use-package lsp-ui
-    :commands lsp-ui-mode
-    :bind-keymap ("C-c C-l" . lsp-command-map)
-    :config
-    (setq lsp-ui-sideline-enable t
-          lsp-ui-flycheck-enable t
-          lsp-ui-flycheck-list-position 'right
-          lsp-ui-flycheck-live-reporting t)
-    (setq lsp-go-env (make-hash-table :test 'equal))
-    (puthash "GOPROXY" "https://proxy.golang.org,direct" lsp-go-env))
-
-  :config
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]target\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]cargo\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]node_modules\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.venv\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]third-party\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-bin\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-out\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-src\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]bazel-testlogs\\'")
-
-
-  (setq lsp-disabled-clients '(rls)
-        lsp-headerline-breadcrumb-enable nil
-        lsp-headerline-breadcrumb-icons-enable nil
-        lsp-prefer-flymake nil
-		lsp-idle-delay 0.500
-        lsp-ui-doc-use-childframe t)
-  (lsp-enable-which-key-integration t))
+(use-package eglot-booster
+  :straight (:host github :repo "jdtsmith/eglot-booster")
+	:after eglot
+	:config	(eglot-booster-mode))
 
 (use-package delight)
 
@@ -920,7 +940,7 @@ the checking happens for all pairs in auto-minor-mode-alist"
         (setq alist (cdr alist))))))
 
 (add-hook 'find-file-hook #'enable-minor-mode-based-on-extension)
-(add-to-list 'auto-minor-mode-alist '("\\.svelte\\'" . lsp-mode))
+(add-to-list 'auto-minor-mode-alist '("\\.svelte\\'" . eglot-mode))
 
 
 ;;
@@ -1179,7 +1199,7 @@ up before you execute another command."
 
 (use-package go-mode
   :custom
-  (lsp-go-directory-filters ["-bazel-src" "-bazel-bin" "-bazel-out" "-bazel-testlogs"])
+  (eglot-go-directory-filters ["-bazel-src" "-bazel-bin" "-bazel-out" "-bazel-testlogs"])
   :mode "\\.go\\'"
   :init
   ;; go-projectile
@@ -1194,7 +1214,7 @@ up before you execute another command."
     ;; (add-hook 'before-save-hook 'gofmt-before-save)
     ;; (go-eldoc-setup)
     (go-projectile-tools-add-path)
-    (lsp)
+    (eglot-ensure)
     (flycheck-golangci-lint-setup)
     (flycheck-pos-tip-mode 1)
     (add-hook 'before-save-hook 'gofmt-before-save nil t))
@@ -1205,25 +1225,28 @@ up before you execute another command."
   :hook ((rust-mode . hs-minor-mode)
 		 (rust-mode . rust-enable-format-on-save)
          (rust-mode . (lambda ()
-						(lsp)
+						(eglot-ensure)
+						(corfu-mode 1)
                         (flycheck-pos-tip-mode 0)
                         ;; (flycheck-inline-mode 0)
                         (set (make-local-variable 'compile-command) "cargo run")
-                        (add-hook 'before-save-hook #'lsp-format-buffer t t))))
+                        (add-hook 'before-save-hook #'eglot-format-buffer t t))))
   :init
   (use-package cargo
     :hook (rust-mode . cargo-minor-mode))
 
-  (setq lsp-rust-server 'rust-analyzer
-        lsp-rust-analyzer-server-display-inlay-hints t
-        lsp-rust-analyzer-display-parameter-hints t
-        lsp-rust-analyzer-display-chaining-hints t))
+  ;; (setq eglot-rust-server 'rust-analyzer
+  ;;       eglot-rust-analyzer-server-display-inlay-hints t
+  ;;       eglot-rust-analyzer-display-parameter-hints t
+  ;;       eglot-rust-analyzer-display-chaining-hints t)
+
+  )
 
 (use-package typescript-mode
   :mode "\\.ts\\'"
   :hook ((typescript-mode . hs-minor-mode)
 		 (typescript-mode . (lambda ()
-							  (lsp 1)
+							  (eglot-ensure)
 							  (prettier-js-mode 1)))))
 
 (use-package protobuf-mode
@@ -1236,7 +1259,7 @@ up before you execute another command."
 
 (use-package python-mode
   :mode "\\.py\\'"
-  :hook (python-mode . lsp-deferred)
+  :hook (python-mode . eglot-ensure)
   :custom
   (dap-python-debugger 'debugpy)
   :config
@@ -1271,7 +1294,7 @@ up before you execute another command."
 (use-package web-mode
   :mode ("\\.phtml\\'" "\\.html\\'" "\\.svelte\\'")
   :hook (web-mode . (lambda ()
-					  (lsp-mode 1)))
+					  (eglot-ensure 1)))
   :init
   (use-package prettier-js
       :init
