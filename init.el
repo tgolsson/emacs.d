@@ -507,7 +507,23 @@ The return value is the new value of LIST-VAR."
 (use-package eglot
   :ensure t
   :hook ((( rust-mode go-mode python-mode web-mode) . eglot-ensure))
+  :bind-keymap ("C-c l" . eglot-mode-map)
+
+
+  :bind (:map eglot-mode-map
+			  ("C-c l a" . eglot-code-actions)
+			  ("C-c l r" . eglot-rename)
+			  ("C-c l h" . eldoc)
+			  ("C-c l e" . eglot-code-action-extract)
+			  ("C-c l w" . eglot-code-action-rewrite)
+			  ("C-c l i" . eglot-code-action-inline)
+			  ("C-c l f t" . eglot-find-typeDefinition)
+			  ("C-c l f d" . eglot-find-declaration)
+			  ("C-c l f i" . eglot-find-implementation)
+			  ;; sometimes ionide acts up
+			  ("C-c l R" . eglot-reconnect))
   :custom
+  (eglot-events-buffer-config '(:size 0))
   (eglot-report-progress t)
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
@@ -1613,11 +1629,29 @@ folder, otherwise delete a word"
   :demand t)
 (put 'scroll-left 'disabled nil)
 
+(flycheck-def-config-file-var typos-typos-toml typos
+                              '("typos.toml"))
+
 (flycheck-define-checker typos
   "A typo checker using typos-cli."
-  :command ("typos" "--format" "brief" source)
+  :command ("typos" "--format" "brief" source
+            (config-file "--config" typos-typos-toml))
   :error-patterns
     ((error line-start (file-name) ":" line ":" column ":" (message) line-end))
   :modes (text-mode prog-mode markdown-mode rust-mode toml-mode python-mode))
 
 (add-to-list 'flycheck-checkers 'typos)
+
+(flycheck-def-config-file-var buf-buf-yaml buf '("buf.yaml"))
+
+(flycheck-define-checker buf
+  "A protobuf checker using buf."
+  :command ("buf" "lint" (config-file "--config" buf-buf-yaml) "--error-format" "text" source-original)
+  :error-patterns ((error line-start (file-name) ":" line ":" column ":" (message) line-end))
+  :modes (protobuf-mode)
+  :working-directory (lambda (checker) (locate-dominating-file buffer-file-name "buf.yaml")))
+
+
+(add-to-list 'flycheck-checkers 'buf)
+
+(put 'narrow-to-region 'disabled nil)
