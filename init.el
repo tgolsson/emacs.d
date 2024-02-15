@@ -527,7 +527,17 @@ The return value is the new value of LIST-VAR."
   (eglot-report-progress t)
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
-  (eglot-extend-to-xref t))
+  (eglot-extend-to-xref t)
+  :init
+  (setq-default eglot-workspace-configuration
+				'(
+				  :pylsp (
+						  :plugins (
+									:mccabe (:enabled nil)
+											:pycodestyle (:enabled nil)
+											:floe (:enabled t)))))
+  )
+
 
 (use-package eglot-booster
   :straight (:host github :repo "jdtsmith/eglot-booster")
@@ -589,7 +599,7 @@ buffer if succeeded without warnings "
   :diminish t
   :config (projectile-mode)
   :defer 10
-  :custom ((projectile-completion-system 'ivy))
+  :custom ((projectile-completion-system 'default))
   :bind-keymap ("C-c p" . projectile-command-map)
   :init
   (use-package ibuffer-projectile
