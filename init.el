@@ -539,11 +539,13 @@ The return value is the new value of LIST-VAR."
   )
 
 
-(use-package eglot-booster
-  :straight (:host github :repo "jdtsmith/eglot-booster")
-	:after eglot
-	:config	(eglot-booster-mode))
-
+;; (use-package eglot-booster
+;;   :straight (:host github :repo "jdtsmith/eglot-booster")
+;; 	:after eglot
+;; 	:config	(eglot-booster-mode))
+(use-package consult-eglot
+  :bind (:map eglot-mode-map
+			  ("C-c l ." . consult-eglot-symbols)))
 (use-package delight)
 
 (defun bury-compile-buffer-if-successful (buffer string)
@@ -802,6 +804,22 @@ Note: this code uses https://en.wikipedia.org/wiki/Md5"
                     (substring myStr 17 20)
                     (substring myStr 20 32)))))
 
+(defun find-first-non-ascii-char ()
+  "Find the first non-ascii character from point onwards."
+  (interactive)
+  (let (point)
+    (save-excursion
+      (setq point
+            (catch 'non-ascii
+              (while (not (eobp))
+                (or (eq (char-charset (following-char))
+                        'ascii)
+                    (throw 'non-ascii (point)))
+                (forward-char 1)))))
+    (if point
+        (goto-char point)
+      (message "No non-ascii characters."))))
+
 (defun* yank-arg () "Yanks the arg at point, abiding by the syntax-table of the
 current mode"
         (interactive)
@@ -908,6 +926,31 @@ notation for the symbol at point."
                       (replace-regexp "\\([A-Z]\\)" "_\\1" nil (1+ start) end)
                       (downcase-region start (cdr (bounds-of-thing-at-point 'symbol)))))))
 
+(defun copy-selected-text (start end)
+  (interactive "r")
+    (if (use-region-p)
+        (let ((text (buffer-substring-no-properties start end)))
+          (shell-command (concat "echo '" text "' | clip.exe")))))
+
+;; Resize the whole frame, and not only a window
+;; Adapted from https://stackoverflow.com/a/24714383/5103881
+(defun acg/zoom-frame (&optional amt frame)
+  "Increaze FRAME font size by amount AMT. Defaults to selected
+frame if FRAME is nil, and to 1 if AMT is nil."
+  (interactive "p")
+  (let* ((frame (or frame (selected-frame)))
+         (font (face-attribute 'default :font frame))
+         (size (font-get font :size))
+         (amt (or amt 1))
+         (new-size (+ size amt)))
+    (set-frame-font (font-spec :size new-size) t `(,frame))
+    (message "Frame's font new size: %d" new-size)))
+
+(defun acg/zoom-frame-out (&optional amt frame)
+  "Call `acg/zoom-frame' with negative argument."
+  (interactive "p")
+  (acg/zoom-frame (- (or amt 1)) frame))
+
 ;; C, C++, Ardunio
 (add-to-list  'auto-mode-alist '("\\.as$"   . c++-mode))
 (add-to-list  'auto-mode-alist '("\\.h$"   . c++-mode))
@@ -943,6 +986,7 @@ notation for the symbol at point."
 ;; Work
 (add-to-list 'auto-mode-alist '("\\.build\\'" . nxml-mode))
 (add-to-list 'auto-mode-alist '("meson.build\\'" . meson-mode))
+(add-to-list 'auto-mode-alist '("BUILD\\'" . python-mode))
 
 (defvar auto-minor-mode-alist ()
   "Alist of filename patterns vs correpsonding minor mode functions, see `auto-mode-alist'
@@ -977,15 +1021,18 @@ the checking happens for all pairs in auto-minor-mode-alist"
   :bind (("C-x g" . magit-status))
   :bind (:map magit-status-mode-map ( "q" . magit-quit-session))
   :init
-  (use-package magit-filenotify
-    :if (not (memq window-system '(w32)))
-    :hook (magit-status-mode . magit-filenotify-mode))
+  ;; (use-package magit-filenotify
+  ;;   :if (not (memq window-system '(w32)))
+  ;;   :hook (magit-status-mode . magit-filenotify-mode))
   ;; (use-package magit-todos
   ;;   :hook (magit-status-mode . magit-todos-mode))
   :config
   (setq magit-todos-nice nil)
+  (magit-auto-revert-mode -1)
   (custom-set-faces '(magit-diff-added ((t (:background "black" :foreground "green3"))))
                     '(magit-diff-removed ((t (:background "black" :foreground "red3"))))))
+
+(use-package git-link)
 
 (defadvice magit-status (around magit-fullscreen activate)
   (window-configuration-to-register :magit-fullscreen)
@@ -1150,7 +1197,6 @@ up before you execute another command."
   (c-set-offset 'comment-intro 0)
   (c-set-offset 'member-init-intro 0)
 
-  (irony-mode 1)
   (electric-pair-mode 1)
   (add-hook 'before-save-hook 'clang-format-buffer t t))
 
@@ -1159,7 +1205,6 @@ up before you execute another command."
 ;;
 (use-package irony
   :commands irony-mode
-  :hook cc-mode
   :defer t
   :config
   (irony-cdb-autosetup-compile-options))
@@ -1319,8 +1364,7 @@ up before you execute another command."
 
 (use-package web-mode
   :mode ("\\.phtml\\'" "\\.html\\'" "\\.svelte\\'")
-  :hook (web-mode . (lambda ()
-					  (eglot-ensure 1)))
+  :hook (web-mode . eglot-ensure)
   :init
   (use-package prettier-js
       :init
@@ -1365,10 +1409,13 @@ up before you execute another command."
   (use-package markdown-toc
     :commands (markdown-toc-generate-toc markdown-toc-refresh-toc)))
 
-(use-package corfu
-  :straight (corfu :files (:defaults "extensions/*")
-                   :includes (corfu-info corfu-history))
+;; (use-package corfu
+;;   :straight (corfu :files (:defaults "extensions/*")
+;;                    :includes (corfu-info corfu-history))
 
+
+(use-package corfu
+  :straight (:files ("*" (:exclude ".git") "extensions/corfu-popupinfo.el"))
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)                 ;; Enable auto completion
@@ -1378,13 +1425,15 @@ up before you execute another command."
   (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
   (corfu-quit-no-match t)        ;; Automatically quit if there is no match
   (corfu-echo-documentation t)   ;; Show documentation in the echo area
-  (corfu-popupinfo-delay 0)
+  (corfu-popupinfo-delay 1)
   :hook ((emacs-lisp-mode . corfu-mode)
          (shell-mode . corfu-mode)
          (eshell-mode . corfu-mode)
 		 (corfu-mode . corfu-popupinfo-mode))
 
+
   :init
+  (require 'corfu-popupinfo)
 
   (use-package kind-icon
 	:after corfu
@@ -1456,9 +1505,17 @@ up before you execute another command."
 (global-set-key (kbd "C-c u")                'uncomment-region)
 (global-set-key (kbd "C-c c")                'comment-or-uncomment-region)
 
+(global-set-key (kbd "M-o")                'copy-selected-text)
+
 (global-set-key (kbd "M-p")                  'backward-paragraph)
 (global-set-key (kbd "M-n")                  'forward-paragraph)
 ;;(global-set-key [tab]                      'tab-indent-or-complete)
+
+
+(global-set-key (kbd "C-x C-=") 'acg/zoom-frame)
+(global-set-key (kbd "C-x C--") 'acg/zoom-frame-out)
+(global-set-key (kbd "<C-wheel-up>") 'acg/zoom-frame)
+(global-set-key (kbd "<C-wheel-down>") 'acg/zoom-frame-out)
 
 ;; programming mode
 (define-key prog-mode-map (kbd "M-W") 'yank-arg)
@@ -1665,3 +1722,103 @@ folder, otherwise delete a word"
 (add-to-list 'flycheck-checkers 'buf)
 
 (put 'narrow-to-region 'disabled nil)
+
+
+(defvar rune--keywords
+  '("pub" "await" "break" "continue" "do" "else" "for" "if" "loop" "match" "return" "try" "while" "yield" "select" "extern" "let" "macro" "mod" "const" "fn" "async" "impl" "trait" "struct" "in" "as"))
+
+(defvar rune--keywords-regexp
+  (regexp-opt rune--keywords 'symbols))
+
+(defvar rune--types
+  '("bool" "u8" "u16" "u32" "u64" "u128" "i8" "i16" "i32" "i64" "i128" "f32" "f64" "char" "str" "None" "Some" "Ok" "Err")
+  )
+
+
+(defvar rune--types-regexp
+  (regexp-opt rune--types 'symbols))
+
+;; detecting types like FooBar::qux, highlight FooBar
+(defvar rune--dynamic-types-regexp
+  "\\([A-Z][a-zA-Z0-9_]*\\)::")
+
+(defvar rune--variables
+  '("self" "super" "Self" "crate"))
+
+(defvar rune--variables-regexp
+  (regexp-opt rune--variables 'symbols))
+
+(defvar rune--strings-regexp
+  "\"[^\"]*\"")
+
+;; like foobar::baz, highlight foobar, but not baz, also not parts of wrods
+;; also not FooBar::baz
+(defvar rune--path-matcher
+  "\\([a-z_][a-z0-9_]*\\)::")
+
+(setq rune-highlights
+	  `((,rune--keywords-regexp . font-lock-keyword-face)
+		(,rune--types-regexp . font-lock-type-face)
+		(,rune--variables-regexp . font-lock-variable-name-face)
+		(,rune--strings-regexp . font-lock-string-face)
+		(,rune--path-matcher 1 font-lock-constant-face)
+		(,rune--dynamic-types-regexp 1 font-lock-type-face)
+		)
+	  )
+
+(defvar rune-mode-syntax-table
+  (let ((table (make-syntax-table)))
+
+    ;; Operators
+    (dolist (i '(?+ ?- ?* ?/ ?% ?& ?| ?^ ?! ?< ?> ?~ ?@))
+      (modify-syntax-entry i "." table))
+
+    ;; Strings
+    (modify-syntax-entry ?\" "\"" table)
+    (modify-syntax-entry ?\\ "\\" table)
+
+    ;; Angle brackets.  We suppress this with syntactic propertization
+    ;; when needed
+    (modify-syntax-entry ?< "(>" table)
+    (modify-syntax-entry ?> ")<" table)
+
+    ;; Comments
+    (modify-syntax-entry ?/  ". 124b" table)
+    (modify-syntax-entry ?*  ". 23n"  table)
+    (modify-syntax-entry ?\n "> b"    table)
+    (modify-syntax-entry ?\^m "> b"   table)
+
+    table)
+  "Syntax definitions and helpers.")
+
+(define-derived-mode rune-mode prog-mode "rune"
+  "Major mode for rune files."
+  :syntax-table rune-mode-syntax-table
+  (setq font-lock-defaults '(rune-highlights))
+
+
+  ;; Misc
+  (setq-local comment-start "// ")
+  (setq-local comment-end   "")
+
+
+  (setq-local comment-start-skip "\\(?://[/!]*\\|/\\*[*!]?\\)[[:space:]]*")
+  (setq-local paragraph-start
+              (concat "[[:space:]]*\\(?:"
+                      comment-start-skip
+                      "\\|\\*/?[[:space:]]*\\|\\)$"))
+  (setq-local indent-tabs-mode nil))
+
+(add-to-list 'auto-mode-alist '("\\.rn" . rune-mode))
+
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(rune-mode . ("cargo" "run" "--" "lsp"))))
+
+(use-package flymake-diagnostic-at-point)
+
+
+(add-to-list
+ 'rune-mode-hook (lambda () (eglot-ensure)
+				   (flymake-diagnostic-at-point-mode 1)
+				   (corfu-mode 1)))
